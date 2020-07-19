@@ -2,7 +2,7 @@ module.exports = {
   title: "杂乱无章",
   description: '前山微有雨, 永巷净无尘',
   dest: 'public/',
-  // base: '/myblog/',
+  base: '/',
   head: [
     ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1,user-scalable=no' }]
