@@ -1,0 +1,11 @@
+node_modules/
+myblog/.vuepress/theme/
+myblog/.vuepress/dist/
+
+y
+y.pub
+y./
+
+yarn.lock
+
+public
