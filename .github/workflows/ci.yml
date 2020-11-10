@@ -24,7 +24,7 @@ jobs:
       uses: peaceiris/actions-gh-pages@v2.5.0
       env:
         ACTIONS_DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
-        PUBLISH_BRANCH: blogBanch
+        PUBLISH_BRANCH: myblog
         PUBLISH_DIR: public
 #   按顺序执行
 #   leancloud-deploy:
