@@ -27,9 +27,26 @@ module.exports = {
     ['@vuepress-reco/rss', {
       site_url: 'https://hjwu.ml',
       copyright: ''
-    }]
+    }],
+    [
+      'vuepress-plugin-sponsor',
+      {
+        theme: 'simple',
+        alipay: '/reward/alipay.JPG',
+        wechat: '/reward/wechatpay.JPG',
+        qq: '',
+        paypal: '',
+        duration: 2000
+      }
+    ],
+    [
+      '@vuepress/google-analytics',
+      {
+        'ga': 'UA-182914025-1' // UA-00000000-0
+      }
+    ]
   ],    
-  theme: "reco",
+  theme: "reco", 
   themeConfig: themeConf,
   markdown: {
     lineNumbers: true,
