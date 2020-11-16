@@ -15,9 +15,9 @@ module.exports = [
       text: "Contact",
       icon: "reco-message",
       items: [ 
+        { text: "Admin", link: "https://hjwu.cf/", icon: "reco-account"},
         { text: "GitHub", link: "https://github.com/loenzo", icon: "reco-github"},
         { text: "码云", link: "https://gitee.com/company_enzo/", icon: "reco-mayun"},
       ],
-    },
-    { text: "Admin", link: "https://hjwu.cf/", icon: "reco-account"},
+    }
   ];

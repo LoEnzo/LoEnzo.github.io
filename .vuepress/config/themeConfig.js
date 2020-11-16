@@ -36,7 +36,6 @@ module.exports = {
   searchMaxSuggestions: 10,
   // 自动形成侧边导航
   // sidebar: 'auto',
-  // 最后更新时间
   lastUpdated: "Last Updated",
   // 作者
   author: "Enzo",
@@ -49,9 +48,8 @@ module.exports = {
   // git地址
   repo: 'LoEnzo/LoEnzo.github.io',
   editLinks: true,
-  // 未生效，因为静态页面部署在master,否则自定义域名访问页面加载不到资源，但这同样导致不能直接编辑该页面
   editLinkText: '在 GitHub 上编辑此页！',
-  // valine 设置 (if you need valine comment )
+  // valine 
   valineConfig: {
     appId: "J1Uq1gtVn91RhSSw4FaAv2GD-MdYXbMMI", // your appId
     appKey: "rxJmmc3H8KmkmMeddXkBRnsw", // your appKey
