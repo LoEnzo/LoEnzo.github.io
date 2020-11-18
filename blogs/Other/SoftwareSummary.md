@@ -18,18 +18,33 @@ date: 2020-07-09
 * [**JetBrains IDEA**](https://www.jetbrains.com/products.html#type=ide)
 
 * [**VScode**](https://code.visualstudio.com/)
+
 * [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+
 * [Maven](http://maven.apache.org/download.cgi)
+
 * [Mysql](https://dev.mysql.com/downloads/installer/)
+
 * [Redis](https://github.com/tporadowski/redis/releases)
+
 * [**Git**](https://git-scm.com/)
+
 * [**Node.js**](https://nodejs.org/zh-cn/download/)
+
 * [**Yarn**](https://yarn.bootcss.com/docs/install/#windows-stable)
+
 * [BCompare]，[class反编译插件,选择对应版本，搜索class，下载，导入，重启](http://www.scootersoftware.com/download.php?zz=moreformats)
+
+  过期报错，删除`C:\Users\用户名\AppData\Roaming\Scooter Software`
+
 * [**JD-gui：查看jar包**](https://github.com/java-decompiler/jd-gui/releases)
+
 * [Navicat Premuim]
+
 * [**TortoiseGit**](https://tortoisegit.org/download/)
+
 * [**XMLSpy2013：查看xsd，xml**]
+
 * [**Postman**](https://www.postman.com/downloads/)
 
 #### 文档编辑器：
