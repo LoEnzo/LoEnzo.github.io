@@ -11,6 +11,16 @@ module.exports = {
   head: [
     ["link", { rel: "icon", href: "/favicon.ico" }],
     ["meta", { name: "viewport", content: "width=device-width,initial-scale=1,user-scalable=no"}],
+    ['meta', { name: 'author', content: 'Enzo' }],
+    ['meta', { name: 'keywords', content: 'vuepress,reco,reco_luan,vuepress-reco,vuepress-theme-reco,theme,blog,主题' }],
+    ['link', { rel: 'manifest', href: '/manifest.json' }],
+    ['meta', { name: 'theme-color', content: '#42b983' }],
+    ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
+    ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
+    ['link', { rel: 'apple-touch-icon', href: '/icon_vuepress_reco.png' }],
+    ['link', { rel: 'mask-icon', href: '/icon_vuepress_reco.svg', color: '#42b983' }],
+    ['meta', { name: 'msapplication-TileImage', content: '/icon_vuepress_reco.png' }],
+    ['meta', { name: 'msapplication-TileColor', content: '#000000' }],
     // 引入jquery
     ["script", {
         "language": "javascript",
@@ -24,31 +34,8 @@ module.exports = {
         "src": "/js/mouseClickEffect.js"
     }],
   ],
-  // 添加rss订阅插件，测试发现只能订阅标题和tip内容
+  serviceWorker: true,
   plugins: pluginConf,
-  // [
-  //   ['@vuepress-reco/rss', {
-  //     site_url: 'https://hjwu.ml',
-  //     copyright: ''
-  //   }],
-  //   [
-  //     'vuepress-plugin-sponsor',
-  //     {
-  //       theme: 'simple',
-  //       alipay: '/reward/alipay.JPG',
-  //       wechat: '/reward/wechatpay.JPG',
-  //       qq: '',
-  //       paypal: '',
-  //       duration: 2000
-  //     }
-  //   ],
-  //   [
-  //     '@vuepress/google-analytics',
-  //     {
-  //       'ga': 'UA-182914025-1' // UA-00000000-0
-  //     }
-  //   ]
-  // ],    
   theme: "reco", 
   themeConfig: themeConf,
   markdown: {
