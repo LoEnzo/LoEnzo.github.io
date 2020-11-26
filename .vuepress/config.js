@@ -17,9 +17,9 @@ module.exports = {
     ['meta', { name: 'theme-color', content: '#42b983' }],
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
-    ['link', { rel: 'apple-touch-icon', href: '/icon_vuepco.press_reng' }],
-    ['link', { rel: 'mask-icon', href: '/icon_vuepress_reco.svg', color: '#42b983' }],
-    ['meta', { name: 'msapplication-TileImage', content: '/icon_vuepress_reco.png' }],
+    ['link', { rel: 'apple-touch-icon', href: '/icon_vuepress_hjwu.png' }],
+    ['link', { rel: 'mask-icon', href: '/icon_vuepress_hjwu.svg', color: '#42b983' }],
+    ['meta', { name: 'msapplication-TileImage', content: '/icon_vuepress_hjwu.png' }],
     ['meta', { name: 'msapplication-TileColor', content: '#000000' }],
     // 引入jquery
     ["script", {
@@ -34,44 +34,7 @@ module.exports = {
         "src": "/js/mouseClickEffect.js"
     }],
   ],
-  serviceWorker: true,
-  plugins: [
-    [
-      'vuepress-plugin-sponsor',
-      {
-        theme: 'simple',
-        alipay: '/reward/alipay.JPG',
-        wechat: '/reward/wechatpay.JPG',
-        qq: '',
-        paypal: '',
-        duration: 2000
-      }
-    ],
-    // google网站分析
-    [
-      '@vuepress/google-analytics',
-      {
-        'ga': 'UA-182914025-1' // UA-00000000-0
-      }
-    ],
-    ['@vuepress/pwa', {
-      serviceWorker: true,
-      updatePopup: {
-        message: "发现新内容可用",
-        buttonText: "刷新"
-      }
-    }],
-    '@vuepress-reco/extract-code',
-    'flowchart',
-    ['sitemap', {
-      hostname: 'https:/hjwu.gq'
-    }],
-    // 添加rss订阅插件，测试发现只能订阅标题和tip内容
-    ['@vuepress-reco/rss', {
-      site_url: 'https://hjwu.gq',
-      copyright: ''
-    }],
-  ],
+  plugins: pluginConf,
   theme: "reco", 
   themeConfig: themeConf,
   markdown: {

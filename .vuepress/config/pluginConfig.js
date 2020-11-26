@@ -1,4 +1,5 @@
 module.exports = [
+  // 打赏插件
   [
     'vuepress-plugin-sponsor',
     {
