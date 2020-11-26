@@ -34,8 +34,6 @@ module.exports = {
   // 搜索设置
   search: true,
   searchMaxSuggestions: 10,
-  // 自动形成侧边导航
-  // sidebar: 'auto',
   lastUpdated: "Last Updated",
   // 作者
   author: "Enzo",
