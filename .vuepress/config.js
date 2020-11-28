@@ -1,7 +1,7 @@
 // 引入主题配置
 const themeConf = require("./config/themeConfig.js");
 // 引入插件
-const pluginConf = require("./config/pluginConfig");
+const pluginConf = require("./config/pluginConfig.js");
 
 module.exports = {
   title: "杂乱无章",
