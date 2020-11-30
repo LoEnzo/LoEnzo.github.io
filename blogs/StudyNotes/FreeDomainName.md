@@ -1,7 +1,7 @@
 ---
 title: 免费域名申请
 tags:
- - 域名
+ - domain
  - Valine
 categories:
  - StudyNotes

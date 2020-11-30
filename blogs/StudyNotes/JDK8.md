@@ -1,5 +1,5 @@
 ---
-title: Java8新特性学习
+title: JDK8新特性学习
 tags:
  - JDK8
 categories:
