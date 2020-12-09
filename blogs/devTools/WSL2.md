@@ -61,7 +61,7 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 
 以管理员身份打开 PowerShell 并运行：
 
-```powershell
+```shell
 dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
 ```
 
@@ -71,7 +71,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 
 安装新的 Linux 分发版时，请在 PowerShell 中运行以下命令，以将 WSL 2 设置为默认版本：
 
-```powershell
+```shell
 wsl --set-default-version 2
 ```
 
@@ -87,7 +87,7 @@ wsl --set-default-version 2
 
 打开windows应用商店，搜索ubuntu，并选择你偏好的 Linux 分发版。我安装的是Ubuntu 20.04版本。
 
-## 注意：
+# 注意：
 
 1. ssh连接设置：
 
@@ -137,7 +137,12 @@ ubuntu2004 config --default-user root
 
 # 设置允许root用户登陆，好像是允许ftp root登陆的，自行测试
 vi  /etc/ssh/sshd_config
+LoginGraceTime 2m
 PermitRootLogin yes
+StrictModes yes
+
+# 设置允许密码登陆
+PasswordAuthentication yes
 
 # 之前修改的下面这种方式，修改Root账户密码，参考
 sudo passwd root

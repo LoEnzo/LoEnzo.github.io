@@ -14,6 +14,8 @@ date: 2020-08-09
 
 转载自**[元洪博客](https://gyh.im/posts/7386aa8e/#前言)**，
 
+[onemanager拓展性设置参考](https://www.2bboy.com/archives/176.html)
+
 :::
 
 <!-- more -->
