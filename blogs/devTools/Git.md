@@ -140,6 +140,14 @@ $ git cherry-pick <HashA> <HashB>
 $ git push
 ```
 
+### 8. 其他
+
+```shell
+// 修改.ignore 是其生效
+git rm -r --cached .
+```
+
+
 ### 问题：
 
 #### 1. git clone 报错 warning: Clone succeeded, but checkout failed."
