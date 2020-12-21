@@ -98,7 +98,7 @@ date: 2020-07-10
 
 * [cron-job](https://blog.hclonely.com/posts/ac04080d/)，[注册地址](https://cron-job.org/en/signup/)，未尝试，配置麻烦
 * [Ajax请求唤醒](https://crosschannel.cc/daily/valine-admin-autoAwaken.html)，未尝试
-* [GitHub+Actions缺点](https://www.antmoe.com/posts/ff6aef7b/index.html)，原理上，githubActions唤醒一次，其他由LeanCloud定时任务唤醒，经过尝试，定时任务也会有流控问题，可以直接换成githubActions 每29分钟发送一条请求到后台即可，这样会找人commit提交次数过多，强迫症勿用。
+* [GitHub+Actions缺点](https://www.antmoe.com/posts/ff6aef7b/index.html)，原理上，githubActions唤醒一次，其他由LeanCloud定时任务唤醒，经过尝试，定时任务也会有流控问题，可以直接换成githubActions 每29分钟发送一条请求到后台即可，这样会造成commit提交次数过多，强迫症勿用。
 * 云监控系统也能唤醒LeanCloud，尝试 dnspod 添加监控，感觉可以，缺点：默认10分钟/次，浪费流量，占用CPU资源，放弃，鸡肋。
 
 **最简单的githubAction唤醒valine-admin**
