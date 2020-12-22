@@ -1,39 +1,25 @@
 // 引入导航栏
 const navConf = require("./navConfig.js");
+// 侧边栏设置
+const sideConf = require("./sideConfig.js");
+// 博客设置
+const blogConf = require("./blogConfig.js");
+// 友链
+const friendConf = require("./friendConfig.js");
 
 module.exports = {
   nav: navConf,
-  sidebar: "auto",
+  sidebar: sideConf,
   type: "blog",
   // 博客设置
-  blogConfig: {
-    category: {
-      location: 2, // 在导航栏菜单中所占的位置，默认2
-      text: "Category", // 默认 “分类”
-    },
-    tag: {
-      location: 3, // 在导航栏菜单中所占的位置，默认3
-      text: "Tag", // 默认 “标签”
-    },
-  },
-  friendLink: [
-    {
-      title: "vuepress-theme-reco",
-      desc: "A simple and beautiful vuepress Blog & Doc theme.",
-      avatar: "https://vuepress-theme-reco.recoluan.com/icon_vuepress_reco.png",
-      link: "https://vuepress-theme-reco.recoluan.com",
-    },
-    {
-      title: "言否",
-      desc: "知无不言，言而不否",
-      email: "18780004653@163.com",
-      link: "http://yanfou.gitee.io/blog/",
-    },
-  ],
+  blogConfig: blogConf,
+  friendLink: friendConf,
   logo: "/logo.jpg",
   // 搜索设置
   search: true,
   searchMaxSuggestions: 10,
+  // 自动形成右侧边导航
+  subSidebar: 'auto',
   lastUpdated: "Last Updated",
   // 作者
   author: "Enzo",
