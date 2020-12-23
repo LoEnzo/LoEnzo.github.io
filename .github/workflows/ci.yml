@@ -10,13 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-
-    - name: Compile and Build
-      uses: actions/checkout@v1
-      
-    - run: git branch -d myblog
-    - run: git push origin --delete myblog
-    - run: git branch myblog
+    - uses: actions/checkout@v1
     - run: yarn install
     - run: yarn build
     # - run: npm install
