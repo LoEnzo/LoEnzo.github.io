@@ -7,5 +7,6 @@ y.pub
 y./
 
 yarn.lock
+yarn-error.log
 
 public/
