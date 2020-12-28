@@ -15,7 +15,7 @@ module.exports = {
   blogConfig: blogConf,
   friendLink: friendConf,
   logo: "/logo.jpg",
-  codeTheme: 'funky',
+  codeTheme: 'tomorrow',
   // 搜索设置
   search: true,
   searchMaxSuggestions: 10,
