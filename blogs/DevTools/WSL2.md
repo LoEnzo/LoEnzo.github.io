@@ -15,7 +15,7 @@ WSL2 是再Windows上运行linux，相对于虚拟机长占后台，WSL2占用�
 
 <!-- more -->
 
-# WSL概要
+# WSL
 
 WSL 是 Windows Subsystem for Linux 的缩写，意思是 linux 版的 window 子系统。
 
@@ -36,9 +36,9 @@ WSL 2 是 WSL 中体系结构的新版本，它更改了 Linux 分发版与 Wind
 * 支持本机直接运行Docker容器
 * WSL2运行速度更快
 
-# 安装
+## WSL安装
 
-## 启用Windows 子系统
+#### 启用Windows 子系统
 
 安装适用于 Linux 的 Windows 子系统，必须先启用“适用于 Linux 的 Windows 子系统”可选功能，然后才能在 Windows 上安装 Linux 分发版。以管理员身份打开 PowerShell 并运行：
 
@@ -46,16 +46,18 @@ WSL 2 是 WSL 中体系结构的新版本，它更改了 Linux 分发版与 Wind
 dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
 ```
 
-若要仅安装 WSL 1，现在应重启计算机并继续[安装所选的 Linux 分发版](https://docs.microsoft.com/zh-cn/windows/wsl/install-win10#install-your-linux-distribution-of-choice)，否则请等待重启并继续更新到 WSL 2。 阅读有关[比较 WSL 2 和 WSL 1](https://docs.microsoft.com/zh-cn/windows/wsl/compare-versions) 的详细信息。
+若要仅安装 WSL 1，现在应重启计算机并继续[安装所选的 Linux 分发版](https://docs.microsoft.com/zh-cn/windows/wsl/install-win10#install-your-linux-distribution-of-choice)，否则请等待重启并继续更新到 WSL 2
 
-## 更新到 WSL 2
+阅读有关[比较 WSL 2 和 WSL 1](https://docs.microsoft.com/zh-cn/windows/wsl/compare-versions) 的详细信息。
+
+#### 更新到 WSL 2
 
 若要更新到 WSL 2，必须满足以下条件：
 
 - 运行 Windows 10（[已更新到版本 2004](ms-settings:windowsupdate) 的**内部版本 19041** 或更高版本）。
 - 通过按 Windows 徽标键 + R，检查你的 Windows 版本，然后键入 **winver**，选择“确定”。 （或者在 Windows 命令提示符下输入 `ver` 命令）。 如果内部版本低于 19041，请[更新到最新的 Windows 版本](ms-settings:windowsupdate)。 [获取 Windows 更新助手](https://www.microsoft.com/software-download/windows10)。
 
-## 启用“虚拟机平台”可选组件
+#### 启用“虚拟机平台”可选组件
 
 安装 WSL 2 之前，必须启用“虚拟机平台”可选功能。
 
@@ -67,7 +69,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 
 **重新启动**计算机，以完成 WSL 安装并更新到 WSL 2。
 
-## 将 WSL 2 设置为默认版本
+#### 将 WSL 2 设置为默认版本
 
 安装新的 Linux 分发版时，请在 PowerShell 中运行以下命令，以将 WSL 2 设置为默认版本：
 
@@ -83,7 +85,7 @@ wsl --set-default-version 2
 
 如果 `wsl --set-default-version` 结果为无效命令，请输入 `wsl --help`。 如果 `--set-default-version` 未列出，则表示你的 OS 不支持它，你需要更新到版本 2004、内部版本 19041 或更高版本。
 
-## 安装 Linux 分发版
+#### 安装 Linux 分发版
 
 打开windows应用商店，搜索ubuntu，并选择你偏好的 Linux 分发版。我安装的是Ubuntu 20.04版本。
 
@@ -115,24 +117,18 @@ WSL会自动在启动时根据虚拟交换机WSL生成`/etc/resolv.conf`文件�
 nameserver 172.27.96.1
 ```
 
-[参考方案一](https://www.xieshasha.love/wsldns.iiMemory)：修改`/etc/WSL.conf`，不生成`resolv.conf`文件，然后命令行或输入`wsl --shutdown`重启即可。后面自己写入**，未生效**，自己写入报错无法对一个指向不存在的链接文件进行编辑
-
-```shell
-vim /etc/wsl.conf
-
-generateResolvConf = false
-```
-
 **暂时解决方案**：自动开机启动项写入配置
 
 ```shell
 'echo -e "\nnameserver 114.114.114.114\nnameserver 8.8.8.8\nnameserver 8.8.4.4" > /etc/resolv.conf'
+
+echo -e "options timeout:1 attempts:1 rotate\nnameserver 114.114.114.114\nnameserver 8.8.8.8" >/etc/resolv.conf
 ```
 
 4. 设置root用户登陆
 
 ```shell
-// 设置ubuntu登录默认用户为root，我的是 ubuntu2004，根据自己对应版本来
+# 设置ubuntu登录默认用户为root，我的是 ubuntu2004，根据自己对应版本来
 ubuntu2004 config --default-user root
 
 # 设置允许root用户登陆，好像是允许ftp root登陆的，自行测试
