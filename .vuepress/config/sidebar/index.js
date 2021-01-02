@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const FOLDERPATH = '../../../../blogs';
+const FOLDERPATH = '../../../blogs';
 
 const utils = {
     getSidebar: function (title, children = [''], collapsable = true, sidebarDepth = 2) {

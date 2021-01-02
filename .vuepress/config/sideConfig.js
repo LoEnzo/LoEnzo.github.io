@@ -1,11 +1,13 @@
-const bigData = require('./sidebar/bigDataIndex.js');
-const devTools = require('./sidebar/devToolsIndex.js');
-const framework = require('./sidebar/frameworkIndex.js');
-const studyNotes = require('./sidebar/studyNotesIndex.js');
+const commonUtils = require('./sidebar/common.js');
+
+const bigData = commonUtils.getSidebar('/BigData/');
+const devTools = commonUtils.getSidebar('/DevTools/');
+const framework = commonUtils.getSidebar('/Framework/');
+const studyNotes = commonUtils.getSidebar('/StudyNotes/');
 
 module.exports = {
     '/blogs/BigData/': bigData,
     '/blogs/DevTools/': devTools,
     '/blogs/Framework/': framework,
-    '/blogs/StudyNotes/': studyNotes,
+    '/blogs/StudyNotes/': studyNotes, 
 };
