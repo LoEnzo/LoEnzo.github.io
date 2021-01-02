@@ -24,6 +24,14 @@ date: 2020-12-10
 
 [Docker官网命令文档](https://docs.docker.com/engine/reference/commandline/cli/?spm=5176.8351553.0.0.4f441991dVcHxY)
 
+[Docker中文文档](http://www.dockerinfo.net/document)
+
+[阿里云镜像容器](https://cr.console.aliyun.com/cn-hangzhou/instances)
+
+### Docker架构
+
+![](./images/docker/docker01.png)
+
 ### 安装
 
 Docker 是一个开源的商业产品，有两个版本：社区版（Community Edition，缩写为 CE）和企业版（Enterprise Edition，缩写为 EE）。企业版包含了一些收费服务，个人开发者一般用不到，一般安装社区版，[参考](https://www.runoob.com/docker/centos-docker-install.html)
@@ -59,51 +67,55 @@ sudo yum install docker-ce docker-ce-cli containerd.io
 sudo systemctl start docker
 ```
 
-### 常规指令
+::: details ubuntu安装docker
 
 ```shell
-# 查看docker信息
-docker info
+前提是先执行apt-get update  apt-get upgrade
 
-# 查看docker进程
-docker ps
-显示信息如下：
+如果还出现这个问题 依次执行下面的步骤：
+
+#添加docker源、
+sudo echo "deb https://download.docker.com/linux/ubuntu zesty edge" > /etc/apt/sources.list.d/docker.list
+
+#支持解析https
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+
+#添加GPG密钥
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+#设置存储库位置
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+#执行安装命令
+apt-get install -y docker-ce
+
+如果还是不行 就再跑一次update然后执行安装命令。我的环境就是这么装起来的。
 ```
-
-::: details docker ps显示进程信息
-
-| CONTAINER ID | IMAGE      | COMMAND              | CREATED        | STATUS   | PORTS                                     | NAMES              |
-| ------------ | ---------- | -------------------- | -------------- | -------- | ----------------------------------------- | ------------------ |
-| 容器id       | 使用的镜像 | 启动容器时运行的命令 | 容器的创建时间 | 容器状态 | 容器的端口信息和使用的连接类型（tcp\udp） | 自动分配的容器名称 |
 
 :::
 
+### 常规指令
+
+| 指令               | 说明                                  | 参数 | 示例 |
+| ------------------ | ------------------------------------- | ---- | ---- |
+| **docker info**    | 查看docker 系统信息，包括镜像和容器数 |      |      |
+| **docker version** | 查看docker的版本信息                  |      |      |
+
 ## Docker指令
+
+![](./images/docker/docker02.png)
 
 ### 生命周期管理
 
-```shell
-# 创建一个新的容器并运行一个命令：docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
-docker run
-
-# 启动/停止/重启容器：docker start/stop/restart [OPTIONS] CONTAINER [CONTAINER...]
-Docker start|stop|restart
-
-# 杀掉一个运行中的容器：docker kill [OPTIONS] CONTAINER [CONTAINER...]
-docker kill 
-
-# 删除一个或多个容器：docker rm [OPTIONS] CONTAINER [CONTAINER...]
-# -f :通过 SIGKILL 信号强制删除一个运行中的容器
-# -l :移除容器间的网络连接，而非容器本身。
-# -v :删除与容器关联的卷
-docker rm
-
-# 在运行的容器中执行命令：docker exec [OPTIONS] CONTAINER COMMAND [ARG...]
-# -d :分离模式: 在后台运行
-# -i :即使没有附加也保持STDIN 打开
-# -t :分配一个伪终端
-docker exec
-```
+| 指令               | 说明             | 参数                                                         | 示例                                                 |
+| ------------------ | ---------------- | ------------------------------------------------------------ | ---------------------------------------------------- |
+| **docker run**     | 创建容器并运行   |                                                              | `docker run --name killer-nginx -p 8900:80 -d nginx` |
+| **docker start**   | 启动容器         |                                                              | `Docker start nginx`                                 |
+| **docker stop**    | 停止容器         |                                                              | `Docker stop nginx`                                  |
+| **docker restart** | 重启容器         |                                                              | `docker restart nginx`                               |
+| **docker kill**    | 杀掉运行中的容器 |                                                              | `docker kill nginx`                                  |
+| **docker rm**      | 删除容器         | `-f `：强制删除一个运行中的容器<br/>` -l `：移除容器间的网络连接，而非容器本身<br/>`-v `：删除与容器关联的卷 | `docker rm nginx`                                    |
+| **docker exec**    | 进入容器执行命令 | `-d `：分离模式: 在后台运行<br/>`-i `：即使没有附加也保持STDIN 打开<br/>`-t `：分配一个伪终端 | `docker exec centos`                                 |
 
 ::: details docker run options 参数说明
 
@@ -129,60 +141,49 @@ docker exec
 
 :::
 
-#### 容器管理
+### 容器管理
 
-```shell
-#  列出容器：docker ps [OPTIONS]
-# -a 显示所有的容器，包括未运行的
-docker ps
+| 指令            | 说明                     | 参数                                                         | 示例                           |
+| --------------- | ------------------------ | ------------------------------------------------------------ | ------------------------------ |
+| **docker ps**   | 列出容器                 | `-a`：所有容器                                               | `docker ps -a`                 |
+| **docker port** | 列出指定的容器的端口映射 |                                                              | `docker port mysql`            |
+| **docker logs** | 获取容器的日志           | `-f `：跟踪日志输出<br/>`--since`：显示某个开始时间的所有日志<br/>`-t`：显示时间戳<br/>`--tail `：仅列出最新N条容器日志 | `docker logs --tail=10 mysql ` |
 
-# 列出指定的容器的端口映射：docker port [OPTIONS] CONTAINER [PRIVATE_PORT[/PROTO]]
-docker port
+::: details docker ps 显示进程信息
 
-# 获取容器的日志：docker logs [OPTIONS] CONTAINER
-# -f : 跟踪日志输出
-# --since :显示某个开始时间的所有日志
-# -t : 显示时间戳
-# --tail :仅列出最新N条容器日志
-docker logs
-```
+| CONTAINER ID | IMAGE      | COMMAND              | CREATED        | STATUS   | PORTS                                     | NAMES              |
+| ------------ | ---------- | -------------------- | -------------- | -------- | ----------------------------------------- | ------------------ |
+| 容器id       | 使用的镜像 | 启动容器时运行的命令 | 容器的创建时间 | 容器状态 | 容器的端口信息和使用的连接类型（tcp\udp） | 自动分配的容器名称 |
 
-#### 镜像仓库
+:::
 
-```shell
-# 登陆到一个Docker镜像仓库，如果未指定镜像仓库地址，默认为官方仓库 Docker Hub：docker login|logout [OPTIONS] [SERVER]
-docker login|logout
+### 镜像仓库
 
-# 从镜像仓库中拉取或者更新指定镜像：docker pull [OPTIONS] NAME[:TAG|@DIGEST]
-docker pull
+| 指令                    | 说明                                                         | 示例                  |
+| ----------------------- | ------------------------------------------------------------ | --------------------- |
+| **docker login/logout** | 登陆到一个Docker镜像仓库，如果未指定镜像仓库地址，默认为官方仓库 | `docker login`        |
+| **docker pull**         | 从镜像仓库中拉取或者更新指定镜像                             | `docker pull mysql`   |
+| **docker push**         | 将本地的镜像上传到镜像仓库,要先登陆到镜像仓库                | `docker push mysql`   |
+| **docker search**       | 搜索镜像                                                     | `docker search mysql` |
 
-# 将本地的镜像上传到镜像仓库,要先登陆到镜像仓库：docker push [OPTIONS] NAME[:TAG]
-docker push
+#### 远程仓库管理
 
-# 登陆阿里云仓库
-sudo docker login --username=hjwu_enzo registry.cn-hangzhou.aliyuncs.com
-
-#从Registry中拉取镜像
-sudo docker pull registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]
-
-# 将镜像推送到Registry
-sudo docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]
-sudo docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]
-```
+| 指令                                                         | 说明                 |
+| ------------------------------------------------------------ | -------------------- |
+| **docker login --username=hjwu_enzo registry.cn-hangzhou.aliyuncs.com** | 登陆到阿里云镜像仓库 |
+| **docker pull registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]** | 从resgistry拉取镜像  |
+| **docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]** |                      |
+| **docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]** | 将进项推送到registry |
 
 ### 本地镜像管理
 
-```shell
-# 列出本地镜像：docker images [OPTIONS] [REPOSITORY[:TAG]]
-# -a :列出本地所有的镜像（含中间映像层，默认情况下，过滤掉中间映像层）；
-# --digests :显示镜像的摘要信息；
-# -f :显示满足条件的镜像；
-# --format :指定返回值的模板文件；
-# --no-trunc :显示完整的镜像信息；
-# -q :只显示镜像ID。
-docker images 
-
-# 删除本地一个或多少镜像。
-docker rmi : 
-```
-
+| 指令              | 说明                                                         | 参数                                                         | 示例                     |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------ |
+| **docker images** | 列出本地镜像                                                 | `-a`：列出本地所有的镜像；<br/>`--digests`：显示镜像的摘要信息；<br/>`-f`：显示满足条件的镜像；<br/>`--format` ：指定返回值的模板文件；<br/>`--no-trunc `：显示完整的镜像信息；<br/>`-q` ：只显示镜像ID | `docker images -a`       |
+| **docker rmi**    | 删除本地一个或多少镜像                                       | `-f `：强制删除                                              | `docker rmi images_name` |
+| **docker tag**    | 标记本地镜像，将其归入某一仓库                               |                                                              |                          |
+| **docker build**  | 用于根据 `Dockerfile` 创建镜像                               | `-f `：指定要使用的Dockerfile路径；                          |                          |
+| **docker save**   | 将镜像导出为文件                                             | `-o`：输出到的文件                                           |                          |
+| **docker load**   | 将文件导入为镜像                                             |                                                              |                          |
+| **docker export** | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大   |                                                              |                          |
+| **docker import** | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                              |                          |

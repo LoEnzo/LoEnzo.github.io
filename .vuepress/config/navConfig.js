@@ -5,7 +5,8 @@ module.exports = [
       text: "Tools",
       icon: "reco-api",
       items: [
-        { text: "转换工具", link: "https://oktools.net/", icon: "reco-api" },
+        { text: "码农工具站", link: "https://tool.lu/", icon: "reco-api" },
+        { text: "在线工具站", link: "https://67tool.com/", icon: "reco-api"},
         { text: 'ProjectsDemo', link: '/blogs/other/Projects-demo.html', icon: 'reco-category'},
         { text: "OneDrive", link: "https://biggerdrive.herokuapp.com/", icon: 'reco-other'}
       ],
