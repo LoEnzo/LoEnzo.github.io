@@ -7,8 +7,7 @@ module.exports = [
       items: [
         { text: "码农工具站", link: "https://tool.lu/", icon: "reco-api" },
         { text: "在线工具站", link: "https://67tool.com/", icon: "reco-api"},
-        { text: 'ProjectsDemo', link: '/blogs/other/Projects-demo.html', icon: 'reco-category'},
-        { text: "OneDrive", link: "https://biggerdrive.herokuapp.com/", icon: 'reco-other'}
+        { text: 'ProjectsDemo', link: '/blogs/other/Projects-demo.html', icon: 'reco-category'}
       ],
     }
   ];
