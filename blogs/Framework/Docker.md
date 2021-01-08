@@ -15,6 +15,7 @@ date: 2020-12-10
 
 <!-- more -->
 
+## 概要
 
 ### 相关链接：
 
@@ -115,7 +116,7 @@ apt-get install -y docker-ce
 | **docker restart** | 重启容器         |                                                              | `docker restart nginx`                               |
 | **docker kill**    | 杀掉运行中的容器 |                                                              | `docker kill nginx`                                  |
 | **docker rm**      | 删除容器         | `-f `：强制删除一个运行中的容器<br/>` -l `：移除容器间的网络连接，而非容器本身<br/>`-v `：删除与容器关联的卷 | `docker rm nginx`                                    |
-| **docker exec**    | 进入容器执行命令 | `-d `：分离模式: 在后台运行<br/>`-i `：即使没有附加也保持STDIN 打开<br/>`-t `：分配一个伪终端 | `docker exec centos`                                 |
+| **docker exec**    | 进入容器执行命令 | `-d `：分离模式: 在后台运行<br/>`-i `：即使没有附加也保持STDIN 打开<br/>`-t `：分配一个伪终端 | `docker exec -it centos /bin/bash`                   |
 
 ::: details docker run options 参数说明
 
@@ -175,7 +176,7 @@ apt-get install -y docker-ce
 | **docker tag [ImageId] registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]** |                      |
 | **docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/nginx:[镜像版本号]** | 将进项推送到registry |
 
-### 本地镜像管理
+#### 本地镜像管理
 
 | 指令              | 说明                                                         | 参数                                                         | 示例                     |
 | ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------ |
@@ -187,3 +188,16 @@ apt-get install -y docker-ce
 | **docker load**   | 将文件导入为镜像                                             |                                                              |                          |
 | **docker export** | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大   |                                                              |                          |
 | **docker import** | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                              |                          |
+
+## 示例：
+
+### mysql
+
+```shell
+# docker mysql 将数据存储在本地目录
+docker run -d -e MYSQL_ROOT_PASSWORD=admin --name mysql -v /data/mysql/data:/var/lib/mysql -p 3306:3306 mysql 
+
+# 指定配置文件
+docker run -d -e MYSQL_ROOT_PASSWORD=admin --name mysql -v /data/mysql/my.cnf:/etc/mysql/my.cnf -v /data/mysql/data:/var/lib/mysql -p 3306:3306 mysql 
+```
+
