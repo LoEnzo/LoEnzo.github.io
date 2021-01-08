@@ -1,19 +1,19 @@
 // 引入导航栏
 const navConf = require("./navConfig.js");
 // 侧边栏设置
-const sideConf = require("./sideConfig.js");
+const sidebarConf = require("./sidebarConfig.js");
 // 博客设置
 const blogConf = require("./blogConfig.js");
 // 友链
-const friendConf = require("./friendConfig.js");
+const friendLinkConf = require("./friendLinkConfig.js");
 
 module.exports = {
   nav: navConf,
-  sidebar: sideConf,
+  sidebar: sidebarConf,
   type: "blog",
   // 博客设置
   blogConfig: blogConf,
-  friendLink: friendConf,
+  friendLink: friendLinkConf,
   logo: "/logo.jpg",
   codeTheme: 'tomorrow',
   // 搜索设置
