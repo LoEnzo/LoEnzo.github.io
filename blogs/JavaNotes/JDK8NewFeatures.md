@@ -3,7 +3,7 @@ title: JDK8新特性学习
 tags:
  - JDK8
 categories:
- - StudyNotes
+ - JavaNotes
 date: 2020-05-15
 ---
 

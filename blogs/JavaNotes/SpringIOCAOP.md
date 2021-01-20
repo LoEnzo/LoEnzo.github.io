@@ -1,8 +1,10 @@
 ---
 title: Spring IoC AOP理解
 tags:
+ - IOC
+ - AOP
 categories:
- - StudyNotes
+ - JavaNotes
 date: 2020-05-11
 ---
 

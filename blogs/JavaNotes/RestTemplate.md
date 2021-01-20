@@ -3,7 +3,7 @@ title: RestTemplate简单使用
 tags:
  - RestTemplate
 categories:
- - StudyNotes
+ - JavaNotes
 date: 2020-09-11
 ---
 

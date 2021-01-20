@@ -17,6 +17,8 @@ WSL2 是再Windows上运行linux，相对于虚拟机长占后台，WSL2占用�
 
 # WSL
 
+## WSL概要
+
 WSL 是 Windows Subsystem for Linux 的缩写，意思是 linux 版的 window 子系统。
 
 Linux 的 Windows 子系统让开发人员无需虚拟机就可以直接在 Windows 上运行 Linux 环境，包括大多数命令行工具、程序和应用。
@@ -38,7 +40,7 @@ WSL 2 是 WSL 中体系结构的新版本，它更改了 Linux 分发版与 Wind
 
 ## WSL安装
 
-#### 启用Windows 子系统
+### 启用Windows 子系统
 
 安装适用于 Linux 的 Windows 子系统，必须先启用“适用于 Linux 的 Windows 子系统”可选功能，然后才能在 Windows 上安装 Linux 分发版。以管理员身份打开 PowerShell 并运行：
 
@@ -50,14 +52,14 @@ dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux 
 
 阅读有关[比较 WSL 2 和 WSL 1](https://docs.microsoft.com/zh-cn/windows/wsl/compare-versions) 的详细信息。
 
-#### 更新到 WSL 2
+### 更新到 WSL 2
 
 若要更新到 WSL 2，必须满足以下条件：
 
 - 运行 Windows 10（[已更新到版本 2004](ms-settings:windowsupdate) 的**内部版本 19041** 或更高版本）。
 - 通过按 Windows 徽标键 + R，检查你的 Windows 版本，然后键入 **winver**，选择“确定”。 （或者在 Windows 命令提示符下输入 `ver` 命令）。 如果内部版本低于 19041，请[更新到最新的 Windows 版本](ms-settings:windowsupdate)。 [获取 Windows 更新助手](https://www.microsoft.com/software-download/windows10)。
 
-#### 启用“虚拟机平台”可选组件
+### 启用“虚拟机平台”可选组件
 
 安装 WSL 2 之前，必须启用“虚拟机平台”可选功能。
 
@@ -69,7 +71,7 @@ dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /nores
 
 **重新启动**计算机，以完成 WSL 安装并更新到 WSL 2。
 
-#### 将 WSL 2 设置为默认版本
+### 将 WSL 2 设置为默认版本
 
 安装新的 Linux 分发版时，请在 PowerShell 中运行以下命令，以将 WSL 2 设置为默认版本：
 
@@ -85,11 +87,11 @@ wsl --set-default-version 2
 
 如果 `wsl --set-default-version` 结果为无效命令，请输入 `wsl --help`。 如果 `--set-default-version` 未列出，则表示你的 OS 不支持它，你需要更新到版本 2004、内部版本 19041 或更高版本。
 
-#### 安装 Linux 分发版
+### 安装 Linux 分发版
 
 打开windows应用商店，搜索ubuntu，并选择你偏好的 Linux 分发版。我安装的是Ubuntu 20.04版本。
 
-# 注意：
+## 注意：
 
 1. ssh连接设置：
 
@@ -155,11 +157,32 @@ C:\Users\用户名\AppData\Local\Microsoft\WindowsApps\ubuntu2004.exe config --d
 每次开机，终端管理软件无法通过ssh连接Linux, 需要先通过自带命令行，或者启动ubuntu客户端，输入`service ssh restart`，之后才能连接
 
 ```shell
-// win+R, 输入shell:startup，进入开机启动文件夹目录，新建一个.bat的批处理文件，内容如下：
+# win+R, 输入shell:startup，进入开机启动文件夹目录，新建一个.bat的批处理文件，内容如下：
 ubuntu2004 -c "service ssh start"
 ```
 
-# 安装源
+## ubuntu添加启动脚本
+
+```shell
+# ubuntu20.04添加启动脚本，开机启动nameserver，防止每次启动WSL2 nameserver被初始化覆盖
+
+# 编写脚本
+vim override_nameserver.sh
+echo -e "options timeout:1 attempts:1 rotate\nnameserver 114.114.114.114\nnameserver 8.8.8.8" >/etc/resolv.conf
+
+# 保存脚本到
+mv override_nameserver.sh /etc/init.d/
+
+# 设置权限
+chmod 755 override_nameserver.sh
+
+# 将脚本添加为启动脚本，90为启动顺序，越大级别越低
+/etc/init.d/update-rc.d override_nameserver.sh defaults 90 
+```
+
+
+
+## ubuntu安装源
 
 备份源
 

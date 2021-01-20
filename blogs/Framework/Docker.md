@@ -111,10 +111,10 @@ apt-get install -y docker-ce
 | 指令               | 说明             | 参数                                                         | 示例                                                 |
 | ------------------ | ---------------- | ------------------------------------------------------------ | ---------------------------------------------------- |
 | **docker run**     | 创建容器并运行   |                                                              | `docker run --name killer-nginx -p 8900:80 -d nginx` |
-| **docker start**   | 启动容器         |                                                              | `Docker start nginx`                                 |
-| **docker stop**    | 停止容器         |                                                              | `Docker stop nginx`                                  |
-| **docker restart** | 重启容器         |                                                              | `docker restart nginx`                               |
-| **docker kill**    | 杀掉运行中的容器 |                                                              | `docker kill nginx`                                  |
+| **docker start**   | 启动容器         | 容器id或容器名称                                             | `Docker start nginx`                                 |
+| **docker stop**    | 停止容器         | 容器id或容器名称                                             | `Docker stop nginx`                                  |
+| **docker restart** | 重启容器         | 容器id或容器名称                                             | `docker restart nginx`                               |
+| **docker kill**    | 杀掉运行中的容器 | 容器id或容器名称                                             | `docker kill nginx`                                  |
 | **docker rm**      | 删除容器         | `-f `：强制删除一个运行中的容器<br/>` -l `：移除容器间的网络连接，而非容器本身<br/>`-v `：删除与容器关联的卷 | `docker rm nginx`                                    |
 | **docker exec**    | 进入容器执行命令 | `-d `：分离模式: 在后台运行<br/>`-i `：即使没有附加也保持STDIN 打开<br/>`-t `：分配一个伪终端 | `docker exec -it centos /bin/bash`                   |
 
@@ -158,6 +158,22 @@ apt-get install -y docker-ce
 
 :::
 
+#### 批量操作容器
+
+```shell
+docker 启动所有的容器
+docker start $(docker ps -a | awk '{ print $1}' | tail -n +2)
+
+docker 关闭所有的容器
+docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
+
+docker 删除所有的容器
+docker rm $(docker ps -a | awk '{ print $1}' | tail -n +2)
+
+docker 删除所有的镜像
+docker rmi $(docker images | awk '{print $3}' |tail -n +2)
+```
+
 ### 镜像仓库
 
 | 指令                    | 说明                                                         | 示例                  |
@@ -188,6 +204,8 @@ apt-get install -y docker-ce
 | **docker load**   | 将文件导入为镜像                                             |                                                              |                          |
 | **docker export** | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大   |                                                              |                          |
 | **docker import** | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                              |                          |
+
+
 
 ## 示例：
 

@@ -3,7 +3,7 @@ title: Linux常用指令和常用软件包安装
 tags:
  - Linux
 categories:
- - DevTools
+ - LinuxNotes
 date: 2020-05-11
 ---
 

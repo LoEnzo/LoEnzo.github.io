@@ -4,7 +4,7 @@ tags:
  - gitlab
  - linux
 categories:
- - StudyNotes
+ - LinuxNotes
 date: 2020-05-15
 ---
 

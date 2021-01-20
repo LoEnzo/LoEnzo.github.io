@@ -3,7 +3,7 @@ title: 了解什么是RESTful
 tags:
  - RESTful
 categories:
- - StudyNotes
+ - JavaNotes
 date: 2020-04-13
 ---
 

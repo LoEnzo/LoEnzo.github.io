@@ -4,7 +4,7 @@ tags:
  - gitlab
  - runner
 categories: 
- - StudyNotes
+ - LinuxNotes
 date: 2019-12-12
 ---
 

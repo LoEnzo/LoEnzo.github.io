@@ -3,7 +3,7 @@ title: Bash脚本命令使用
 tags:
  - bash
 categories:
- - StudyNotes
+ - LinuxNotes
 date: 2020-05-22
 ---
 

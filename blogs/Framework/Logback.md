@@ -3,9 +3,8 @@ title: Logback的使用
 tags:
  - Logback
 categories:
- - StudyNotes
+ - LinuxNotes
 date: 2020-05-14
-
 ---
 
 ::: tip

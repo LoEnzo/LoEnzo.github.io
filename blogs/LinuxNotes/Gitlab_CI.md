@@ -4,7 +4,7 @@ tags:
  - gitlab
  - CI
 categories:
- - Framework
+ - LinuxNotes
 date: 2020-05-11
 ---
 
