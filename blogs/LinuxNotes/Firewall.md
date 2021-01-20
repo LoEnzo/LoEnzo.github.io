@@ -5,9 +5,8 @@ tags:
  - ufw
  - iptables
 categories:
- - Linux
+ - LinuxNotes
 date: 2021-01-18
-
 ---
 
 ::: tip
