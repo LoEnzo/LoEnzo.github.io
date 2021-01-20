@@ -7,6 +7,7 @@ module.exports = [
       items: [
         { text: "码农工具站", link: "https://tool.lu/", icon: "reco-api" },
         { text: "在线工具站", link: "https://67tool.com/", icon: "reco-api"},
+        { text: "mall学习", link: "http://www.macrozheng.com/#/README", icon: "reco-api"},
         { text: 'ProjectsDemo', link: '/blogs/other/Projects-demo.html', icon: 'reco-category'}
       ],
     }

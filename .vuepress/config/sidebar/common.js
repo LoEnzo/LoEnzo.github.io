@@ -13,16 +13,22 @@ const commonUtils = {
     },
     getTitle: function(filenames){
         if(filenames == '/BigData/'){
-            return '大数据相关框架学习';
+            return '大数据相关学习笔记';
         }
         if(filenames == '/Framework/'){
-            return "常用框架";
+            return "常用框架学习笔记";
         }
         if(filenames == '/StudyNotes/'){
             return "学习笔记";
         }
         if(filenames == '/DevTools/'){
             return "开发工具";
+        }
+        if(filenames == '/LinuxNotes/'){
+            return "Linux学习笔记";
+        }
+        if(filenames == '/JavaNotes/'){
+            return "Java学习笔记";
         }
     }
 };
