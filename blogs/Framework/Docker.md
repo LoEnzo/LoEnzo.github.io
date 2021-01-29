@@ -17,7 +17,7 @@ date: 2020-12-10
 
 ## 概要
 
-### 相关链接：
+**相关链接：**
 
 [Docker 官网](https://www.docker.com/)
 
@@ -209,7 +209,7 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 
 ## 示例：
 
-### mysql
+### MySql
 
 ```shell
 # docker mysql 将数据存储在本地目录
@@ -217,5 +217,41 @@ docker run -d -e MYSQL_ROOT_PASSWORD=admin --name mysql -v /data/mysql/data:/var
 
 # 指定配置文件
 docker run -d -e MYSQL_ROOT_PASSWORD=admin --name mysql -v /data/mysql/my.cnf:/etc/mysql/my.cnf -v /data/mysql/data:/var/lib/mysql -p 3306:3306 mysql 
+```
+
+### Elasticsearch
+
+```shell
+# 拉取elasticsearch镜像
+docker pull elasticsearch:7.6.2
+
+# 修改虚拟内存区域大小，否则会因为过小而无法启动
+sysctl -w vm.max_map_count=262144
+
+# 使用如下命令启动Elasticsearch服务
+docker run -p 9200:9200 -p 9300:9300 --name elasticsearch \
+-e "discovery.type=single-node" \
+-e "cluster.name=elasticsearch" \
+-v /mydata/elasticsearch/plugins:/usr/share/elasticsearch/plugins \
+-v /mydata/elasticsearch/data:/usr/share/elasticsearch/data \
+-d elasticsearch:7.6.2
+
+# 启动时会发现/usr/share/elasticsearch/data目录没有访问权限，只需要修改/mydata/elasticsearch/data目录的权限，再重新启动即可
+chmod 777 /mydata/elasticsearch/data/
+
+# 安装中文分词器IKAnalyzer，并重新启动
+docker exec -it elasticsearch /bin/bash
+
+#此命令需要在容器中运行，如果成功，后面两个则不需要，直接重启容器即可
+elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.6.2/elasticsearch-analysis-ik-7.6.2.zip
+
+
+# 容器中直接下载安装可能会报错，注意版本要保持一致，可以在宿主机下载后复制到容器中，
+docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearch:/usr/share/elasticsearch
+
+# 安装中文分词器
+elasticsearch-plugin install /usr/share/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip
+
+docker restart elasticsearch
 ```
 
