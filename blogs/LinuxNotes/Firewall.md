@@ -19,7 +19,7 @@ Linux防火墙，作为公网和内网之间的保护屏障，在保障数据安
 
 # firewall
 
-| 指令                                                         | 备注               |
+| 指令                                                         | 说明               |
 | ------------------------------------------------------------ | ------------------ |
 | `systemctl start firewalld.service`                          | 开启防火墙         |
 | `systemctl stop firewalld.service`                           | 停止防火墙         |
@@ -50,9 +50,14 @@ cat /etc/firewalld/zones/public.xml
 
 :::
 
-​	
-
 # iptables
 
+| 指令                                                         | 说明                      |
+| ------------------------------------------------------------ | ------------------------- |
+| `iptables -V`                                                | 查看版本号                |
+| `service iptables start | stop | restart`                    | iptables 启动、停止、重启 |
+| `service iptables save`                                      | 保存iptables规则          |
+| `iptables --list`                                            | 查看iptables规则          |
+| `iptables -A INPUT -i eth0 -p tcp --dport 80 -m state --state NEW,ESTABLISHED -j ACCEPT ` | 追加规则                  |
 
 
