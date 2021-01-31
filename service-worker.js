@@ -27,7 +27,7 @@ self.addEventListener('message', (event) => {
 self.__precacheManifest = [
   {
     "url": "404.html",
-    "revision": "0d56d00c20ec95b996aad285dd25e346"
+    "revision": "8909620ebae0bd2a21143cbc4b9852af"
   },
   {
     "url": "assets/css/0.styles.9e92e356.css",
@@ -318,8 +318,8 @@ self.__precacheManifest = [
     "revision": "ddc8580439f8b990f11aa005cea93e81"
   },
   {
-    "url": "assets/js/38.919c317b.js",
-    "revision": "16d48548a37a3ce6c85c66a2a5e9451e"
+    "url": "assets/js/38.0550d421.js",
+    "revision": "fc73215179bae93f1d7f774cddfed524"
   },
   {
     "url": "assets/js/39.a457c2a8.js",
@@ -342,8 +342,8 @@ self.__precacheManifest = [
     "revision": "3f7535e2cbca04ba76dcb4b35b59234c"
   },
   {
-    "url": "assets/js/43.7f133886.js",
-    "revision": "9fe86e797308b3d776195a283efe438a"
+    "url": "assets/js/43.46f5e050.js",
+    "revision": "3ddebe5b779fc0907b97807115184b33"
   },
   {
     "url": "assets/js/44.59e91081.js",
@@ -430,8 +430,8 @@ self.__precacheManifest = [
     "revision": "3f699e2f7435e907f91473a2b7cf5b38"
   },
   {
-    "url": "assets/js/app.34b05f03.js",
-    "revision": "a48c799ff039afb6a10bef28f1d9c40b"
+    "url": "assets/js/app.889e1461.js",
+    "revision": "f795c82d50b62329845a8b9c9c2bedc9"
   },
   {
     "url": "avatar.jpg",
@@ -443,215 +443,215 @@ self.__precacheManifest = [
   },
   {
     "url": "blogs/BigData/Flume.html",
-    "revision": "814fa277483af1997df47937987cf89f"
+    "revision": "36cc4026decc5ee5dd403ab94b2ceead"
   },
   {
     "url": "blogs/BigData/Grafana.html",
-    "revision": "feb7d3236fb521895d484679f6a2d1bc"
+    "revision": "a6809b34600fc35c421a4e23b0f341d5"
   },
   {
     "url": "blogs/BigData/influxDB.html",
-    "revision": "38f64042d52c69c5fcc371a3315f7233"
+    "revision": "374d34ef99879851e0b1b68a3dafd78b"
   },
   {
     "url": "blogs/BigData/Kafka.html",
-    "revision": "b4d6d4c0a9ebc3a4c1da000f2c088827"
+    "revision": "5f46d77bec4f33fc8947b521224edef8"
   },
   {
     "url": "blogs/BigData/KafkaEagle.html",
-    "revision": "8cc646c2c453c2c219f06c8b860b995c"
+    "revision": "a9c274487efd88157c3d998fe64f9a57"
   },
   {
     "url": "blogs/BigData/KafkaManager.html",
-    "revision": "f8d65cb8e9dc274bd93d26b8eae17954"
+    "revision": "ed23b84aa4b681362ae8e3e297cbf3eb"
   },
   {
     "url": "blogs/BigData/RabbitMQAndKafka.html",
-    "revision": "b0999b87635c14526f6f666cad03f88c"
+    "revision": "5c335212782160602d1e4e8e8de34bdf"
   },
   {
     "url": "blogs/BigData/Spark.html",
-    "revision": "3876af7827a1934ff65850c197350a88"
+    "revision": "9f659d81d2ea0d8519602d4fc76543bd"
   },
   {
     "url": "blogs/BigData/StreamProcessing.html",
-    "revision": "a32c4d5faba0b3d1387bf6419149bcf4"
+    "revision": "da5c3755690d4e390293845ecffe2c5c"
   },
   {
     "url": "blogs/BigData/Zookeeper.html",
-    "revision": "db9cb3a9e9e16051527798bfc6cddd24"
+    "revision": "a5a0b05ce54f72269f3d6c7f3c22ba98"
   },
   {
     "url": "blogs/DevTools/Git.html",
-    "revision": "03ea875d05ec074214bbf71c27c5484c"
+    "revision": "24bd156bb2c39ed7a414b97e713b2f73"
   },
   {
     "url": "blogs/DevTools/IDEA.html",
-    "revision": "719f06fc37a67e6c3979131f13bc1670"
+    "revision": "22fe34683ba4600b0cb9d6feed89a61a"
   },
   {
     "url": "blogs/DevTools/IDEAShortcut.html",
-    "revision": "1eaec8e30ff1cd22bf0f4e7ea5d23565"
+    "revision": "8b4fd82fd1ec3535df1b0db03b264d3d"
   },
   {
     "url": "blogs/DevTools/Maven.html",
-    "revision": "091040008074c2be82df0cdf69710cb9"
+    "revision": "36497b2f0e2893e564b19b60435520c8"
   },
   {
     "url": "blogs/DevTools/VMtoCentos7.html",
-    "revision": "ce143da18349088345da5cba28056a15"
+    "revision": "f076a86d97ce9843fa2518f02e0e7955"
   },
   {
     "url": "blogs/DevTools/VScode.html",
-    "revision": "49793f3e47fc981ffc611c252f4ccb08"
+    "revision": "89899af8f87a4de702191dfd122e9014"
   },
   {
     "url": "blogs/DevTools/WSL2.html",
-    "revision": "f3ac5f08a1a68b8300db93fd9f35a2d7"
+    "revision": "50a86386e3990cc78a9e9de93803ea73"
   },
   {
     "url": "blogs/Framework/Docker.html",
-    "revision": "549550c8bfda300dbc678d7a6b53dde3"
+    "revision": "f43fddf837bcac478b2dd69ef519020c"
   },
   {
     "url": "blogs/Framework/Logback.html",
-    "revision": "154816ba6d09145b25c4223b5fa69e42"
+    "revision": "fe9762b15939d4f7d1ad30c53f5201d6"
   },
   {
     "url": "blogs/Framework/Lombok.html",
-    "revision": "aa267d50e8f9b0193201a0369dc321fe"
+    "revision": "c87409547dc8239923b20e9e0425d027"
   },
   {
     "url": "blogs/Framework/Mysql.html",
-    "revision": "721d0321af57c2c1d63f3d8cc58c82d3"
+    "revision": "92ca978918562e0837b552b16a16d877"
   },
   {
     "url": "blogs/Framework/SpringBoot.html",
-    "revision": "60837bb5eb66d0b85e6075c1fbe9ab0e"
+    "revision": "efb029e8e6d0a71420e2e7895de6a077"
   },
   {
     "url": "blogs/index.html",
-    "revision": "2ac421c630b0f79806b2e70d271e2f7b"
+    "revision": "a2b2b45eac9946b13a71fdf241847030"
   },
   {
     "url": "blogs/JavaNotes/JDK8NewFeatures.html",
-    "revision": "0f4aedf883b6e125f207c098751cb488"
+    "revision": "13e86b0e7361060adc28f142e9f12eae"
   },
   {
     "url": "blogs/JavaNotes/RESTful.html",
-    "revision": "cfc60e7e272355e6c421cc9092adf5a5"
+    "revision": "0a102466572e1f7b63f71957ff48d289"
   },
   {
     "url": "blogs/JavaNotes/RestTemplate.html",
-    "revision": "773ce19514af9cbeb1ab962cbeb6dcae"
+    "revision": "76c162a916e31b21d5341b22b5c8f429"
   },
   {
     "url": "blogs/JavaNotes/SpringIOCAOP.html",
-    "revision": "aa3f89337f1d284ed00e0a2b79c04c8f"
+    "revision": "f9a163a73a1b002676e073575c911e36"
   },
   {
     "url": "blogs/JavaNotes/TimeAndDateConversion.html",
-    "revision": "fcb3872dfff240cf4b706e039b0d5985"
+    "revision": "c49884b607b22dbd3aea8beaca250010"
   },
   {
     "url": "blogs/LinuxNotes/Bash.html",
-    "revision": "1b668b6252aa84a9430364161e7322fd"
+    "revision": "3a1559d3623ef174e1aa2a08f1a302ea"
   },
   {
     "url": "blogs/LinuxNotes/Firewall.html",
-    "revision": "a8295dd1403337a5041bc28170dedb97"
+    "revision": "d7894e09c52fc60162805ff06775dfd5"
   },
   {
     "url": "blogs/LinuxNotes/Gitlab_CI.html",
-    "revision": "fb9ee5d0cebb693e2eb33d601ea45297"
+    "revision": "2856aa1a853a26cc058d0b916a1c94ce"
   },
   {
     "url": "blogs/LinuxNotes/Gitlab-runner.html",
-    "revision": "5c2a449c837b70c2294bb5373389f52d"
+    "revision": "7b672eb08c630955993d1648e4164a03"
   },
   {
     "url": "blogs/LinuxNotes/Gitlab.html",
-    "revision": "b98b094f46b066910e8794f3ec61ed44"
+    "revision": "3cec5854217e832002cfd1752002f3df"
   },
   {
     "url": "blogs/LinuxNotes/Linux.html",
-    "revision": "efeb6564d2ea63c5533cd56b76d297bd"
+    "revision": "79a1525f5faa71a11391adbf080fac86"
   },
   {
     "url": "blogs/Other/Interview.html",
-    "revision": "70cef0c5a435ad75ce3e77f632dafe14"
+    "revision": "0135f2af156ad53750a2dc6d2f1983d8"
   },
   {
     "url": "blogs/Other/Projects-demo.html",
-    "revision": "c3007eae94cc560e02fa399cf2d53476"
+    "revision": "5d8e97454b82268989941dc038d2df2c"
   },
   {
     "url": "blogs/Other/SoftwareSummary.html",
-    "revision": "3c12c514cb4133607873a4f361a2817e"
+    "revision": "23c8a5df451ec4d9abe06aec5a27d2cb"
   },
   {
     "url": "blogs/StudyNotes/Apache.html",
-    "revision": "293069f383d90b6377e90f072ff019dc"
+    "revision": "3f80a7bf624ae7483a134a1e7e048db9"
   },
   {
     "url": "blogs/StudyNotes/Cmd.html",
-    "revision": "a7ffaa399fa87d19bbd576bdcceaf4f8"
+    "revision": "1e6f0c854f8f5fdc54f0a44f0b5a9a71"
   },
   {
     "url": "blogs/StudyNotes/FreeDomainName.html",
-    "revision": "c45cec722c219e13240cf3419db33d4f"
+    "revision": "9c9d9148d0d711f6d84d56267cb43c05"
   },
   {
     "url": "blogs/StudyNotes/GithubAction.html",
-    "revision": "6b812344e1425ac2d9c9b292b829814d"
+    "revision": "f0a6925bfb609a3d8b60e3c2127211f1"
   },
   {
     "url": "blogs/StudyNotes/IntranetPenetration.html",
-    "revision": "1246201413f89c8dc47d831948f7a38b"
+    "revision": "7ea46cdf7165ddb95b8c0626c10cc4d8"
   },
   {
     "url": "blogs/StudyNotes/MavenSettings.html",
-    "revision": "0a30b9c7ddf55e83e4c5c327f56383f0"
+    "revision": "8500fd16ce7bda1e7641c00caa92cb40"
   },
   {
     "url": "blogs/StudyNotes/OneManager.html",
-    "revision": "1d3978ffdd5959a78c5f412fbc0a58e1"
+    "revision": "85984893a749c10a0c48c7eaf8d11452"
   },
   {
     "url": "blogs/StudyNotes/vuepress.html",
-    "revision": "8caebbe91bf3da0dd4aed866dfaeff3a"
+    "revision": "adb11b1447c496fbffab1617be7553fc"
   },
   {
     "url": "categories/BigData/index.html",
-    "revision": "b4b5c6a79428a2401e7ab5ad94871776"
+    "revision": "f14851ef3d80721c11aab70a7135fea0"
   },
   {
     "url": "categories/DevTools/index.html",
-    "revision": "2b64ba9c8ee90b26620b0130a6858bf6"
+    "revision": "ba320520712d0886886a35b70ee9a531"
   },
   {
     "url": "categories/Framework/index.html",
-    "revision": "be444056cdda3388a7682eb8c52dfd78"
+    "revision": "0eb3cbf44580953bd343a7a66290256e"
   },
   {
     "url": "categories/index.html",
-    "revision": "80d5d5309902c7993b9e8b867145b27b"
+    "revision": "8e3458dd89dd648cf9f2402e59e1432f"
   },
   {
     "url": "categories/JavaNotes/index.html",
-    "revision": "7014fca69614ec4ee8f722e165fd229f"
+    "revision": "371ee2265aee10015ce63ec17ff30fb9"
   },
   {
     "url": "categories/LinuxNotes/index.html",
-    "revision": "7feb64b8985ea9a255af6e3813faa490"
+    "revision": "f4ca27571b2248d08eb49ee9b55c43fa"
   },
   {
     "url": "categories/Other/index.html",
-    "revision": "cabf0d018409bed44f32a4e90c6aeb98"
+    "revision": "ea5e9e69c446c9f3c9d6cfda0db289a4"
   },
   {
     "url": "categories/StudyNotes/index.html",
-    "revision": "e517aa94b1bd10ed18cbd3939a523730"
+    "revision": "153865d7971c43b411b937b75d997c00"
   },
   {
     "url": "icon_vuepress_hjwu.png",
@@ -663,7 +663,7 @@ self.__precacheManifest = [
   },
   {
     "url": "index.html",
-    "revision": "02bed197d6a9a2cbd893e43202654142"
+    "revision": "d0f399c148f225887354aa34e9b47759"
   },
   {
     "url": "js/jquery-3.5.1.min.js",
@@ -683,215 +683,215 @@ self.__precacheManifest = [
   },
   {
     "url": "tag/AOP/index.html",
-    "revision": "2b5507e86082bda5764167de830d0b43"
+    "revision": "be9f17b5630f1e4ab958e3ce5c0036e7"
   },
   {
     "url": "tag/Apache/index.html",
-    "revision": "1a3aa64dc8a5b1b97faefb7fa357608f"
+    "revision": "eaf906739c3a27b8b5ce44a504d80e46"
   },
   {
     "url": "tag/bash/index.html",
-    "revision": "99ddeb745e3df00579a0ddb7af159bec"
+    "revision": "abdf21fec465b930f340cc3ed4d016e4"
   },
   {
     "url": "tag/CI/index.html",
-    "revision": "512e2b3d6dbda100e043eee651bafb58"
+    "revision": "42af86710805b2fcea4cb9d503445fe2"
   },
   {
     "url": "tag/cmd/index.html",
-    "revision": "ae1f19d343e81f7f4d5e7aee940b4b2c"
+    "revision": "36d9db16399ad179fbd02718186d0ada"
   },
   {
     "url": "tag/Date/index.html",
-    "revision": "68a5bc580a95a11b2cb9d2bd031c4a1c"
+    "revision": "4960e3c32d4181fd2aa14abae4fac798"
   },
   {
     "url": "tag/Docker/index.html",
-    "revision": "f30713eb99730bc5ee662f678ae1c38c"
+    "revision": "fea16455a32065cbc0875470fecabb82"
   },
   {
     "url": "tag/domain/index.html",
-    "revision": "4f96a887e32717d36b4378539dab2bc7"
+    "revision": "820fb929ae53ffe5a5ea3b9f9f4dd019"
   },
   {
     "url": "tag/firewall/index.html",
-    "revision": "93bf0d00d3a031ed00a1ec6fa00bead3"
+    "revision": "bc5bd7ab82de99501a169e8c60fc3576"
   },
   {
     "url": "tag/Flink/index.html",
-    "revision": "edc6bc562b266fdebbe3f9ed8fe2f141"
+    "revision": "95ca25552068552890c5e47cfaf72709"
   },
   {
     "url": "tag/Flume/index.html",
-    "revision": "0c5e47cd55b3a29f58192724a0a5d311"
+    "revision": "9891613439978669e00f15e843c36aa3"
   },
   {
     "url": "tag/Git/index.html",
-    "revision": "ccd8d19f21cd25516bfa25dc5e81e4c3"
+    "revision": "98d6232c2c3fffc46f98f22a6ae3de57"
   },
   {
     "url": "tag/GithubActions/index.html",
-    "revision": "b4571cdb557a58f44c0ef5e21791a355"
+    "revision": "4c0b7e931db96758efdf28fc0841bdd0"
   },
   {
     "url": "tag/gitlab/index.html",
-    "revision": "21f6a4d242105089cd7c65f277399e42"
+    "revision": "6a37ef38a469fa83affa97792849a61a"
   },
   {
     "url": "tag/Grafana/index.html",
-    "revision": "af7610c7d4d40307ecd4d64628e1b32c"
+    "revision": "a4a7d6a29d32948d67a3f6ab64fdac87"
   },
   {
     "url": "tag/heroku/index.html",
-    "revision": "2a77cd718f39f5dd2887961559cc5739"
+    "revision": "8ec6af512c015e7a711f0f7774c8aa5b"
   },
   {
     "url": "tag/IDEA/index.html",
-    "revision": "8632d2263f1ba0362da5cccaa7e4a816"
+    "revision": "1b07ec0158b5bd0d1c59cccf95d4cd18"
   },
   {
     "url": "tag/index.html",
-    "revision": "d3c26417beee7bd0518f88deb1fe816c"
+    "revision": "ed8d1f94791b38e001af5174d621c170"
   },
   {
     "url": "tag/influxDB/index.html",
-    "revision": "e43a741e2b8f7101e757a9c66e637d07"
+    "revision": "1eda02fb3873ebcd16619fdeacb5c5cc"
   },
   {
     "url": "tag/IOC/index.html",
-    "revision": "e56016db0df4fbf7e730ec2e232d1c6a"
+    "revision": "38c8b8e023e8f11f5d5442d575a02bd6"
   },
   {
     "url": "tag/iptables/index.html",
-    "revision": "d86bcc5464a09904116144488536221c"
+    "revision": "1ddb75366cc3641b58c5c9eaf753d094"
   },
   {
     "url": "tag/JDK8/index.html",
-    "revision": "737b2cdb291467b0af78a8042dc3b380"
+    "revision": "ec1c7a02d1d40552db1e2a5c83280332"
   },
   {
     "url": "tag/Kafka Eagle/index.html",
-    "revision": "fa45911779f306ff7b71c6eff8f8e893"
+    "revision": "a827f7a65c4dac48e77633773198186e"
   },
   {
     "url": "tag/kafka/index.html",
-    "revision": "3ae858170465a2038e6e7923d40a6a0c"
+    "revision": "560c3edfe9130ed5dc83588006001eb0"
   },
   {
     "url": "tag/Kafka/index.html",
-    "revision": "a48566f1b6d130b994cde258ec5b3a8c"
+    "revision": "b4d525f59da680137071f4aba3b573d6"
   },
   {
     "url": "tag/KafkaManager/index.html",
-    "revision": "b5121ca07b11bcfe562f70f990b40cde"
+    "revision": "502bf41ac05b268f72b54278e1f0b45f"
   },
   {
     "url": "tag/linux/index.html",
-    "revision": "cd66af3b4c04696785b7bf0436cac9b9"
+    "revision": "2c6f6325f41dd4dc8059a6c9f5d3486a"
   },
   {
     "url": "tag/Linux/index.html",
-    "revision": "9db1e844d84ddb0428f5da3b43bf2386"
+    "revision": "c17b5450e6b33695d131143f83a00856"
   },
   {
     "url": "tag/LocalDate/index.html",
-    "revision": "573bc00968fa1fa9bad27fbaa21e1eee"
+    "revision": "d43b707deee71f769513a81d14cbadaf"
   },
   {
     "url": "tag/LocalDateTime/index.html",
-    "revision": "5e4956d9234a81b1fcdbc6b1ef07c461"
+    "revision": "977aa6fadf214355cfacbcbbaeb3f50e"
   },
   {
     "url": "tag/Logback/index.html",
-    "revision": "96e30c100a5fa54340a2949733e2cec1"
+    "revision": "56655486238504e85bbc43c10420b80f"
   },
   {
     "url": "tag/Lombok/index.html",
-    "revision": "372695ef47100547ec8dae116eed7e4b"
+    "revision": "96fd29cb0950212f70ec7d691d4314e7"
   },
   {
     "url": "tag/Maven/index.html",
-    "revision": "33ad1e28afbf6529ed8f48bf739967de"
+    "revision": "975e0682435100d5fb3c5fc1f1c36d2f"
   },
   {
     "url": "tag/natapp/index.html",
-    "revision": "97df24c6f71b27a6eeb5d6331e1a661c"
+    "revision": "28c1e9309f02ebf348d1ae52e0e603c9"
   },
   {
     "url": "tag/OneDrive/index.html",
-    "revision": "1c541bd3cf09549b035417be70129300"
+    "revision": "d2f26c5def383477b83ac6c3c5e502af"
   },
   {
     "url": "tag/php/index.html",
-    "revision": "6f4fff0bf9a5270982d1dae3cdeaf9c0"
+    "revision": "d535ea3ad4e16d0feed96a990a837421"
   },
   {
     "url": "tag/rabbitMQ/index.html",
-    "revision": "7286bafb951c89a9689941ed880624a1"
+    "revision": "3e070b7ee56a953c10c13d1e6dc3af59"
   },
   {
     "url": "tag/RESTful/index.html",
-    "revision": "c338e7ecbf39eb43acac01bffbd529a3"
+    "revision": "4fef5209c766035cf40707b45a32b6e7"
   },
   {
     "url": "tag/RestTemplate/index.html",
-    "revision": "ba5366ef1925bf522778efc5052530d2"
+    "revision": "d2cb7a591088cf58e07b268e7b80de52"
   },
   {
     "url": "tag/runner/index.html",
-    "revision": "8b27d627515ebc617bf940e1c2f7bbf4"
+    "revision": "a921073f8e57c5f1f04fe25a1325967b"
   },
   {
     "url": "tag/Spark/index.html",
-    "revision": "1199f22c13c14d67787b2fdebc6ed05f"
+    "revision": "1bdde713aa4fd2f9325c2fbe7d53da62"
   },
   {
     "url": "tag/SpringBoot/index.html",
-    "revision": "b252e191c29e5f4afc20f2267fc49d25"
+    "revision": "352cf8e72ec5bb2d89dc5a6f4afa6772"
   },
   {
     "url": "tag/SQL/index.html",
-    "revision": "9f861eed23cf959c03e1011385a02342"
+    "revision": "1fb814f70537dd79bd191c9911d2714e"
   },
   {
     "url": "tag/Storm/index.html",
-    "revision": "410634b0d05734ef1e8cac76681cfd3a"
+    "revision": "5ad7f2a62cd80d69ce1a800d891ea73a"
   },
   {
     "url": "tag/tools/index.html",
-    "revision": "32e30a325a5a5eeb8278aafba07da847"
+    "revision": "07e8f77e93309e47d712988f24e2270c"
   },
   {
     "url": "tag/ufw/index.html",
-    "revision": "04388e23d52c211353bee7094a45f659"
+    "revision": "8d9b23f254c4d0b77158fc38d41f1c1f"
   },
   {
     "url": "tag/Valine/index.html",
-    "revision": "382d9d9d092d688c6e09eea07866c8d4"
+    "revision": "0c4133402aac245a651fe5c3bc5cfa03"
   },
   {
     "url": "tag/VMware/index.html",
-    "revision": "d2bfac7d1417bb15bffedf4f67cc9b4c"
+    "revision": "f82bc3866979c082314ff6eb85a8811b"
   },
   {
     "url": "tag/VScode/index.html",
-    "revision": "95cb35ad8dbbe884559c3e42a476158b"
+    "revision": "5ea6af63fd45b85cc7a3e6f3f055d126"
   },
   {
     "url": "tag/vuepress/index.html",
-    "revision": "3e81564518dc366ebd0b525b12bff8c3"
+    "revision": "0b4fadd95bba26d29ff8f17062e217ac"
   },
   {
     "url": "tag/WSL2/index.html",
-    "revision": "698ecf11794c5ea184a12d614716c592"
+    "revision": "41938183e71965f609329979e9e62919"
   },
   {
     "url": "tag/zookeeper/index.html",
-    "revision": "5493f30ff99ca1585b54c3eabacc9f11"
+    "revision": "4f2c036db18c4bec948a4f4199b8e329"
   },
   {
     "url": "timeline/index.html",
-    "revision": "7ba572c6c398e3291b55d1dce71d4449"
+    "revision": "bc824780b86fe810a64de4340d442319"
   }
 ].concat(self.__precacheManifest || []);
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
