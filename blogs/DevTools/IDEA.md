@@ -94,7 +94,7 @@ web工程热更新插件；无法安装可选择网上下载插件包，离线�
 
 ### 3. 其他
 
-#### 3.1 springboot启动报错
+#### 3.1 springboot启动报错启动报错
 
 ```shell
 Error running 'App': Command line is too long. Shorten command line for App
@@ -102,11 +102,30 @@ Error running 'App': Command line is too long. Shorten command line for App
 
 解决：
 
-在 `.idea\workspace.xml`，目录下添加改节点，**重新启动报错1，需要再重新打包一次**
+在 `.idea\workspace.xml`，目录下添加改节点，重新启动报错1，需要再重新打包一次
 
 ```xml
 <component name="PropertiesComponent"> 
 <property name="dynamic.classpath" value="true" />
+```
+
+* 加载mysql驱动显示以下信息
+
+```javascript
+Loading class com.mysql.jdbc.Driver'. This is deprecated. The new driver class is com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
+```
+
+解决：
+
+配置文件中驱动升级为`com.mysql.cj.jdbc.Driver`，完整配置如下：
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=CST
+    username: root
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
 ```
 
 
