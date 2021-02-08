@@ -30,6 +30,9 @@ const commonUtils = {
         if(filenames == '/JavaNotes/'){
             return "Java学习笔记";
         }
+        if(filenames == '/SpringCloudNotes/'){
+            return "SpringCloud学习笔记";
+        }
     }
 };
 
