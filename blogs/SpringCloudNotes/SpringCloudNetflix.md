@@ -31,9 +31,11 @@ Netflix OSS 开源组件集成，包括Eureka、Hystrix、Ribbon、Feign、Zuul�
 
 ### [Spring Cloud Eureka：服务注册与发现](http://www.macrozheng.com/#/cloud/eureka?id=spring-cloud-eureka：服务注册与发现)
 
+#### **Eureka**简介
+
 微服务架构需要有一个注册中心，所有的微服务都会在注册中心注册自己的地址和端口信息，每个微服务都会定时从注册中心获取服务列表，同时汇报自己的运行情况，保证整个微服务的正常运行，Eureka就是实现这一套流程的组件。
 
-**搭建注册中心**
+#### **搭建注册中心**
 
 * IDEA初始化一个SpringBoot应用，可以在创建的选择组件：`Spring Cloud Discovery -> Eureka Server`，或者创建后手动添加pom
 
@@ -64,7 +66,7 @@ eureka:
     enable-self-preservation: false #关闭保护模式
 ```
 
-**搭建客户端**
+#### **搭建客户端**
 
 * 依赖
 
@@ -98,13 +100,13 @@ eureka:
 
 访问注册中心`http://localhost:8001`即可客户端成功注册
 
-**搭建注册中心集群**
+#### **搭建注册中心集群**
 
 由于多个微服务都是注册到注册中心通过服务列表来相互调用，一旦注册中心宕机，会导致所有服务都出现问题，所以我们需要多个注册中心来保证服务正常运行
 
 * 根据注册中心配置文件新增一个`application-replica1.yml`、`application-replica2.yml`配置文件，根据下面配置修改端口号，hostname（为了在注册中心里面好区分），注册中心的地址即可
 
-  **注意：**注册中心地址使用的 `replica2`这样的域名，可以在hosts里面修改下文件
+  **注意**：注册中心地址使用的 `replica2`这样的域名，可以在hosts里面修改下文件
 
   ```properties
   127.0.0.1 replica2
@@ -134,7 +136,7 @@ eureka:
 
 ![](./images/springcloud_arch01.png)
 
-**Eureka常用配置**
+#### **Eureka常用配置**
 
 ```yaml
 eureka:
@@ -157,3 +159,395 @@ eureka:
 ```
 
 ### [Spring Cloud Ribbon：负载均衡的服务调用](http://www.macrozheng.com/#/cloud/ribbon?id=spring-cloud-ribbon：负载均衡的服务调用)
+
+#### Ribbon简介
+
+在微服务架构中， 我们服务一般都会部署多个，用户请求进来会调用哪一个就需要负载均衡平衡，当我们使用RestTemplate来调用其他服务时，Ribbon可以很方便的实现负载均衡功能。
+
+**[RestTemplate简单使用](https://hjwu.gq/blogs/JavaNotes/RestTemplate.html)**
+
+#### **创建user-service客户端模块**
+
+供 **Ribbon** 提供服务使用，同时修改配置文件，启动 **user-service** 8020，8021两个端口，注册到注册中心8001中，user-service 中写一些常见的CURD接口即可
+
+* `application.yml`配置
+
+```yaml
+server:
+  port: 8201
+spring:
+  application:
+    name: user-service
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+```
+
+#### **创建ribbon-service模块**
+
+通过`ribbon-service` 服务的 **RestTemplate**直接调用 `user-service` 模块的接口即可
+
+* 新增依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+</dependency>
+```
+
+* `application.yml`配置
+
+```yaml
+server:
+  port: 8301
+spring:
+  application:
+    name: ribbon-service
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+service-url:
+  user-service: http://user-service    # 对应注册中心中 user-server 服务的name地址
+```
+
+* 负载均衡使用，在创建`RestTemplate` bean基础上添加注解 `@LoadBalanced` 即可
+
+```java
+@Configuration
+public class RibbonConfig {
+
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate(){
+        return new RestTemplate();
+    }
+}
+```
+
+* Ribbon **全局配置**与**指定服务配置**
+
+```yaml
+user-service: # 指定user-service 服务配置，全局配置去除这行即可，我实测全局配置未生效，不知道为啥
+  ribbon:
+    ConnectTimeout: 1000 #服务请求连接超时时间（毫秒）
+    ReadTimeout: 3000 #服务请求处理超时时间（毫秒）
+    OkToRetryOnAllOperations: true #对超时请求启用重试机制
+    MaxAutoRetriesNextServer: 1 #切换重试实例的最大个数
+    MaxAutoRetries: 1 # 切换实例后重试最大次数
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #修改负载均衡算法
+```
+
+::: details 修改负载均衡算法
+
+| 参数 `com.netflix.loadbalancer.XXX` | 说明                                                         |
+| ----------------------------------- | ------------------------------------------------------------ |
+| `RandomRule`                        | 从提供服务的实例中以随机的方式                               |
+| `RoundRobinRule`                    | 以线性轮询的方式，就是维护一个计数器，从提供服务的实例中按顺序选取，第一次选第一个，第二次选第二个，以此类推，到最后一个以后再从头来过； |
+| `RetryRule`                         | 在RoundRobinRule的基础上添加重试机制，即在指定的重试时间内，反复使用线性轮询策略来选择可用实例； |
+| `WeightedResponseTimeRule`          | 对RoundRobinRule的扩展，响应速度越快的实例选择权重越大，越容易被选择； |
+| `BestAvailableRule`                 | 选择并发较小的实例                                           |
+| `AvailabilityFilteringRule`         | 先过滤掉故障实例，再选择并发较小的实例                       |
+| `ZoneAwareLoadBalancer`             | 采用双重过滤，同时过滤不是同一区域的实例和故障实例，选择并发较小的实例 |
+
+::: 
+
+* 通过创建bean进行全局配置
+
+```java
+@Bean
+public IRule customRule(){
+   return new RandomRule();  // 随机
+}
+```
+
+启动注册中心`eureka-service`，启动`user-service`8020、8021，客户端，启动`ribbon-service`服务
+
+调用`ribbon-service`服务能看到`user-service`两个端口的控制台交替打印即可，可以尝试其他负载均衡策略，查看控制台变化
+
+### [Spring Cloud Hystrix：服务容错保护](http://www.macrozheng.com/#/cloud/hystrix?id=spring-cloud-hystrix：服务容错保护)
+
+#### Hystrix简介
+
+在微服务架构中，服务与服务之间通过远程调用的方式进行通信，一旦某个被调用的服务发生了故障，其依赖服务也会发生故障，此时就会发生故障的蔓延，最终导致系统瘫痪。Hystrix实现了断路器模式，当某个服务发生故障时，通过断路器的监控，给调用方返回一个错误响应，而不是长时间的等待，这样就不会使得调用方由于长时间得不到响应而占用线程，从而防止故障的蔓延。Hystrix具备**服务降级、服务熔断、线程隔离、请求缓存、请求合并及服务监控**等强大功能。
+
+#### **创建一个hystrix-service模块**
+
+* 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+</dependency>
+```
+
+* `application.yml`配置
+
+```yaml
+server:
+  port: 8401
+spring:
+  application:
+    name: hystrix-service
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+service-url:
+  user-service: http://user-service
+```
+
+* 启动类添加注解`@EnableCircuitBreaker`开启断路器功能
+
+#### 服务熔断、服务降级、服务限流
+
+  微服务是完成一个单一的业务功能，这样做的好处是可以做到解耦，每个微服务可以独立演进。但是，一个应用可能会有多个微服务组成，微服务之间的数据交互通过远程过程调用完成。服务之间调用链路太长，相互调用，如果其中一个服务调用时间太长，或者不可用，大量请求堆积，占用系统资源，进而导致系统崩溃，所谓的"雪崩效应"
+
+**服务熔断**：当检测到某个服务多次超时或相应时间太长，会对该服务降级处理，熔断该服务的调用，快速返回错误详细信息，避免长时间等待和资源占用，当检测到节点相应正常后，恢复调用
+
+**服务降级**：从整体负荷考虑，服务分优先级，保证核心业务，暂时停止非核心业务
+
+**服务限流**：限制并发请求量，超过阈值拒绝请求
+
+整点秒杀活动，服务限流是指允许能负载的请求量进来，多余的请求拒绝；服务降级是整点秒杀时对用户注册等非核心的业务做降级处理；服务熔断是当秒杀活动访问太多导致超时，熔断该服务，并作降级处理，返回用户友好提示信息
+
+* 服务降级演示
+
+`UserHystrixController`添加用于测试服务降级的接口：
+
+```java
+@GetMapping("/testFallback/{id}")
+public CommonResult testFallback(@PathVariable Long id) {
+    return userService.getUser(id);
+}
+```
+
+在UserService中添加调用方法与服务降级方法，方法上需要添加`@HystrixCommand`注解：
+
+```java
+@HystrixCommand(fallbackMethod = "getDefaultUser")
+public CommonResult getUser(Long id) {
+    return restTemplate.getForObject(userServiceUrl + "/user/{1}", CommonResult.class, id);
+}
+
+public CommonResult getDefaultUser(@PathVariable Long id) {
+    User defaultUser = new User(-1L, "defaultUser", "123456");
+    return new CommonResult<>(defaultUser);
+}
+```
+
+#### **验证**
+
+启动`eureka-server`、`user-service`、`hystrix-service`服务；
+
+正常调用`http://localhost:8401/user/testFallback/1`返回
+
+```json
+{
+	data: {
+		id: 1,
+		username: "macro",
+		password: "123456",
+	},
+	message: "操作成功",
+	code: 200,
+}
+```
+
+关闭`user-service`服务，再次调用，服务降级，直接返回预设错误信息
+
+```json
+{
+	data: {
+		id: -1,
+		username: "defaultUser",
+		password: "123456",
+	},
+	message: "操作成功",
+	code: 200,
+}
+```
+
+**[Hystrix的请求缓存](http://www.macrozheng.com/#/cloud/hystrix?id=hystrix的请求缓存)**
+
+**[Hystrix请求合并](http://www.macrozheng.com/#/cloud/hystrix?id=请求合并)**
+
+**[Hystrix Dashboard：断路器执行监控](http://www.macrozheng.com/#/cloud/hystrix_dashboard?id=hystrix-dashboard：断路器执行监控)**
+
+### [Spring Cloud OpenFeign：基于Ribbon和Hystrix的声明式服务调用](http://www.macrozheng.com/#/cloud/feign?id=spring-cloud-openfeign：基于ribbon和hystrix的声明式服务调用)
+
+#### Feign简介
+
+Feign是声明式的服务调用工具，我们只需创建一个接口并用注解的方式来配置它，就可以实现对某个服务接口的调用，简化了直接使用RestTemplate来调用服务接口的开发量。Feign具备可插拔的注解支持，同时支持Feign注解、JAX-RS注解及SpringMvc注解。当使用Feign时，Spring Cloud集成了Ribbon和Eureka以提供负载均衡的服务调用及基于Hystrix的服务容错保护功能。
+
+#### 创建一个feign-service模块
+
+* 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+* `application.yml`配置
+
+```yaml
+server:
+  port: 8701
+spring:
+  application:
+    name: feign-service
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+```
+
+* 启动类上添加注解`@EnableFeignClients`启动**Feign**客户端功能
+
+* **Feigin**客户端**user-service**服务的接口绑定
+
+  创建一个`user-service`接口，内容基于`user-service`服务的**Controller**类修改为接口，保留**springmvc**的注解即可
+
+```java
+// value对应要连接的user-service服务，fallback对应的为user-service降级服务的实现类
+@FeignClient(value = "user-service",fallback = UserFallbackService.class)
+public interface UserService {
+    @PostMapping("/user/create")
+    CommonResult create(@RequestBody User user);
+
+    @GetMapping("/user/{id}")
+    CommonResult<User> getUser(@PathVariable Long id);
+}
+```
+
+* 创建**降级服务**实现类
+
+```java
+@Component
+public class UserFallbackService implements UserService {
+    @Override
+    public CommonResult create(User user) {
+        User defaultUser = new User(-1L, "defaultUser", "123456");
+        return new CommonResult<>(defaultUser);
+    }
+
+    @Override
+    public CommonResult<User> getUser(Long id) {
+        User defaultUser = new User(-1L, "defaultUser", "123456");
+        return new CommonResult<>(defaultUser);
+    }
+}
+```
+
+* 开启日志，打印详细的http请求细节
+
+::: details 日志等级
+
+- **NONE**：默认的，不显示任何日志；
+- **BASIC**：仅记录请求方法、URL、响应状态码及执行时间；
+- **HEADERS**：除了BASIC中定义的信息之外，还有请求和响应的头信息；
+- **FULL**：除了HEADERS中定义的信息之外，还有请求和响应的正文及元数据。
+
+:::
+
+```java
+@Configuration
+public class FeignConfig {
+    @Bean
+    Logger.Level feignLoggerLevel() {
+        return Logger.Level.FULL;
+    }
+}
+```
+
+* **Feign**常用配置，**Feign**中可以直接使用**ribbon**，hystrix配置
+
+```yaml
+feign:
+  hystrix:
+    enabled: true #在Feign中开启Hystrix
+  compression:
+    request:
+      enabled: false #是否对请求进行GZIP压缩
+      mime-types: text/xml,application/xml,application/json #指定压缩的请求数据类型
+      min-request-size: 2048 #超过该大小的请求会被压缩
+    response:
+      enabled: false #是否对响应进行GZIP压缩
+logging:
+  level: #修改日志级别
+    com.macro.cloud.service.UserService: debug
+```
+
+#### 验证
+
+启动`eureka-server`、`user-service`、`feign-service`服务；
+
+访问http://localhost:8701/user/1，`user-service`两端口控制台正常交替打印
+
+关闭两个所有的`user-service`服务，再次访问，返回为降级预设错误
+
+```json
+{
+	data: {
+		id: -1,
+		username: "defaultUser",
+		password: "123456",
+	},
+	message: "操作成功",
+	code: 200,
+}
+```
+
+### [Spring Cloud Zuul：API网关服务](http://www.macrozheng.com/#/cloud/zuul?id=spring-cloud-zuul：api网关服务)
+
+#### Zuul简介
+
+API网关为微服务架构中的服务提供了统一的访问入口，客户端通过API网关访问相关服务。API网关的定义类似于设计模式中的门面模式，它相当于整个微服务架构中的门面，所有客户端的访问都通过它来进行路由及过滤。它实现了**请求路由、负载均衡、校验过滤、服务容错、服务聚合**等功能。
+
+#### 创建一个zuul-proxy模块
+
+* 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+</dependency>
+```
+
+* `application.yml`配置
+
+```yaml
+server:
+  port: 8801
+spring:
+  application:
+    name: zuul-proxy
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+```
+
+* 启动类添加注解`EnableZuulProxy`启用Zuul的API网关功能
+* 
