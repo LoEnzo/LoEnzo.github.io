@@ -500,7 +500,7 @@ logging:
 
 启动`eureka-server`、`user-service`、`feign-service`服务；
 
-访问http://localhost:8701/user/1，`user-service`两端口控制台正常交替打印
+访问`http://localhost:8701/user/1`，`user-service`两端口控制台正常交替打印
 
 关闭两个所有的`user-service`服务，再次访问，返回为降级预设错误
 
@@ -541,7 +541,7 @@ server:
 spring:
   application:
     name: zuul-proxy
-eureka:
+eureka: 	
   client:
     register-with-eureka: true
     fetch-registry: true
@@ -550,4 +550,186 @@ eureka:
 ```
 
 * 启动类添加注解`EnableZuulProxy`启用Zuul的API网关功能
-* 
+* 启动`eureka-server`，两个`user-service`，`feign-service`和`zuul-proxy`来演示Zuul的常用功能
+
+* 配置路由规则：
+
+```yaml
+zuul:
+  routes: #给服务配置路由
+    user-service:
+      path: /userService/**
+    feign-service:
+      path: /feignService/**
+  ignored-services: user-service,feign-service  #关闭默认路由配置
+```
+
+验证接口，因为已经使用了feign，所以可以看到userService两个端口的控制台交替答应成功的日志记录，默认的路由规则就是注册到注册中心的服务名，也就是说访问userService，user-service都能成功调用user-service服务的接口，关闭默认路由后，默认的访问路径就失效了
+
+访问`http://localhost:8801/userService/user/1`，`http://localhost:8801/user-service/user/1`都可以发现请求路由到了user-service上了；
+
+访问`http://localhost:8801/feignService/user/1`，`http://localhost:8801/feign-service/user/1`都可以发现请求路由到了feign-service上了
+
+* 配置路由访问前缀，访问接口底之前加上前缀路径即可
+
+```yaml
+zuul:
+  prefix: /proxy #给网关路由添加前缀
+```
+
+验证：`http://localhost:8801/proxy/userService/user/1`
+
+#### **查看路由信息**
+
+* 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+* `application-yml`配置
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'routes'
+```
+
+* 测试
+
+查看简单路由信息：`http://localhost:8801/actuator/routes/`
+
+查看详细路由信息：`http://localhost:8801/actuator/routes/details`
+
+#### **Header过滤及重定向添加Host(未测试)**
+
+Zuul在请求路由时，默认会过滤掉一些敏感的头信息，以下配置可以防止路由时的Cookie及Authorization的丢失
+
+```yaml
+zuul:
+  sensitive-headers: Cookie,Set-Cookie,Authorization  # 配置过滤敏感的请求头信息，设置为空就不会过滤
+  add-host-header: true                               # 设置为true重定向是会添加host请求头
+```
+
+#### 过滤器
+
+路由与过滤是Zuul的两大核心功能，路由功能负责将外部请求转发到具体的服务实例上去，是实现统一访问入口的基础，过滤功能负责对请求过程进行额外的处理，是请求校验过滤及服务聚合的基础
+
+**Zuul中集中典型的过滤器类型**
+
+| 过滤器    | 说明                                                         | 场景                                                 |
+| --------- | ------------------------------------------------------------ | ---------------------------------------------------- |
+| `pre`     | 在请求被路由到目标服务前执行，                               | 比如权限校验、打印日志等功能；                       |
+| `routing` | 在请求被路由到目标服务时执行，这是使用Apache HttpClient或Netflix Ribbon构建和发送原始HTTP请求的地方； |                                                      |
+| `post`    | 在请求被路由到目标服务后执行                                 | 比如给目标服务的响应添加头信息，收集统计数据等功能； |
+| `error`   | 请求在其他阶段发生错误时执行                                 |                                                      |
+
+**zuul过滤器生命周期**
+
+![](./images/springcloud_zuul01.png)
+
+**自定义过滤器**
+
+添加下面自定义的过滤器，调用`http://localhost:8801/user-service/user/1`即可看到日志生效；
+
+**仿照写了一个其他的过滤器，判断请求是否又accessToken或者其他参数的，没有生效，过滤器理解还不通透。**
+
+::: details Prelog Filter
+
+```java
+package com.macro.cloud.filter;
+
+import com.netflix.zuul.ZuulFilter;
+import com.netflix.zuul.context.RequestContext;
+import com.netflix.zuul.exception.ZuulException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ * Created by macro on 2019/9/9.
+ */
+@Component
+public class PreLogFilter extends ZuulFilter {
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
+    /**
+     * 过滤器类型，有pre、route、post、error四种。
+     */
+    @Override
+    public String filterType() {
+        return "pre";
+    }
+
+    /**
+     * 过滤器执行顺序，数值越小优先级越高。
+     */
+    @Override
+    public int filterOrder() {
+        return 1;
+    }
+
+    /**
+     * 是否进行过滤，返回true会执行过滤。
+     */
+    @Override
+    public boolean shouldFilter() {
+        return true;
+    }
+
+    /**
+     * 自定义的过滤器逻辑，当shouldFilter()返回true时会执行。
+     */
+    @Override
+    public Object run() throws ZuulException {
+        RequestContext requestContext = RequestContext.getCurrentContext();
+        HttpServletRequest request = requestContext.getRequest();
+        String host = request.getRemoteHost();
+        String method = request.getMethod();
+        String uri = request.getRequestURI();
+        LOGGER.info("Remote host:{},method:{},uri:{}", host, method, uri);
+        return null;
+    }
+}
+```
+
+:::
+
+**禁用过滤器**
+
+```yaml
+zuul:
+  PreLogFilter:       # 对应过滤器的名称
+    pre:              # 对应过滤器的类型
+      disable: true   # 是否禁用过滤器，默认为false
+```
+
+**核心过滤器**
+
+::: details 核心过滤器
+
+| 过滤器名称              | 过滤类型 | 优先级 | 过滤器的作用                                                 |
+| ----------------------- | -------- | ------ | ------------------------------------------------------------ |
+| ServletDetectionFilter  | pre      | -3     | 检测当前请求是通过DispatcherServlet处理运行的还是ZuulServlet运行处理的 |
+| Servlet30WrapperFilter  | pre      | -2     | 对原始的HttpServletRequest进行包装                           |
+| FormBodyWrapperFilter   | pre      | -1     | 将Content-Type为application/x-www-form-urlencoded或multipart/form-data的请求包装成FormBodyRequestWrapper对象 |
+| DebugFilter             | route    | 1      | 根据zuul.debug.request的配置来决定是否打印debug日志          |
+| PreDecorationFilter     | route    | 5      | 对当前请求进行预处理以便执行后续操作                         |
+| RibbonRoutingFilter     | route    | 10     | 通过Ribbon和Hystrix来向服务实例发起请求，并将请求结果进行返回 |
+| SimpleHostRoutingFilter | route    | 100    | 只对请求上下文中有routeHost参数的进行处理，直接使用HttpClient向routeHost对应的物理地址进行转发 |
+| SendForwardFilter       | route    | 500    | 只对请求上下文中有forward.to参数的进行处理，进行本地跳转     |
+| SendErrorFilter         | post     | 0      | 当其他过滤器内部发生异常时的会由它来进行处理，产生错误响应   |
+| SendResponseFilter      | post     | 1000   | 利用请求上下文的响应信息来组织请求成功的响应内容             |
+
+:::
+
+#### Ribbon和Hystrix的支持
+
+由于Zuul自动集成了Ribbon和Hystrix，所以Zuul天生就有负载均衡和服务容错能力，我们可以通过Ribbon和Hystrix的配置来配置Zuul中的相应功能，所以可以在配置文件中直接添加Ribbon，Hystrix的配置即可
