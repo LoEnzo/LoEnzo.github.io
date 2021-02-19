@@ -96,6 +96,12 @@ eureka:
 
 * 添加`bootstrap.yml`配置文件
 
+**注意**：之所以要用`bootstrap.yml`，是因为启动**SpringBoot**项目时，会优先读取`bootstrap.yml`里的配置，然后才会读取`application.yml`。如果不通过`bootstrap.yml`里的配置，先从配置中心拉下相应的配置文件，就会报错
+
+**总结**：`bootstrap.yml`（bootstrap.properties）用来在程序引导时执行，应用于更加早期配置信息读取，如可以使用来配置application.yml中使用到参数等；`application.yml`（application.properties) 应用程序特有配置信息，可以用来配置后续各个模块中需使用的公共参数等；`bootstrap.yml` 先于 `application.yml `加载
+
+**典型场景**：当使用 **Spring Cloud Config Server** 的时候，你应该在 `bootstrap.yml` 里面指定 `spring.application.name` 和 `spring.cloud.config.server.git.uri`或者一些加密/解密的信息
+
 ```yaml
 server:
   port: 9001
