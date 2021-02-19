@@ -19,7 +19,7 @@ Spring Cloud Netflix 是在  Netflix OSS 基础上的封装，里面包含有分
 :::
 <!-- more -->
 
-## Spring Cloud Netflix
+# Spring Cloud Netflix
 
 Netflix OSS 开源组件集成，包括Eureka、Hystrix、Ribbon、Feign、Zuul等核心组件。
 
@@ -29,13 +29,13 @@ Netflix OSS 开源组件集成，包括Eureka、Hystrix、Ribbon、Feign、Zuul�
 - Feign：基于Ribbon和Hystrix的声明式服务调用组件；
 - Zuul：API网关组件，对请求提供路由及过滤功能。
 
-### [Spring Cloud Eureka：服务注册与发现](http://www.macrozheng.com/#/cloud/eureka?id=spring-cloud-eureka：服务注册与发现)
+## [Spring Cloud Eureka：服务注册与发现](http://www.macrozheng.com/#/cloud/eureka?id=spring-cloud-eureka：服务注册与发现)
 
-#### **Eureka**简介
+### **Eureka**简介
 
 微服务架构需要有一个注册中心，所有的微服务都会在注册中心注册自己的地址和端口信息，每个微服务都会定时从注册中心获取服务列表，同时汇报自己的运行情况，保证整个微服务的正常运行，Eureka就是实现这一套流程的组件。
 
-#### **搭建注册中心**
+### **搭建注册中心**
 
 * IDEA初始化一个SpringBoot应用，可以在创建的选择组件：`Spring Cloud Discovery -> Eureka Server`，或者创建后手动添加pom
 
@@ -66,7 +66,7 @@ eureka:
     enable-self-preservation: false #关闭保护模式
 ```
 
-#### **搭建客户端**
+### **搭建客户端**
 
 * 依赖
 
@@ -100,7 +100,7 @@ eureka:
 
 访问注册中心`http://localhost:8001`即可客户端成功注册
 
-#### **搭建注册中心集群**
+### **搭建注册中心集群**
 
 由于多个微服务都是注册到注册中心通过服务列表来相互调用，一旦注册中心宕机，会导致所有服务都出现问题，所以我们需要多个注册中心来保证服务正常运行
 
@@ -136,7 +136,7 @@ eureka:
 
 ![](./images/springcloud_arch01.png)
 
-#### **Eureka常用配置**
+### **Eureka常用配置**
 
 ```yaml
 eureka:
@@ -158,15 +158,15 @@ eureka:
     enable-self-preservation: false #关闭eureka服务端的保护机制
 ```
 
-### [Spring Cloud Ribbon：负载均衡的服务调用](http://www.macrozheng.com/#/cloud/ribbon?id=spring-cloud-ribbon：负载均衡的服务调用)
+## [Spring Cloud Ribbon：负载均衡的服务调用](http://www.macrozheng.com/#/cloud/ribbon?id=spring-cloud-ribbon：负载均衡的服务调用)
 
-#### Ribbon简介
+### Ribbon简介
 
 在微服务架构中， 我们服务一般都会部署多个，用户请求进来会调用哪一个就需要负载均衡平衡，当我们使用RestTemplate来调用其他服务时，Ribbon可以很方便的实现负载均衡功能。
 
 **[RestTemplate简单使用](https://hjwu.gq/blogs/JavaNotes/RestTemplate.html)**
 
-#### **创建user-service客户端模块**
+### **创建user-service客户端模块**
 
 供 **Ribbon** 提供服务使用，同时修改配置文件，启动 **user-service** 8020，8021两个端口，注册到注册中心8001中，user-service 中写一些常见的CURD接口即可
 
@@ -186,7 +186,7 @@ eureka:
       defaultZone: http://localhost:8001/eureka/
 ```
 
-#### **创建ribbon-service模块**
+### **创建ribbon-service模块**
 
 通过`ribbon-service` 服务的 **RestTemplate**直接调用 `user-service` 模块的接口即可
 
@@ -271,13 +271,13 @@ public IRule customRule(){
 
 调用`ribbon-service`服务能看到`user-service`两个端口的控制台交替打印即可，可以尝试其他负载均衡策略，查看控制台变化
 
-### [Spring Cloud Hystrix：服务容错保护](http://www.macrozheng.com/#/cloud/hystrix?id=spring-cloud-hystrix：服务容错保护)
+## [Spring Cloud Hystrix：服务容错保护](http://www.macrozheng.com/#/cloud/hystrix?id=spring-cloud-hystrix：服务容错保护)
 
-#### Hystrix简介
+### Hystrix简介
 
 在微服务架构中，服务与服务之间通过远程调用的方式进行通信，一旦某个被调用的服务发生了故障，其依赖服务也会发生故障，此时就会发生故障的蔓延，最终导致系统瘫痪。Hystrix实现了断路器模式，当某个服务发生故障时，通过断路器的监控，给调用方返回一个错误响应，而不是长时间的等待，这样就不会使得调用方由于长时间得不到响应而占用线程，从而防止故障的蔓延。Hystrix具备**服务降级、服务熔断、线程隔离、请求缓存、请求合并及服务监控**等强大功能。
 
-#### **创建一个hystrix-service模块**
+### **创建一个hystrix-service模块**
 
 * 依赖
 
@@ -312,7 +312,7 @@ service-url:
 
 * 启动类添加注解`@EnableCircuitBreaker`开启断路器功能
 
-#### 服务熔断、服务降级、服务限流
+### 服务熔断、服务降级、服务限流
 
   微服务是完成一个单一的业务功能，这样做的好处是可以做到解耦，每个微服务可以独立演进。但是，一个应用可能会有多个微服务组成，微服务之间的数据交互通过远程过程调用完成。服务之间调用链路太长，相互调用，如果其中一个服务调用时间太长，或者不可用，大量请求堆积，占用系统资源，进而导致系统崩溃，所谓的"雪崩效应"
 
@@ -349,7 +349,7 @@ public CommonResult getDefaultUser(@PathVariable Long id) {
 }
 ```
 
-#### **验证**
+### **验证**
 
 启动`eureka-server`、`user-service`、`hystrix-service`服务；
 
@@ -387,13 +387,13 @@ public CommonResult getDefaultUser(@PathVariable Long id) {
 
 **[Hystrix Dashboard：断路器执行监控](http://www.macrozheng.com/#/cloud/hystrix_dashboard?id=hystrix-dashboard：断路器执行监控)**
 
-### [Spring Cloud OpenFeign：基于Ribbon和Hystrix的声明式服务调用](http://www.macrozheng.com/#/cloud/feign?id=spring-cloud-openfeign：基于ribbon和hystrix的声明式服务调用)
+## [Spring Cloud OpenFeign：基于Ribbon和Hystrix的声明式服务调用](http://www.macrozheng.com/#/cloud/feign?id=spring-cloud-openfeign：基于ribbon和hystrix的声明式服务调用)
 
-#### Feign简介
+### Feign简介
 
 Feign是声明式的服务调用工具，我们只需创建一个接口并用注解的方式来配置它，就可以实现对某个服务接口的调用，简化了直接使用RestTemplate来调用服务接口的开发量。Feign具备可插拔的注解支持，同时支持Feign注解、JAX-RS注解及SpringMvc注解。当使用Feign时，Spring Cloud集成了Ribbon和Eureka以提供负载均衡的服务调用及基于Hystrix的服务容错保护功能。
 
-#### 创建一个feign-service模块
+### 创建一个feign-service模块
 
 * 依赖
 
@@ -496,7 +496,7 @@ logging:
     com.macro.cloud.service.UserService: debug
 ```
 
-#### 验证
+### 验证
 
 启动`eureka-server`、`user-service`、`feign-service`服务；
 
@@ -516,13 +516,13 @@ logging:
 }
 ```
 
-### [Spring Cloud Zuul：API网关服务](http://www.macrozheng.com/#/cloud/zuul?id=spring-cloud-zuul：api网关服务)
+## [Spring Cloud Zuul：API网关服务](http://www.macrozheng.com/#/cloud/zuul?id=spring-cloud-zuul：api网关服务)
 
-#### Zuul简介
+### Zuul简介
 
 API网关为微服务架构中的服务提供了统一的访问入口，客户端通过API网关访问相关服务。API网关的定义类似于设计模式中的门面模式，它相当于整个微服务架构中的门面，所有客户端的访问都通过它来进行路由及过滤。它实现了**请求路由、负载均衡、校验过滤、服务容错、服务聚合**等功能。
 
-#### 创建一个zuul-proxy模块
+### 创建一个zuul-proxy模块
 
 * 依赖
 
@@ -579,7 +579,7 @@ zuul:
 
 验证：`http://localhost:8801/proxy/userService/user/1`
 
-#### **查看路由信息**
+### **查看路由信息**
 
 * 依赖
 
@@ -606,7 +606,7 @@ management:
 
 查看详细路由信息：`http://localhost:8801/actuator/routes/details`
 
-#### **Header过滤及重定向添加Host(未测试)**
+### **Header过滤及重定向添加Host(未测试)**
 
 Zuul在请求路由时，默认会过滤掉一些敏感的头信息，以下配置可以防止路由时的Cookie及Authorization的丢失
 
@@ -616,7 +616,7 @@ zuul:
   add-host-header: true                               # 设置为true重定向是会添加host请求头
 ```
 
-#### 过滤器
+过滤器
 
 路由与过滤是Zuul的两大核心功能，路由功能负责将外部请求转发到具体的服务实例上去，是实现统一访问入口的基础，过滤功能负责对请求过程进行额外的处理，是请求校验过滤及服务聚合的基础
 
@@ -730,6 +730,6 @@ zuul:
 
 :::
 
-#### Ribbon和Hystrix的支持
+### Ribbon和Hystrix的支持
 
 由于Zuul自动集成了Ribbon和Hystrix，所以Zuul天生就有负载均衡和服务容错能力，我们可以通过Ribbon和Hystrix的配置来配置Zuul中的相应功能，所以可以在配置文件中直接添加Ribbon，Hystrix的配置即可

@@ -173,3 +173,116 @@ spring:
 使用`'{application}'`占位符配置，说明是`config`服务就使用`config`子文件夹下面的配置文件，`config`服务就是前面说的`spring.cloud.config.name`,
 
 ### [刷新配置](http://www.macrozheng.com/#/cloud/config?id=刷新配置)
+
+* 依赖
+
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+* 添加`bootstrap.yml`配置
+
+```yaml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'refresh'
+```
+
+* 添加刷新配置注解
+
+  在需要刷新配置的地方添加，这里也就是 **ConfigClientController** 添加`@RefreshScope`注解用于刷新配置；
+
+  重启`config-client`后，post请求`http://localhost:9001/actuator/refresh`即可刷新配置，重新调用`http://localhost:9001/configInfo`验证配置是否更改成功
+
+## [创建config-security-server模块](http://www.macrozheng.com/#/cloud/config?id=创建config-security-server模块)
+
+给配置中心添加安全认证
+
+* 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-config-server</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
+* 添加`application-yml`配置，启动服务
+
+```yaml
+server:
+  port: 8905
+spring:
+  application:
+    name: config-security-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://gitee.com/myMagicRain/springcloud-config.git
+          username: macro
+          password: 123456
+          clone-on-start: true #开启启动时直接从git获取配置
+  security: #配置用户名和密码
+    user:
+      name: macro
+      password: 123456
+```
+
+* 修改`config-client`配置，重新启动
+
+```yaml
+server:
+  port: 9002
+spring:
+  application:
+    name: config-client
+  cloud:
+    config:
+      profile: dev #启用配置后缀名称
+      label: dev #分支名称
+      uri: http://localhost:8905 #配置中心地址
+      name: config #配置文件名称
+      username: macro    # 配置中心的用户名和密码，如果错误，服务启动会报错，无法加载从配置中心加载配置文件
+      password: 123456
+```
+
+启动使用`bootstrap-security.yml`配置的`config-client`服务；
+
+访问`http://localhost:9002/configInfo`进行测试，发现可以获取到配置信息，配置中心加入安全验证成功
+
+## [config-sever集群搭建](http://www.macrozheng.com/#/cloud/config?id=config-sever集群搭建)
+
+所有微服务从配置中心获取配置文件，一旦配置中心宕机，就会发生严重的后果，所以需要搭建配置中心集群，保证服务正常运行
+
+* 启动两个端口的`config-server` 8902，8903
+
+* 修改`config-client`配置文件，添加了从注册中心获取配置中心地址的配置并去除了配置中心uri的配置
+
+```yaml
+spring:
+  cloud:
+    config:
+      profile: dev #启用环境名称
+      label: dev #分支名称
+      name: config #配置文件名称
+#     uri: http://localhost:8901 # 去除了配置中心地址，改为下面配置
+      discovery:
+        enabled: true
+        service-id: config-server # 指定从注册中心中根据服务名获取配置中心地址，
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+```
+
+- 访问`http://localhost:9003/configInfo`，发现`config-client`可以获取到配置信息。
