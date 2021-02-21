@@ -1,7 +1,7 @@
 ---
 title: Spring Cloud Config
 tags:
- - config
+ - SpringCloud
 categories:
  - SpringCloudNotes
 date: 2021-02-18
@@ -109,32 +109,16 @@ spring:
   application:
     name: config-client
   cloud:
-    config: #Config客户端配置
-      profile: dev #启用配置后缀名称
-      label: dev #分支名称
-      uri: http://localhost:8901 #配置中心地址
-      name: config #配置文件名称
+    config:                # Config客户端配置
+      profile: dev         # 启用配置后缀名称
+      label: dev           # 分支名称
+      uri: http://localhost:8901  # 配置中心地址
+      name: config 				  # 配置文件名称
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8001/eureka/
 ```
-
-
-* 配置文件信息的访问格式
-
-```bash
-# 获取配置信息
-/{label}/{application}-{profile}
-# 获取配置文件信息
-/{label}/{application}-{profile}.yml
-```
-
-### **占位符配置说明**
-
-- `application`：代表应用名称，默认为配置文件中的`spring.application.name`，如果配置了`spring.cloud.config.name`，则为该名称
-- `label`：代表分支名称，对应配置文件中的`spring.cloud.config.label`
-- `profile`：代表环境名称，对应配置文件中的`spring.cloud.config.profile`
 
 
 * 添加`ConfigClientController `类用于获取配置
@@ -153,17 +137,36 @@ public class ConfigClientController {
 }
 ```
 
+### 获取配置文件信息
+
+* 配置文件信息的访问格式
+
+```yaml
+# 获取配置文件信息
+/{label}/{application}-{profile}
+# 获取配置文件内容信息
+/{label}/{application}-{profile}.yml
+```
+
+* 占位符配置说明
+
+| 占位符        | 说明     | 对应配置                                                     |
+| ------------- | -------- | ------------------------------------------------------------ |
+| `label`       | 分支名称 | 对应配置文件中的`spring.cloud.config.label`                  |
+| `application` | 应用名称 | 默认为配置文件中的`spring.application.name`，如果配置了`spring.cloud.config.name`，则为该名称 |
+| `profile`     | 环境名称 | 对应配置文件中的`spring.cloud.config.profile`                |
+
 启动`eureka-server`、`config-server`服务，
 
-访问 `http://localhost:8901/master/config-dev`，来获取master分支上dev环境的配置信息；
+访问 `http://localhost:8901/master/config-dev`，来获取**master**分支上**dev**环境的配置信息；
 
-访问 `http://localhost:9001/configInfo`，可以获取到dev分支下dev环境的配置；
+访问 `http://localhost:9001/configInfo`，可以获取到**dev**分支下**dev**环境的配置；
 
 ### 获取子目录配置
 
 多个微服务的多环境统一用一个git配置中心，默认扫描根目录，会使得配置文件过于臃肿，按服务创建不同的子文件夹目录，方便管理
 
-* `yml`配置
+* 添加`config-server`中`application-yml`配置
 
 ```yaml
 spring:
@@ -180,7 +183,7 @@ spring:
 
 ### [刷新配置](http://www.macrozheng.com/#/cloud/config?id=刷新配置)
 
-* 依赖
+* `config-client`添加依赖
 
 ```xml
 <dependency>
@@ -278,9 +281,9 @@ spring:
 spring:
   cloud:
     config:
-      profile: dev #启用环境名称
-      label: dev #分支名称
-      name: config #配置文件名称
+      profile: dev		 # 启用环境名称
+      label: dev 		 # 分支名称
+      name: config       # 配置文件名称
 #     uri: http://localhost:8901 # 去除了配置中心地址，改为下面配置
       discovery:
         enabled: true
