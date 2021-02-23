@@ -67,3 +67,17 @@ java -jar zipkin-server-2.12.9-exec.jar
 java -jar zipkin-server-2.12.9-exec.jar --STORAGE_TYPE=elasticsearch --ES_HOSTS=localhost:9200 
 ```
 
+* 结合`kibana`可视化界面查看每次请求的信息
+
+
+
+::: warning
+
+根据原作者学习流程坐下来发现**Zipkin**的使用体验并不好，不知道是不是哪操作有问题
+
+- **Zipkin** 并不能完整的每个请求都记录下来
+- 更多的是我请求了多次，它只记录了一次，
+- 重启后，重新调用多次，它一次也搜不到，个人感觉不是很好用
+- 另外**elasticsearch**、**kibana**只是再docker中启动起来了，但是不知道怎么设置索引，我直接都选择的默认的，查不到任何数据插入进来
+
+:::
