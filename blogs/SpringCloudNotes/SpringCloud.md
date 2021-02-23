@@ -11,9 +11,9 @@ date: 2021-02-08
 
 mall项目全套学习，mall项目（39k+star）是一套电商系统，使用现阶段主流技术实现。涵盖了SpringBoot 2.3.0、MyBatis 3.4.6、Elasticsearch 7.6.2、RabbitMQ 3.7.15、Redis 5.0、MongoDB 4.2.5、Mysql5.7等技术，采用Docker容器化部署。
 
-本文是我根据作者开源项目，文档依次学习做的缩略学习流程笔记和遇到的问题，有些东西没有细看，可以看作者链接。
+本文是我根据作者开源项目，文档依次学习做的缩略学习流程笔记和遇到的问题，工程同样用的作者的开源项目，实际学习中需要根据自己需求安装一些软件，修改一些配置，有些东西没有细写，完整的可以看作者链接。
 
-[doc文档地址](http://www.macrozheng.com/#/)，[关注公众号](https://github.com/macrozheng/mall-learning/blob/master/docs/cloud/springcloud.md#公众号)第一时间获取，根据文档持续学习
+[doc文档地址](http://www.macrozheng.com/#/)，作者[公众号](https://github.com/macrozheng/mall-learning/blob/master/docs/cloud/springcloud.md#公众号)第一时间获取，根据文档持续学习
 
 :::
 <!-- more -->

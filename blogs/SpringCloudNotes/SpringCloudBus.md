@@ -9,7 +9,7 @@ date: 2021-02-19
 
 ::: tip
 
-**Spring Cloud Bus** （消息总线）通过轻量消息代理连接各个分布的节点，用于广播 状态变更（如配置文件变更）或者其他的消息指令，可以将其理解为管理和传播消息所有分布式服务中的详细即可。**Spring Cloud Bus** 配合 **Spring Cloud Config** 使用可以实现配置的动态刷新。目前 **Spring Cloud Bus** 支持两种消息代理：**RabbitMQ** 和 **Kafka**。**AMQP*（(Advanced Message Queuing Protocol），一个提供统一消息服务的应用层标准高级消息队列协议
+**Spring Cloud Bus** （消息总线）通过轻量消息代理连接各个分布的节点，用于广播 状态变更（如配置文件变更）或者其他的消息指令，可以将其理解为管理和传播消息所有分布式服务中的详细即可。**Spring Cloud Bus** 配合 **Spring Cloud Config** 使用可以实现配置的动态刷新。目前 **Spring Cloud Bus** 支持两种消息代理：**RabbitMQ** 和 **Kafka**。**AMQP**（(Advanced Message Queuing Protocol），一个提供统一消息服务的应用层标准高级消息队列协议
 
 :::
 <!-- more -->
@@ -36,7 +36,7 @@ rabbitmq-plugins enable rabbitmq_management
 
 因为网络原因，没有安装成功**Erlang**，直接在虚拟机中用**docker**启动的**RabbitMQ**
 
-访问地址：`http://localhost:15672/`
+本地启动访问地址：`http://localhost:15672/`，我是用的虚拟机的ip
 
 默认用户名、密码为`guest`
 
