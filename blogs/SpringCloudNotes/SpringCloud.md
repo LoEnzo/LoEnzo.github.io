@@ -70,7 +70,7 @@ SpringCloud是一个由许多子项目组成的综合项目，各子项目有不
 
 ## SpringCloud子项目简介
 
-
+![来自Spring官网](./images/springcloud_arch02.png)
 
 ### Spring Cloud Netflix
 
