@@ -152,6 +152,10 @@ spring:
         - Weight=group1, 2
 ```
 
+#### 常用`Route Predicate Factory`
+
+![](./images/springcloud_gateway01.png)
+
 ## [Route Filter 的使用](http://www.macrozheng.com/#/cloud/gateway?id=route-filter-的使用)
 
 路由过滤器可用于**修改进入的HTTP请求和返回的HTTP响应**，路由过滤器只能指定路由进行使用。**Spring Cloud Gateway** 内置了多种路由过滤器，他们都由**GatewayFilter**的工厂类来产生，下面我们介绍下常用路由过滤器的用法。
@@ -387,3 +391,7 @@ logging:
 * 验证
 
 使用`application-eureka.yml`配置文件启动api-gateway服务，访问`http://localhost:9201/user-service/user/1 `，可以路由到**user-service**的`http://localhost:8201/user/1 `
+
+## 其他参考
+
+[Gateway网关简介及使用](https://blog.csdn.net/rain_web/article/details/102469745)

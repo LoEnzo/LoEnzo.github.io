@@ -52,7 +52,9 @@ java -jar zipkin-server-2.12.9-exec.jar
 
 - 启动`eureka-sever`，`ribbon-service`，`user-service`：
 
-多次通过`ribbon-serivce`调用`user-service`接口，可以再**Zipkin**界面筛选服务，查看每一次请求，然后进去可以看到这次请求调用的完整链路，以及调用每个服务所耗时间
+多次通过`ribbon-serivce`调用`user-service`接口，可以在**Zipkin**界面筛选服务，查看每一次请求，然后进去可以看到这次请求调用的完整链路，以及调用每个服务所耗时间
+
+**注意**：**Sleuth**为抽样搜集，也就是说不是每次请求都会记录
 
 ## [使用Elasticsearch存储跟踪信息](http://www.macrozheng.com/#/cloud/sleuth?id=使用elasticsearch存储跟踪信息)
 
@@ -71,13 +73,11 @@ java -jar zipkin-server-2.12.9-exec.jar --STORAGE_TYPE=elasticsearch --ES_HOSTS=
 
 
 
-::: warning
+::: tip
 
-根据原作者学习流程坐下来发现**Zipkin**的使用体验并不好，不知道是不是哪操作有问题
-
-- **Zipkin** 并不能完整的每个请求都记录下来
-- 更多的是我请求了多次，它只记录了一次，
+- **Zipkin** 并不能完整的每个请求都记录下来，是**抽样收集**
 - 重启后，重新调用多次，它一次也搜不到，个人感觉不是很好用
 - 另外**elasticsearch**、**kibana**只是再docker中启动起来了，但是不知道怎么设置索引，我直接都选择的默认的，查不到任何数据插入进来
+- 多次重新启动报错`ERROR: cannot load service names: server error (Internal Server Error)`，好像是**elasticsearch**存储数据格式乱了，暂未解决
 
 :::

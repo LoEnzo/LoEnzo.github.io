@@ -255,3 +255,29 @@ elasticsearch-plugin install /usr/share/elasticsearch/elasticsearch-analysis-ik-
 docker restart elasticsearch
 ```
 
+### Kibana
+
+```shell
+# 下载镜像
+docker pull kibana:7.6.2
+
+# 启动服务
+docker run --name kibana -p 5601:5601 \
+--link elasticsearch:es \
+-e "elasticsearch.hosts=http://es:9200" \
+-d kibana:7.6.2
+
+# 将配置文件服务拷贝出来
+sudo docker container cp kibana:/usr/share/kibana/config/ /mydata/kibana/
+
+# 末尾添加 i18n.locale: zh-CN，可以启动中文
+vi /mydata/kibana/kibana.yml
+
+# 开启防火墙
+firewall-cmd --zone=public --add-port=5601/tcp --permanent
+firewall-cmd --reload
+
+# 访问地址
+访问地址进行测试：http://192.168.3.101:5601
+```
+
