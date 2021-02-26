@@ -1,3 +1,12 @@
+---
+title: IDEA常用快捷键
+tags:
+ - IDEA
+categories:
+ - DevTools
+date: 2020-05-11
+---
+
 **二.选择当前行**
 
 按Home（定位到行首）然后按Shift+Dnd（行尾） 
