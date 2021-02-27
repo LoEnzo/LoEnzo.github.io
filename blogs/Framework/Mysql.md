@@ -143,25 +143,38 @@ mysql安装以及使用
 
 
 
-## 问题：
+## QA：
 
-#### 1. 无法解决报错，卸载mysql重装
+**Q**: **Window MySql服务突然启动报错**
 
->sudo apt-get autoremove mysql*  *--purge* 
->
->sudo apt-get remove apparmor   *//这个apparmor是在装mysql-server时装上的，和安全有关*
+::: tip
 
-#### 2. 修改root密码，密码等级
+本地计算机上的MySQL服务启动后停止。某些服务在未由其他服务或程序使用时将自动停止
 
-> set global validate_password.policy=LOW;
->
-> ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'your_password'
+:::
 
+**A**：
 
+* 备份安装目录下`data`文件夹，清空里面数据；
 
-## 其他
+* 执行初始化命令`mysqld --initialize-insecure --user=mysql`
+* 安装服务` mysqld --install MySQL`，启动服务`net start mysql`
+* 登录`MySql`，输入指令`mysql -u root -p`，初始化密码在**data**目录下`.err`文件里
+* 登录成功后修改为之前的密码，或者新密码，按顺序推荐，二三未试过
 
-### 1.  springBoot整合mybatise启动报错
+```mysql
+# 方案一
+mysql> alter user 'root'@'localhost' identified by 'cy7m0ypu8CpLFperzI45';
+# 方案二
+mysql> set password for 'root'@'localhost'=password('cy7m0ypu8CpLFperzI45');
+# 方案三,需要刷新权限
+mysql> update mysql.user set authentication_string=password('cy7m0ypu8CpLFperzI45') where user='root' and Host = 'localhost';
+mysql> flush privileges;
+```
+
+## Other
+
+**1.  springBoot整合mybatise启动报错**
 
 ```shell
 Failed to obtain JDBC Connection; nested exception is java.sql.SQLException: The server time zone value '�й���׼ʱ��' is unrecognized or represents more than one time zone. You must configure either the server or JDBC driver (via the 'serverTimezone' configuration property) to use a more specifc time zone value if you want to utilize time zone support.
