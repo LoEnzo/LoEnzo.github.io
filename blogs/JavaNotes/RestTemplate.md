@@ -396,49 +396,86 @@ public class RestTemplateConfig {
 Registry< ConnectionSocketFactory>（忽略/使用自定义证书，待学习）参考：[绕过证书](https://blog.csdn.net/xiaoxian8023/article/details/49865335)，[信任自定义证书](https://blog.csdn.net/xiaoxian8023/article/details/49866397?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param)
 
 ```java
-@Bean
-public RestTemplate restTemplate() {
-    RestTemplate restTemplate= new RestTemplate(httpRequestFactory());
-    // 自定义编码设置，有其他方式，这种是写死了的，不是很推荐
-    restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
-    return  restTemplate;
-}
+package com.travelsky.ibeplus.service.impl.businesstravelpolicy.application.config;
 
-@Bean
-public ClientHttpRequestFactory httpRequestFactory() {
-    return new HttpComponentsClientHttpRequestFactory(httpClient());
-}
+import com.travelsky.ibeplus.util.http.IbeplusRestTemplateBuilder;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
 
 /**
-* httpClient
-*
-* @return HttpClient
-*/
-@Bean
-public HttpClient httpClient() {
-    // 忽略/使用自定义证书，待学习
-    Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-        .register("http", PlainConnectionSocketFactory.getSocketFactory())
-        .register("https", SSLConnectionSocketFactory.getSocketFactory())
-        .build();
-    PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
+ * ProjectName: ibeplus-service-businesstravel-policy
+ * ClassName: RestTemplateConfig
+ * Class Description: RestTemplateConfig 配置类
+ *
+ * @Author hjwu
+ * @Date2021/3/16 15:04
+ */
+@Configuration
+public class RestTemplateConfig {
+
+    @Value("${connectTimeout}")
+    private Integer connectTimeout;
+
+    @Value("${readTimeout}")
+    private Integer readTimeout;
+
+    @Value("${requestTimeout}")
+    private Integer requestTimeout;
+
+    @Value("${maxPool}")
+    private Integer maxPool;
+
+    @Bean
+    public RestTemplate restTemplate() {
+        RestTemplate restTemplate = new RestTemplate(httpRequestFactory());
+        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        return restTemplate;
+    }
+
+    public ClientHttpRequestFactory httpRequestFactory() {
+        return new HttpComponentsClientHttpRequestFactory(httpClient());
+    }
+
+    public HttpClient httpClient() {
+        Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", SSLConnectionSocketFactory.getSocketFactory())
+                .build();
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
         //整个连接池最大连接数
         connectionManager.setMaxTotal(maxPool);
         //路由是对maxTotal的细分  只有一个地址，就可以和MaxTotal设置为一样
         connectionManager.setDefaultMaxPerRoute(maxPool);
         RequestConfig requestConfig = RequestConfig.custom()
-            //服务器返回数据(response)的时间，超过该时间抛出read timeout
-            .setSocketTimeout(readTimeOut)
-            //连接上服务器(握手成功)的时间，超出该时间抛出connect timeout
-            .setConnectTimeout(connectTimeout)
-            //从连接池中获取连接的超时时间，超过该时间未拿到可用连接，会抛出异常
-            .setConnectionRequestTimeout(requestTimeOut)
-            .build();
+                //服务器返回数据(response)的时间，超过该时间抛出read timeout
+                .setSocketTimeout(readTimeout)
+                //连接上服务器(握手成功)的时间，超出该时间抛出connect timeout
+                .setConnectTimeout(connectTimeout)
+                //从连接池中获取连接的超时时间，超过该时间未拿到可用连接，会抛出异常
+                .setConnectionRequestTimeout(requestTimeout)
+                .build();
 
-    return HttpClientBuilder.create()
-        .setDefaultRequestConfig(requestConfig)
-        .setConnectionManager(connectionManager)
-        .build();
+        return HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setConnectionManager(connectionManager)
+                .build();
+    }
 }
 ```
 
