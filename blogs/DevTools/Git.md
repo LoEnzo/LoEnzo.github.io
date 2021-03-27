@@ -1,3 +1,200 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 title: Git 操作手册
 tags:
@@ -196,99 +393,3 @@ git config --global http.sslVerify false
 解决：到 `控制面板-用户帐户-凭据管理器`目录下修改凭证的`用户名`和`密码`
 
 ![Git修改凭证](./img/Git01.png)
-
-
-## release 步骤
-```mermaid
-sequenceDiagram
-    participant A as 准备 IssueList.yml
-    participant B as 执行指令 release
-    A ->> B: 将 IssueList.yml 放到指定位置
-    loop
-        B ->> B: 报错可重复执行
-    end
-```
-
-## 自动 release 工具实现细节
-```mermaid
-sequenceDiagram
-    participant A as 执行指令 release
-    participant B as 解析 IssueList.yml
-    participant C as 检出 Tag
-    Note right of C: last release tag
-    participant D as 解析所有工程版本号
-    Note right of D: last release tag
-    participant E as 检出 master
-    Note right of E: master
-    participant F as 删除 release 分支
-    Note right of F: master
-    participant G as 创建 release 分支
-
-    A->>B: 执行指令 release
-    B->>C: 解析 IssueList.yml
-    C->>D: 检出 Tag
-    D->>E: 解析所有工程版本号
-    E->>F: 检出 master
-    F->>G: 删除 release 分支
-```
-
-<br>
-
-```mermaid
-sequenceDiagram
-    participant H as 打包工程处理
-    Note right of H: release
-    participant I as parent 工程处理
-    Note right of I: release
-    participant J as 校验 release 工程
-    Note right of J: release
-    participant K as 回退工程版本
-    Note right of K: release
-    participant L as 备份
-    Note right of L: release
-    participant M as 提交推送
-
-    H->>I: 修改 parent 工程版本号
-    I->>J: 修改上线工程版本号
-    J->>K: 校验上线工程版本是否维护准确
-    K->>L: 回退不上线工程版本
-    L->>M: 备份回退工程版本
-```
-
-<br>
-
-```mermaid
-sequenceDiagram
-    participant N as 解析模块
-    Note right of N: release
-    participant O as 构建工程顺序
-    Note right of O: release
-    participant P as 自动 release
-
-    N->>O: 根据 module 解析工程顺序
-    O->>P: 构建 release 顺序
-    P->>P: 保存 release 结果
-```
-
-<br>
-
-```mermaid
-sequenceDiagram
-    participant Q as 创建分支
-    Note right of Q: new branch
-    participant R as 创建 Tag
-    Note right of R: new tag
-    participant S as 检出 master
-    Note right of S: master
-    participant T as 合并
-    Note right of T: master
-    participant U as 修改 parent
-    Note right of U: master
-    participant V as 提交
-
-    Q->>R: 基于 release 分支创建上线分支
-    R->>S: 基于 release 分支创建 tag 并推送
-    S->>T: 检出 master 分支，合并 release 分支
-    T->>U: 将回退工程的版本号维护到 master 分支
-    U->>V: 提交推送
-```
