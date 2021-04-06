@@ -7,6 +7,7 @@ const studyNotes = commonUtils.getSidebar('/StudyNotes/');
 const linuxNotes = commonUtils.getSidebar('/LinuxNotes/');
 const JavaNotes = commonUtils.getSidebar('/JavaNotes/');
 const SpringCloudNotes = commonUtils.getSidebar('/SpringCloudNotes/');
+const otherNotes = commonUtils.getSidebar('/Other/');
 
 module.exports = {
     '/blogs/BigData/': bigData,
@@ -16,4 +17,5 @@ module.exports = {
     '/blogs/LinuxNotes/': linuxNotes,
     '/blogs/JavaNotes/': JavaNotes,
     '/blogs/SpringCloudNotes/': SpringCloudNotes,
+    '/blogs/Other/': otherNotes,
 };

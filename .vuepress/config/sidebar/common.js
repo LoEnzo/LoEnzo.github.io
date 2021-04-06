@@ -33,6 +33,9 @@ const commonUtils = {
         if(filenames == '/SpringCloudNotes/'){
             return "SpringCloud学习笔记";
         }
+        if(filenames == '/Other/'){
+            return "其他未分类笔记";
+        }
     }
 };
 

@@ -1,8 +1,11 @@
 ---
-title: '开发环境配置笔记'
-isShowComments: true
+title: 开发环境配置笔记
+tags:
+ - tools
+categories: 
+ - Other
+date: 2021-04-06
 ---
-
 
 ::: tip 
 
