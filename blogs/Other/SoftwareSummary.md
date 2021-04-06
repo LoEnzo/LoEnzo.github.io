@@ -31,7 +31,7 @@ date: 2020-07-09
 
 * [**Node.js**](https://nodejs.org/zh-cn/download/)
 
-* [**Yarn**](https://yarn.bootcss.com/docs/install/#windows-stable)
+* [**Yarn**](https://www.jianshu.com/go-wild?ac=2&url=https%3A%2F%2Fclassic.yarnpkg.com%2Flatest.msi)
 
 * [BCompare]，[class反编译插件,选择对应版本，搜索class，下载，导入，重启](http://www.scootersoftware.com/download.php?zz=moreformats)
 

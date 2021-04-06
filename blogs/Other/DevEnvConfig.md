@@ -13,7 +13,7 @@ Window更换电脑，需要重新配置整套开发环境，环境变量，常�
 
 [常用软件安卓目录参考](https://hjwu.gq/blogs/Other/SoftwareSummary.html)
 
-## Java
+## Dev
 
 ### JDK 
 
@@ -50,7 +50,13 @@ PATH			%CATALINA_HOME%\lib	%CATALINA_HOME%\bin
 验证:	安装目录\bin 启动startup.bat，本地访问 localhost:8080，能看到tomcat信息即可
 ```
 
+### Yarn
 
+```shell
+安装完成即可使用过，如果采用压缩包安装
+PATH	安装目录\bin
+验证：	yarn -v
+```
 
 ## Editor
 
