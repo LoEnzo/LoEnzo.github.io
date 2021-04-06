@@ -50,8 +50,8 @@ date: 2020-07-09
 #### 文档编辑器：
 
 * [**Typora**：Markdown文档编辑器](https://www.typora.io/)
-
 * [**Notepad**++](https://notepad-plus-plus.org/downloads/)
+* [**Sublime Text 3**](https://www.sublimetext.com/)
 
 #### windows常用软件：
 
