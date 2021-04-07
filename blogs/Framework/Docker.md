@@ -205,6 +205,20 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 | **docker export** | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大   |                                                              |                          |
 | **docker import** | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                              |                          |
 
+### 其他：
+
+将容器配配置文件复制到宿主机：`docker container cp 容器名:容器内文件的路径  宿主机路径`
+
+```shell
+docker container cp nginx:/etc/nginx /mydata/nginx/
+```
+
+将宿主机的文件拷贝到容器中：`docker cp 宿主机路径 容器名:容器内路径`
+
+```shell
+docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearch:/usr/share/elasticsearch
+```
+
 
 
 ## 示例：
