@@ -19,13 +19,15 @@ date: 2020-07-09
 
 * [**VScode**](https://code.visualstudio.com/)
 
-* [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* **[JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)**
 
-* [Maven](http://maven.apache.org/download.cgi)
+* **[Maven](http://maven.apache.org/download.cgi)**
 
-* [Mysql](https://dev.mysql.com/downloads/installer/)
+* **[Mysql](https://dev.mysql.com/downloads/installer/)**
 
 * [Redis](https://github.com/tporadowski/redis/releases)
+
+* [**Go**](https://golang.google.cn/dl/)
 
 * [**Git**](https://git-scm.com/)
 

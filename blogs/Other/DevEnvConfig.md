@@ -58,6 +58,22 @@ PATH	# 安装目录\bin
 验证：	yarn -v
 ```
 
+### Go
+
+```shell
+# 安装完成即可使用，如果采用压缩包安装
+PATH	# 安装目录\bin
+验证：	go evn
+```
+
+### Git
+
+```shell
+# 安装完成即可使用，如果采用压缩包安装
+PATAH	# 安装目录\cmd
+验证：	git version
+```
+
 ## Database
 
 ### MySql

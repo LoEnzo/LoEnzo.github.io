@@ -36,6 +36,9 @@ const commonUtils = {
         if(filenames == '/Other/'){
             return "其他未分类笔记";
         }
+        if(filenames == '/GoNotes/'){
+            return "Go学习笔记";
+        }
     }
 };
 
