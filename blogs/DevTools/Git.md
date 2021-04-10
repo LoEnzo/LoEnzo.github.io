@@ -185,9 +185,19 @@ git config --global --unset http.proxy
 git config --global http.sslVerify false
 ```
 
+#### 4. git pull 报错：filename too long
 
+原因：
 
-#### 4. Git修改凭证
+这个是你本地放置的仓库地址在多级文件夹里面，且自己要拉取的项目某些文件的层级也很多导致的，一般拉取到最外层的磁盘即可，当然，可以修改git配置解决
+
+解决：
+
+```shell
+git config --global core.longpaths true
+```
+
+#### 5. Git修改凭证
 
 事例：使用`Tortoigit`提交文件时，因为没有权限，输入的凭证错误，导致提交失败，后续添加权限后，重复提交仍然失败。
 
