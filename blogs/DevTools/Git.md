@@ -197,7 +197,19 @@ git config --global http.sslVerify false
 git config --global core.longpaths true
 ```
 
-#### 5. Git修改凭证
+#### 5. git pull 报错429: `fatal: unable to access 'https://github.com.cnpmjs.org/LoEnzo/LoEnzo.github.io.git/': The requested URL returned error: 429`
+
+原因：
+
+偶尔出现的拉去大文件，或者网络不好的情况
+
+解决：
+
+```shell
+git config --global http.postBuffer 5242880000
+```
+
+#### 6. Git修改凭证
 
 事例：使用`Tortoigit`提交文件时，因为没有权限，输入的凭证错误，导致提交失败，后续添加权限后，重复提交仍然失败。
 
