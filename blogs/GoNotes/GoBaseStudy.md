@@ -1,5 +1,5 @@
 ---
-title: Go语言学习笔记
+title: Go变量创建
 tags:
  - go
  - goland

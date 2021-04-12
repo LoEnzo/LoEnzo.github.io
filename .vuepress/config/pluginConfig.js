@@ -32,7 +32,9 @@ module.exports = [
   }],
   // 添加rss订阅插件，测试发现只能订阅标题和tip内容
   ['@vuepress-reco/rss', {
+    base_url: '/', // required
     site_url: 'https://hjwu.gq',
-    copyright: ''
+    copyright: '',
+    count: 10
   }],
 ]
