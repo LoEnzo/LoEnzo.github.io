@@ -4,7 +4,7 @@ tags:
  - go
 categories: 
  - GoNotes
-date: 2021-04-10
+date: 2021-04-15
 ---
 
 ::: tip 
@@ -184,4 +184,122 @@ func forNoFunc() {
 
 # 无条件跳转语句
 
+格式如下，goto打破原有的代码执行顺序，通常与条件语句使用实现条件转移，构成循环，跳出循环等功能，
+
+注意：goto 标签 和 标签：表达式之前不能变量声明，否则会报语法错误
+
+```go
+goto 标签;
+...
+...
+标签: 表达式;
+```
+
+打印1-10之间的偶数
+
+```go
+func getEvenNumberFunc() {
+	i := 1
+flag:
+	for i <= 10 {
+		if i%2 == 1 {
+			i++
+			goto flag
+		}
+		fmt.Println(i)
+		i++
+	}
+}
+```
+
 # 延迟语句
+
+格式如下：`defer`后面跟函数的调用即可，
+
+`defer`的使用场景，对于多次资源调用的方法，最后需要关闭资源的场景，在return后会自动执行defer，避免多次手动关闭资源
+
+```go
+defer xxxfunc()
+```
+
+* `defer`只是延时函数的调用，不受后面的逻辑影响，多个`defer`逆序输出
+
+```go
+func deferOrderOneFunc() {
+	name := "go"
+	age := 18
+	defer fmt.Println(name) // 输出: go
+	defer fmt.Println(age)  // 输出: 18
+
+	name = "python"
+	fmt.Println(name) // 输出: python
+}
+
+// python
+// 18
+// go
+```
+
+* `defer`在return之后
+
+```go
+var name = "go"
+
+func main() {
+	// defer 顺序在 return之后
+	myName := deferOrderTwoFunc() 
+	fmt.Printf("main 函数里的name: %s\n", name)   // 先return name被defer修改了全局变量，name是go
+	fmt.Println("main 函数里的myName: ", myName)  // return 后，name被defer修改了全局变量，此时赋值给myName的是python
+}
+
+func deferOrderTwoFunc() string {
+	defer func() {
+		name = "python"
+	}()
+
+	fmt.Printf("deferOrderTwoFunc 函数里的name：%s\n", name) // 此时，name全局变量为go
+	return name	
+}
+
+// deferOrderTwoFunc 函数里的name：go
+// main 函数里的name: python
+// main 函数里的myName:  go
+```
+
+* `defer`与匿名函数
+
+```go
+func anonymousFunc() {
+	name := "go"
+	defer func() {
+		fmt.Println(name) // 输出: python
+	}()
+	defer func(name string) {
+		fmt.Println(name) // 输出: go
+	}(name)
+	name = "python"
+	fmt.Println(name) // 输出: python
+}
+
+// python
+// go
+// python
+```
+
+* `defer`还可以修改返回值
+
+```go
+func triple(x int) (result int) {   // x传值4
+	defer func() {
+		result += x    // defer 修改返回值 8+4
+	}()
+	return double(x)   // 8
+}
+
+func double(x int) int {
+	return x + x      // 4 + 4 
+}
+
+// 12
+```
+
