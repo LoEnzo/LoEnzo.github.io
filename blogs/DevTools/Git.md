@@ -143,10 +143,15 @@ $ git push
 ### 8. 其他
 
 ```shell
-// 修改.ignore 是其生效
-git rm -r --cached .
-```
+// 修改.ignore 使其生效
+git rm -r --cached
 
+// 修改tag标签名
+git tag new_tag_name old_tag_name
+git tag -d old_tag_name
+git push origin :refs/tags/old_tag_name
+git push --tags
+```
 
 ### 问题：
 
@@ -197,7 +202,7 @@ git config --global http.sslVerify false
 git config --global core.longpaths true
 ```
 
-#### 5. git pull 报错429: `fatal: unable to access 'https://github.com.cnpmjs.org/LoEnzo/LoEnzo.github.io.git/': The requested URL returned error: 429`
+#### 5. git pull 报错429: `fatal: unable to access 'https://XXX.git/': The requested URL returned error: 429`
 
 原因：
 

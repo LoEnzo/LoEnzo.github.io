@@ -295,3 +295,44 @@ firewall-cmd --reload
 访问地址进行测试：http://192.168.3.101:5601
 ```
 
+## 其他
+
+### docker图形化工具
+
+内置界面简单明了，常规的关于docker状态，容器、镜像的管理，日志查看都可以在图形化界面操作，减少指令
+
+```shell
+# 下载镜像
+docker pull portainer/portainer
+
+# 启动容器
+docker run -p 9000:9000 -p 8000:8000 --name portainer \
+--restart=always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v /mydata/portainer/data:/data \
+-v /mydata/portainer/public:/public \	# 中文汉化
+-d portainer/portainer
+```
+
+中文汉化，下载插件，[百度云](https://pan.baidu.com/s/13ra6jXHR_7vajLLlf5GVEw)，提取码：`nzue`
+
+下载后解压上传到`mydata/portainer/public`目录下，`unzip`解压，如果启动报错的，请找一下最新版的汉化包，重启解压后覆盖public文件夹，或者启动参数去除链接宿主机汉化那一步，启动原版即可
+
+## 本机上传到服务器（自己当前情况）
+
+```shell
+# 下载东西 curl -O https://XXX
+
+# 宿主机器下载，上传到服务器
+sftp name@ip
+
+# 上传
+put local_file remote_file
+
+# 下载
+get remote_file local_file
+
+# 服务器连接sftp
+sudo sftp name@ip
+```
+

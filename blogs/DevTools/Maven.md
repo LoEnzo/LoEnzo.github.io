@@ -15,9 +15,9 @@ maven理解，常用指令，以及常规报错汇总。
 
 <!-- more -->
 
-一、Maven常用指令
+# Maven常用指令
 
-### 1. 常用指令
+## 常用指令
 
 ```shell
 # 打包项目到本地，一般在target文件夹下；
@@ -35,7 +35,7 @@ mvn clean deploy
 
 父子工程版本依赖，父工程一般包含`pom.xml`及里面相应依赖的版本设定；子工程依赖父工程
 
-### 2. pom.xml配置文件中gav的说明
+## pom.xml配置文件说明（gav）
 
   - groupId：顾名思义，即组织或公司，一般我们会用公司或者自己的前几级包名来进行定义。
   - artifactId：这个值定义的是本项目的名字。
@@ -60,7 +60,25 @@ mvn clean deploy
  <name>helloworld-app-service</name>
 ```
 
-## 二、问题
+## 清除仓库
+
+清除本地仓库因为网络或者配置文件导致下载失败生成的`lastUpdated`的文件，保存下列文件为`bat`后缀文件，双击运行即可
+
+```shell
+# 设置本地仓库路径
+set REPOSITORY_PATH=C:\repository
+rem 正在搜索...
+for /f "delims=" %%i in ('dir /b /s "%REPOSITORY_PATH%\*lastUpdated*"') do (
+    del /s /q %%i
+)
+rem 搜索完毕
+pause
+
+# 或者 ctrl + R 切换到 本地仓库路径，输入下列指令
+for /r %i in (*.lastUpdated) do del %i
+```
+
+# 其他问题
 
 ### 1. 本地tomcat启动报错
 
