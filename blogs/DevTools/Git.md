@@ -155,7 +155,11 @@ git push --tags
 
 ### 问题：
 
-#### 1. git clone 报错 warning: Clone succeeded, but checkout failed."
+#### 1. git clone 报错 
+
+`warning: Clone succeeded, but checkout failed.` 或者`filename too long`，原因：
+
+这个是你本地放置的仓库地址在多级文件夹里面，且自己要拉取的项目某些文件的层级也很多导致的，一般拉取到最外层的磁盘即可，当然，可以修改git配置解决
 
 解决：
 
@@ -163,9 +167,9 @@ git push --tags
 git config --system core.longpaths true
 ```
 
-#### 2. git push github 或者 git update 更新报错`SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443`
+#### 2. git push github 或者 git update 更新报错 443
 
-原因：
+ `SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443`，原因：
 
 ```
 因为Git的Http代理的问题，Git支持三种协议：git://、ssh://和http://，本来push的时候应该走ssh隧道的，但是因为设置了http代理，所以就走了http的代理，于是就提交不了了。 
@@ -190,29 +194,30 @@ git config --global --unset http.proxy
 git config --global http.sslVerify false
 ```
 
-#### 4. git pull 报错：filename too long
+#### 4. git pull 报错429
 
-原因：
-
-这个是你本地放置的仓库地址在多级文件夹里面，且自己要拉取的项目某些文件的层级也很多导致的，一般拉取到最外层的磁盘即可，当然，可以修改git配置解决
-
-解决：
-
-```shell
-git config --global core.longpaths true
-```
-
-#### 5. git pull 报错429: `fatal: unable to access 'https://XXX.git/': The requested URL returned error: 429`
-
-原因：
-
-偶尔出现的拉去大文件，或者网络不好的情况
+原因：偶尔出现的拉去大文件，或者网络不好的情况， `fatal: unable to access 'https://XXX.git/': The requested URL returned error: 429`
 
 解决：
 
 ```shell
 git config --global http.postBuffer 5242880000
 ```
+
+#### 5. git push 报错403
+
+原因：开始还可以推送，后面就报错了，暂时不知道为啥，详细错误：  `fatal: unable to access 'https://XXX.git/': The requested URL returned error: 403`
+
+解决：
+
+```shell
+vim .git/config
+
+[remote “origin”]
+	url = https://用户名:密码@gitXXX.git 
+```
+
+重新推送即可
 
 #### 6. Git修改凭证
 

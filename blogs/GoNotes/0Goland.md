@@ -10,7 +10,7 @@ date: 2021-04-07
 
 ::: tip 
 
-近年来go语言越来越火热，值得了解一下，扩宽下知识面，先简单学习下基础语法，go语言学习笔记
+近年来go语言越来越火热，值得了解一下，扩宽下知识面，先简单学习下基础语法，go语言学习笔记，[参考地址](http://golang.iswbm.com/en/latest/index.html)，后面的笔记都是基于该作者的笔记一步步学习，练习的[工程地址](https://gitee.com/myMagicRain/go-study)
 :::
 
 # Goland配置
