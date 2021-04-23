@@ -11,6 +11,7 @@ module.exports = {
       { icon: 'reco-github', link: 'https://github.com/loenzo' },
       { icon: 'reco-mayun', link: 'https://gitee.com/company_enzo/' },
       { icon: 'reco-account', link: 'https://hjwu.cf/'},
-      { icon: 'reco-other', link: 'https://biggerdrive.herokuapp.com/'}
+      { icon: 'reco-other', link: 'https://biggerdrive.herokuapp.com/'},
+      { icon: 'reco-lock', link: 'https://hjwudriver.herokuapp.com/'}
     ]
 };
