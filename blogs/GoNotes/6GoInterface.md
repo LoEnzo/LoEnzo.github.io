@@ -245,7 +245,7 @@ Type Assertion（中文名叫：类型断言），作用如下：
 
 * 第一种：`t := i.(T)`
 
-  可以断言一个接口对象`i`里面是不是`nil`，`i`代表接口对象，`T`代表接口对象存储的值类型，如果断言成功，返回`t`，断言失败，触发`panic`
+  可以断言一个接口对象`i`里面是不是`nil`，`i`代表接口对象，`T`代表接口对象存储的值类型，如果断言成功，返回其类型`t`，断言失败，触发`panic`
 
 ```go
 func triggerPanicOne() {
@@ -260,15 +260,121 @@ func triggerPanicOne() {
 // panic: interface conversion: interface {} is int, not string
 ```
 
-* 第二种：`t, ok:= i.(T)`
+* 第二种：`t, ok:= i.(T)`，断言成功，返回其类型`t`，`ok`值为`true`，断言失败，返回其类型的零值`t`，`ok`值为`false`
 
 ```go
 func main() {
     var i interface{} = 10
     t1, ok := i.(int)
     fmt.Printf("%d-%t\n", t1, ok)
+    t1, ok := i.(string)
+    fmt.Printf("%d-%t\n", t1, ok) 
 }
 
+// int零值是0，string的零值是""，interface{}的零值是<nil>
 // 10-true
+// -false
 ```
 
+* 结合`switch`来判断，`switch i.(type) `，注意，匹配到了是
+
+```go
+func useSwitchToTypeAssertion(i interface{}) {
+	switch x := i.(type) {
+	case int:
+		fmt.Println(x, "is int")
+	case string:
+		fmt.Println(x, "is string")
+	case nil:
+		fmt.Println(x, "is nil")
+	default:
+		fmt.Println(x, "not type matched")
+	}
+}
+
+func main() {
+	useSwitchToTypeAssertion("10")
+	useSwitchToTypeAssertion("abc")
+	useSwitchToTypeAssertion(nil)
+	useSwitchToTypeAssertion(10.01)
+}
+
+// 10 is string
+// abc is string
+// <nil> is nil
+// 10.01 not type matched
+```
+
+## 空接口
+
+空接口，即定义的接口里面不包含任何方法，可以说所有的类型至少都实现了空接口
+
+```go
+type emptyInterface interface {
+}
+```
+
+空接口的值和类型都是`<nil>`
+
+```go
+func main() {
+    var i interface{}
+    fmt.Printf("type: %T, value: %v", i, i)
+}
+
+// type: <nil>, value: <nil>
+```
+
+**空接口的使用**
+
+* 用于作为实例承载任意类型的值
+
+```go
+func creatEmptyInterface() {
+	var i interface{}
+	i = 5
+	fmt.Println(i)
+	i = "string"
+	fmt.Println(i)
+}
+```
+
+* 用于函数接收任意类型的值
+
+```go
+func main {
+	a := 5
+	b := "string"
+	// 接收单个值
+	receiveEmptyInterface(a)
+	receiveEmptyInterface(b)
+
+	// 接收多个值
+	receiveMoreEmptyInterface(a, b)
+}
+
+func receiveEmptyInterface(emptyInterface interface{}) {
+	fmt.Println(emptyInterface)
+}
+```
+
+* 可以用于定义接收任意类型的`array`、`slice`、`map`、`strcut`
+
+```go
+func receiveMoreTypeEmptyInterface() {
+	any := make([]interface{}, 5)
+	any[0] = 11
+	any[1] = "hello world"
+	any[2] = []int{11, 22, 33, 44}
+	fmt.Println("创建一个切片，接收多种类型的值")
+	for _, value := range any {
+		fmt.Println(value)
+	}
+}
+```
+
+**注意:**
+
+* 空接口可以承载任意值，但不代表任意类型就可以承接空接口类型的值
+* 当空接口承载数组和切片后，该对象无法再进行切片
+* 当你使用空接口来接收任意类型的参数时，它的静态类型是 interface{}，但动态类型（是 int，string 还是其他类型）我们并不知道，因此需要使用类型断言
