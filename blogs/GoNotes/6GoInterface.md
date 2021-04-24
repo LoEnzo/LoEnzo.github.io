@@ -378,3 +378,94 @@ func receiveMoreTypeEmptyInterface() {
 * 空接口可以承载任意值，但不代表任意类型就可以承接空接口类型的值
 * 当空接口承载数组和切片后，该对象无法再进行切片
 * 当你使用空接口来接收任意类型的参数时，它的静态类型是 interface{}，但动态类型（是 int，string 还是其他类型）我们并不知道，因此需要使用类型断言
+
+## 接口的三个潜规则
+
+### 方法调用的限制
+
+定义一个`Animal`接口，其中包含`eat()`方法，定义了`Cat`接口体，包含了的两个方法`eat()`、`run()`
+
+```go
+type Animal interface {
+	eat()
+}
+
+type Cat struct {
+	name string
+}
+
+func (cat Cat) eat() {
+	fmt.Printf("%s is animal, it cant eatting.\n", cat.name)
+}
+
+func (cat Cat) run() {
+	fmt.Printf("%s is animal, it can running.\n", cat.name)
+}
+
+func printType(i interface{}) {
+
+	switch i.(type) {
+	case int:
+		fmt.Println("参数的类型是 int")
+	case string:
+		fmt.Println("参数的类型是 string")
+	}
+}
+
+func main() {
+	// 显示申明了 animal对象为Animal接口，
+	var animal Animal
+	animal = Cat{name: "cat"}
+	animal.eat()
+	// 会报错，所调用方法受到接口的方法限制
+	// animal.run()
+    
+    	// 更改
+	animal1 := Cat{name: "cat"}
+	animal1.eat()
+	animal1.run()
+}
+```
+
+### 调用函数时的隐式转换
+
+Go 语言中的函数调用都是值传递的，变量会在方法调用前进行类型转换
+
+```go
+func printType(i interface{})  {
+
+    switch i.(type) {
+    case int:
+        fmt.Println("参数的类型是 int")
+    case string:
+        fmt.Println("参数的类型是 string")
+    }
+}
+
+func main() {
+    a := 10
+    // 隐式转换了 a的值 为 空接口类型
+    printType(a)
+    // 直接判断就会报错
+    // switch a.(type) {}
+    // 调整为 显示转换
+    switch interface{}(a).(type){}
+}
+```
+
+### 类型断言中的隐式转换
+
+静态类型为`接口类型`的对象才可以进行类型断言
+
+```go
+func main(){
+    var a interfaceP{} = 5
+    // 对静态类型a断言完成后，go 隐式转换返回了一个静态类型
+    swtich b := a.(type){
+    case int:
+        // 这里会报错，因为b此时是静态类型，不是接口类型了，不能再进行断言
+        b.(int)
+    }
+}
+```
+
