@@ -37,4 +37,14 @@ module.exports = [
     copyright: '',
     count: 10
   }],
+  // 复制代码功能
+  [
+    "vuepress-plugin-nuggets-style-copy",
+    {
+        copyText: "复制代码",
+        tip: {
+            content: "复制成功!"
+        }
+    }
+  ],
 ]

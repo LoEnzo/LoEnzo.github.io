@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@vuepress-reco/vuepress-plugin-rss": "^1.0.2",
-    "vue-class-component": "^7.2.3"
+    "vue-class-component": "^7.2.3",
+    "vuepress-plugin-nuggets-style-copy": "^1.0.3"
   },
   "description": "just want to record somethings"
 }
