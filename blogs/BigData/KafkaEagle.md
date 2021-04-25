@@ -8,7 +8,6 @@ date: 2020-09-09
 ---
 
 ::: tip
- Kafka Eagle简单使用
 
 :::
 

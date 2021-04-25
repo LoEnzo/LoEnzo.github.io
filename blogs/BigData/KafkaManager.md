@@ -8,7 +8,6 @@ date: 2020-09-08
 ---
 
 ::: tip
-KafkaManager简单使用
 
 :::
 
