@@ -1,7 +1,5 @@
 // 引入导航栏
 const navConf = require("./navConfig.js");
-// 侧边栏设置
-const sidebarConf = require("./sidebarConfig.js");
 // 博客设置
 const blogConf = require("./blogConfig.js");
 // 友链
@@ -9,7 +7,7 @@ const friendLinkConf = require("./friendLinkConfig.js");
 
 module.exports = {
   nav: navConf,
-  sidebar: sidebarConf,
+  // sidebar: sidebarConf, 改用自动侧边栏插件
   type: "blog",
   // 博客设置
   blogConfig: blogConf,

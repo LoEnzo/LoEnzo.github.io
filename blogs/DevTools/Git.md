@@ -155,7 +155,7 @@ git push --tags
 
 ### 问题：
 
-#### 1. git clone 报错 
+#### git clone 报错 
 
 `warning: Clone succeeded, but checkout failed.` 或者`filename too long`，原因：
 
@@ -167,7 +167,7 @@ git push --tags
 git config --system core.longpaths true
 ```
 
-#### 2. git push github 或者 git update 更新报错 443
+#### git push github 或者 git update 更新报错 443
 
  `SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443`，原因：
 
@@ -182,7 +182,7 @@ git config --system core.longpaths true
 git config --global --unset http.proxy
 ```
 
-#### 3. git pull 报错：`SSL certificate problem: unable to get local issuer certificate`
+#### git pull 报错：`SSL certificate problem: unable to get local issuer certificate`
 
 原因：
 
@@ -194,7 +194,7 @@ git config --global --unset http.proxy
 git config --global http.sslVerify false
 ```
 
-#### 4. git pull 报错429
+#### git pull 报错429
 
 原因：偶尔出现的拉去大文件，或者网络不好的情况， `fatal: unable to access 'https://XXX.git/': The requested URL returned error: 429`
 
@@ -204,7 +204,7 @@ git config --global http.sslVerify false
 git config --global http.postBuffer 5242880000
 ```
 
-#### 5. git push 报错403
+#### git push 报错403
 
 原因：开始还可以推送，后面就报错了，暂时不知道为啥，详细错误：  `fatal: unable to access 'https://XXX.git/': The requested URL returned error: 403`
 
@@ -219,7 +219,16 @@ vim .git/config
 
 重新推送即可
 
-#### 6. Git修改凭证
+#### 设置和取消代理
+
+```shell
+# 设置代理
+git config --global https.proxy `http://127.0.0.1:8081`
+# 取消代理
+git config --global --unset https.proxy
+```
+
+#### Git修改凭证
 
 事例：使用`Tortoigit`提交文件时，因为没有权限，输入的凭证错误，导致提交失败，后续添加权限后，重复提交仍然失败。
 
