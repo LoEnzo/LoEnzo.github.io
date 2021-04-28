@@ -469,3 +469,6 @@ func main(){
 }
 ```
 
+# 练习源码
+
+[Interface](https://gitee.com/myMagicRain/go-study/tree/master/src/Interface)

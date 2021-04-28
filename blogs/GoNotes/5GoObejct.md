@@ -129,3 +129,7 @@ go语言中，要区分函数`首字母大小写`，它决定方法的访问权�
 
 * 首字母大写，这个方法对所有包都是`public`，都能调用
 * 搜字母小写，这个方法是`private`，其他包无法访问
+
+# 练习源码
+
+[Object](https://gitee.com/myMagicRain/go-study/tree/master/src/Object)

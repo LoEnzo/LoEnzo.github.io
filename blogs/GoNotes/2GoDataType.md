@@ -387,3 +387,7 @@ func modify(sls []int) {
 | %9.f  | 宽度9，精度0       |
 
 :::
+
+# 练习源码
+
+[DataType](https://gitee.com/myMagicRain/go-study/tree/master/src/DataType)

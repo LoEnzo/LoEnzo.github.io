@@ -55,3 +55,6 @@ func catchPanic(x int) {
 // catched Pnic, program is ok
 ```
 
+# 练习源码
+
+[Exception](https://gitee.com/myMagicRain/go-study/tree/master/src/Exception)
