@@ -70,8 +70,16 @@ PATH	# 安装目录\bin
 
 ```shell
 # 安装完成即可使用，如果采用压缩包安装
-PATAH	# 安装目录\cmd
+PATH	# 安装目录\cmd
 验证：	git version
+```
+
+### **[Nginx](http://nginx.org/en/download.html)**
+
+```shell
+# 安装对应目录，windows安装对应稳定版，然后解压即可
+PATH	# 安装目录
+验证：	nginx -v
 ```
 
 ## Database
