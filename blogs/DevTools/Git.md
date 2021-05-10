@@ -140,7 +140,15 @@ $ git cherry-pick <HashA> <HashB>
 $ git push
 ```
 
-### 8. 其他
+### 8. 回退
+
+```shell
+// 版本回退，回退到该版本之后的提交记录都会丢失
+git reset --hard commit_id
+git push -f
+```
+
+### 9. 其他
 
 ```shell
 // 修改.ignore 使其生效
