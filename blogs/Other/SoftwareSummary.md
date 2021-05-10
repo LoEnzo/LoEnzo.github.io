@@ -63,14 +63,11 @@ date: 2020-07-09
 #### 其他：
 
 * [**Everything**：磁盘搜索软件](https://www.voidtools.com/zh-cn/)
-
 * [**Utools**：快捷启动软件](https://www.u.tools/)
-
 * [**Windows Terminal**：终端，windows应用商店下载]()
-
 * [**QuickLook**：快速预览](https://github.com/QL-Win/QuickLook/releases)
-
 * [**Snipaste**：截屏贴图软件，Windows商店也可以下载](https://www.snipaste.com/)
-
 * [**TrafficeMonitor**：系统托盘图片，显示网速等参数信息]()
+
+* [向日葵远程控制]([https://sunlogin.oray.com/download/)
 

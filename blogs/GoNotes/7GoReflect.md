@@ -256,7 +256,183 @@ Type 对象 和 Value 对象都可以通过 Kind() 方法返回对应的接口�
 reflect.TypeOf(m).Kind()
 ```
 
+结构体
 
+```go
+type Profile struct {
+	name   string
+	age    int
+	gender string
+}
+
+type Picture struct {
+}
+```
+
+### 类型转换
+
+Int() 转int，Float()转float，String()转string，Bool()转boolean，Pointer()转指针，Interface()转接口类型
+
+::: details 类型转换
+
+```go
+func main() {
+	var age int = 25
+	// Int() 转 int
+	transferType(25)
+	// Float() 转 float
+	//transferType(9.99)
+	// String() 转 string
+	//transferType("hello")
+	// Bool() 转 boolean
+	//transferType(true)
+	// Pointer 转 指针
+	//transferType(&age)
+}
+
+func transferType(age interface{}) {
+	v1 := reflect.ValueOf(age)
+	fmt.Printf("转换前， type: %T, value: %v \n", v1, v1)
+	//v2 := v1.Int()
+	//v2 := v1.Float()
+	//v2 := v1.String()
+	//v2 := v1.Bool()
+	//v2 := v1.Pointer()
+	v2 := v1.Interface() // Interface() 转 接口类型
+	fmt.Printf("转换后， type: %T, value: %v \n", v2, v2)
+}
+```
+
+:::
+
+### 切片操作
+
+Slice() 函数与上面所有类型转换的函数都不一样，它返回还是 reflect.Value 反射对象，而不再是我们所想的真实世界里的切片对象
+
+Slice3()这个三个参数暂时没看懂
+
+::: details 切片操作
+
+```go
+func main() {
+    reflectSlice()
+	// 更新切片
+	arr := []int{1, 2}
+	reflectUpdateSlice(&arr)
+}
+
+func reflectUpdateSlice(arrPtr interface{}) {
+	valuePtr := reflect.ValueOf(arrPtr)
+	value := valuePtr.Elem()
+	fmt.Printf("更新前value：%d, 容量 %d\n", value, value.Len())
+
+	value.Set(reflect.Append(value, reflect.ValueOf(3)))
+	fmt.Printf("更新后value：%d, 容量 %d\n", value, value.Len())
+}
+
+func reflectSlice() {
+	var numList []int = []int{1, 2, 4, 5, 2, 5}
+
+	v1 := reflect.ValueOf(numList)
+	fmt.Printf("转换前， type: %T, value: %v \n", v1, v1)
+	// Slice 函数接收两个参数
+	v2 := v1.Slice(0, 4)
+	fmt.Printf("转换后， type: %T, value: %v \n", v2, v2)
+	// Slice3 对切片再切片,暂时没有看第三个参数的含义
+	//v3 := v2.Slice3(1,3,3)
+	v3 := v2.Slice(1, 3)
+	fmt.Printf("转换后， type: %T, value: %v \n", v3, v3)
+}
+```
+
+:::
+
+### 属性操作
+
+* 属性操作`NumField() `和 `Field()`
+
+::: details 属性操作
+
+```go
+func reflectStruct() {
+	p := Profile{"张三", 18, "male"}
+	v := reflect.ValueOf(p)
+	fmt.Printf("字段数为：%d\n", v.NumField())
+	for i := 0; i < v.NumField(); i++ {
+		fmt.Printf("第 %d 个元素为 %v\n", i+1, v.Field(i))
+	}
+}
+```
+
+::: 
+
+### 方法操作
+
+创建三个方法
+
+```go
+func (p Profile) SayBye() string {
+	return "Bye"
+}
+
+func (p Profile) SayHello() string {
+	return "Hello"
+}
+
+func (p Picture) SelfIntroduction(name string, age int) {
+	fmt.Printf("Hello, my name is %s and i'm %d years old.", name, age)
+}
+```
+
+
+::: details 动态调用函数
+
+```go
+func main() {	
+    // 动态调用函数（使用索引且无参数）
+	reflectDynamicFun()
+	// 动态调用函数（使用函数名且无参数）
+	reflectDynamicFun1()
+	// 动态调用函数（使用函数且有参数）
+	reflectDynamicFun2()
+}
+
+func reflectDynamicFun2() {
+   p := Picture{}
+   v := reflect.ValueOf(p)
+   name := reflect.ValueOf("赵六")
+   size := reflect.ValueOf(100)
+   input := []reflect.Value{name, size}
+   v.MethodByName("SelfIntroduction").Call(input)
+}
+
+func reflectDynamicFun1() {
+   p := &Profile{"王五", 27, "male"}
+   v := reflect.ValueOf(p)
+   fmt.Print(v.MethodByName("SayHello").Call(nil), "\n")
+   fmt.Print(v.MethodByName("SayBye").Call(nil), "\n")
+}
+
+func reflectDynamicFun() {
+   p := &Profile{"王五", 27, "male"}
+
+   t := reflect.TypeOf(p)
+   v := reflect.ValueOf(p)
+
+   fmt.Printf("调用第 %d 个方法：%v ，调用结果：%v\n", 1,
+      t.Method(0).Name, v.Elem().Method(0).Call(nil))
+   fmt.Printf("调用第 %d 个方法：%v ，调用结果：%v\n", 2,
+      t.Method(1).Name, v.Elem().Method(1).Call(nil))
+}
+```
+
+:::
+
+## 说明
+
+go反射感觉比较难理解，我也是才入门，
+
+根据原作者的叙述，我个人觉得能不用反射就不用反射，有这块的代码都感觉都比较难理解，概念比较抽象，哈哈。
 
 # 练习源码
 
