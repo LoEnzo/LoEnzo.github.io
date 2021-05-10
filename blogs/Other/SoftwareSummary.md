@@ -58,7 +58,7 @@ date: 2020-07-09
 #### windows常用软件：
 
 * [**BandZip**: 压缩软件](http://www.bandisoft.com/)
-* [**QTTabBar**：Windows资管管理器插件](http://qttabbar.wikidot.com/)，先下载1038，再下载1040补丁更新即可获取最新版
+* [**QTTabBar**：Windows资管管理器插件](http://qttabbar.wikidot.com/)，[使用参考，评论含中文文件下载](https://sspai.com/post/52521)，[汉化文件下载](http://drive.lanyuanxiaoyao.com/f/500112d02d/)
 
 #### 其他：
 
