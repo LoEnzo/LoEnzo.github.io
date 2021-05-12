@@ -62,7 +62,7 @@ import _ "packgename"
 
 通常`vendor` 目录是通过 `go mod vendor` 命令生成的，这个命令会将项目依赖全部打包到你的项目目录下的 verdor 文件夹中
 
-# Go Modules
+# Go包管理
 
 go的包管理方式，从`GOPATH`到`GO VENDOR`到`GO  MODULES`，推荐使用`Go Modules`
 
@@ -82,10 +82,12 @@ go的包管理方式，从`GOPATH`到`GO VENDOR`到`GO  MODULES`，推荐使用`
 
   它在每个项目的下都创建一个`vendor`目录，每个项目需要的以来都下载到该目录下，项目之间不相互影响，但是项目同一个包极大可能被多个项目用到了，每个项目下都保留无疑是对磁盘空间的浪费，别人要使用你的项目，你还得想你依赖的包都上传，否则别人很可能无法使用】
 
-* go mod
+* go modules
+
+  [参考](https://segmentfault.com/a/1190000021854441)
 
   go v1.11版本开始，`go env`多了个环境变量`GO111MODULE`，通过它可以开启或关闭 go mod 模式，它有三个可选值：`off`、`on`、`auto`，默认值是`auto`
-
+  
   * `GO111MODULE=off`禁用模块支持，编译时会从`GOPATH`和`vendor`文件夹中查找包
   * `GO111MODULE=on`启用模块支持，编译时会忽略`GOPATH`和`vendor`文件夹，只根据 `go.mod`下载依赖
   * `GO111MODULE=auto`，当项目在`$GOPATH/src`外且项目根目录有`go.mod`文件时，自动开启模块支持
@@ -94,4 +96,71 @@ go的包管理方式，从`GOPATH`到`GO VENDOR`到`GO  MODULES`，推荐使用`
 // 开启方式
 $ go env -w GO111MODULE="on"
 ```
+
+## go mod
+
+### go modules 模式核心文件
+
+`go.mod`
+
+- 第一行：模块的引用路径
+- 第二行：项目使用的 go 版本
+- 第三行：项目所需的直接依赖包及其版本
+
+简单的 go.mod
+
+如何将依赖写入`go.mod`，通过`go get `下载安装指定的依赖，或者`go build`导入import中的依赖也能自动下载
+
+```go
+module go-study
+
+go 1.16
+
+require github.com/qq827435393/gohello v0.0.0-20201127010752-c29ed43981d7
+```
+
+复杂的go.mod
+
+- `exclude`： 忽略指定版本的依赖包
+- `replace`：由于在国内访问golang.org/x的各个包都需要翻墙，你可以在go.mod中使用replace替换成github上对应的库。
+
+```go
+module github.com/BingmingWong/module-test
+
+go 1.14
+
+require (
+    example.com/apple v0.1.2
+    example.com/banana v1.2.3
+    example.com/banana/v2 v2.3.4
+    example.com/pear // indirect
+    example.com/strawberry // incompatible
+)
+
+exclude example.com/banana v1.2.4
+replace（
+    golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac => github.com/golang/crypto v0.0.0-20180820150726-614d502a4dac
+    golang.org/x/net v0.0.0-20180821023952-922f4815f713 => github.com/golang/net v0.0.0-20180826012351-8a410e7b638d
+    golang.org/x/text v0.3.0 => github.com/golang/text v0.3.0
+)
+```
+
+`go.sum`
+
+每一行都是由 `模块路径`，`模块版本`，`哈希检验值` 组成，其中哈希检验值是用来保证当前缓存的模块不会被篡改。hash 是以`h1:`开头的字符串，表示生成checksum的算法是第一版的hash算法（sha256）
+
+**注意**：`go.mod 和 go.sum 是 go modules 版本管理的指导性文件，因此 go.mod 和 go.sum 文件都应该提交到你的 Git 仓库中去，避免其他人使用你写项目时，重新生成的go.mod 和 go.sum 与你开发的基准版本的不一致`
+
+### go mod 相关指令
+
+| 命令            | 作用                                                         |
+| --------------- | ------------------------------------------------------------ |
+| go mod init     | 生成 go.mod 文件                                             |
+| go mod download | 下载 go.mod 文件中指明的所有依赖到本地cache，默认为`$GOPATH/pkg/mod`目录） |
+| go mod tidy     | 整理现有的依赖（添加缺少的包，且删除无用的包）               |
+| go mod graph    | 查看现有的依赖结构                                           |
+| go mod edit     | 编辑 go.mod 文件，-fmt 格式化文件                            |
+| go mod vendor   | 导出项目所有的依赖到vendor目录                               |
+| go mod verify   | 校验一个模块是否被篡改过                                     |
+| go mod why      | 查看为什么需要依赖某模块                                     |
 
