@@ -93,8 +93,11 @@ go的包管理方式，从`GOPATH`到`GO VENDOR`到`GO  MODULES`，推荐使用`
   * `GO111MODULE=auto`，当项目在`$GOPATH/src`外且项目根目录有`go.mod`文件时，自动开启模块支持
 
 ```go
-// 开启方式
-$ go env -w GO111MODULE="on"
+// 开启go mod方式
+go env -w GO111MODULE="on"
+
+// 设置代理
+go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
 ## go mod
@@ -164,3 +167,28 @@ replace（
 | go mod verify   | 校验一个模块是否被篡改过                                     |
 | go mod why      | 查看为什么需要依赖某模块                                     |
 
+### go 编码规范
+
+[参考](http://golang.iswbm.com/en/latest/c03/c03_04.html#)
+
+* 文件命名
+
+  建议统一小写，不同单词之间用“_”隔开，测试文件以`_test.go`结尾
+
+* 常量命名
+
+  建议大写下划线分割，可以于变量区分开
+
+* 变量命名
+
+  建议驼峰
+
+* 函数命名
+
+  建议驼峰，`注意`：go根据函数手写字母大小写区分外包能不能访问，需要则大写，不需要小写
+
+* 接口命名
+
+* 注释
+
+* 包导入

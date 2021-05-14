@@ -38,3 +38,15 @@ oracle 报错 oracle12c安装失败【INS-30131】执行安装程序验证所需
       `setup.exe -ignorePrereq -J"-Doracle.install.db.validate.supportedOSCheck=false"`
   3. 不行执行`setup.exe -ignorePrereq -J"-Doracle.install.client.validate.clientSupportedOSCheck=false"`命令
       之后会自动进入安装步骤中
+
+查杀进程
+
+```shell
+# 查看端口占用 
+netstat -ano |findstr "端口
+# 查看进程 
+tasklist |findstr "进程id号"
+# 杀掉进程 
+taskkill /f /t /im "进程id或者进程名称"
+```
+
