@@ -285,7 +285,7 @@ func channelAsLock(channel chan bool, x *int) {
 
 之前的例子中，为了让协程执行完，我们再`main`函数中添加了`time.sleep`的操作，但是真实开发场景中，我们无法估计协程执行完的时间，也就无法设定`time.sleep`，所以这种方式只适用于平时的测试，下面有两种方式来定位什么时候协程执行完了
 
-### 使用信道标识
+## 使用信道标识
 
 也就是在所有协程执行完成之后，在发送一个`true`，在主协程中如果获取到了`true`标识，就说明子协程执行完成了
 
@@ -310,7 +310,7 @@ func main() {
 // 子协程执行完成了
 ```
 
-### 使用WaitGroup
+## 使用WaitGroup
 
 使用信道标识，对于单个协程或者协程数量比较少的时候还可以，如果数量多了，代码就看着有点复杂了，所以推荐另外一种方式，使用 sync包 提供的 WaitGroup 类型
 
@@ -368,10 +368,167 @@ var 实例名 sync.WaitGroup
 
 实例化WaitGroup后有几个常用的方法：
 
-- `Add`：初始值为0，你传入的值会往计数器上加，这里直接传入你子协程的数量
+- `Add`：初始值为0，你传入的值会往计数器上加，这里直接传入你子协程的数量，参数值要等于go协程数量，否则会报错，暂不知道怎么来确定这个值哦
 - `Done`：当某个子协程完成后，可调用此方法，会从计数器上减一，通常可以使用 defer 来调用
 - `Wait`：阻塞当前协程，直到实例里的计数器归零
 
+```go
+func main() {
+    
+	var wg sync.WaitGroup
+    
+	wg.Add(2)
+	go useWaitGroup(1, &wg)
+	go useWaitGroup(2, &wg)
+	wg.Wait()
+
+	fmt.Println("子协程执行完成了")
+}
+
+func useWaitGroup(x int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	for i := 0; i < 5; i++ {
+		fmt.Printf("协程 %d: 输出：%d\n", x, i)
+	}
+}
+```
+
+如果传入的参数变成了下面这种，就会报错如下：
+
+因为子线程函数，传入的参数是waitgroup的值拷贝，主协程的waitGroup wg并没有调用Done()，导致标志位没有释放，出现死锁
+
+```go
+func useWaitGroup(x int, wg sync.WaitGroup) {
+	defer wg.Done()
+	for i := 0; i < 5; i++ {
+		fmt.Printf("协程 %d: 输出：%d\n", x, i)
+	}
+}
+
+// ...
+// 协程 1: 输出：3
+// 协程 1: 输出：4
+// fatal error: all goroutines are asleep - deadlock!
+
+// goroutine 1 [semacquire]:
+// sync.runtime_Semacquire(0xc00000a0a8)
+```
+
+# 互斥锁和读写锁
+
+go语言中，面对并发，优先考虑信道，如果信道无法解决，需要使用共享内存来解决，就需要了解锁机制
+
+## 互斥锁
+
+互斥锁（Mutex，全称 mutual exclusion）是为了来保护一个资源不会因为并发操作而引起冲突导致数据不准确
+
+Mutex锁定义方式
+
+```go
+var mutexLock *sync.Mutex
+mutexLock = new(sync.Mutex)
+
+mutexLock := &sync.Mutex{}
+```
+
+示例：
+
+去除锁相关的代码，最终count的值小于30000，因为三个协程在同时执行，先读取count，再更新count值，count值不具备原子性，导致数据不准备
+
+```go
+func userMutex(count *int, wg *sync.WaitGroup, mutexLock *sync.Mutex) {
+	for i := 0; i < 10000; i++ {
+		mutexLock.Lock()		//
+		*count = *count + 1
+		mutexLock.Unlock()		//
+	}
+	wg.Done()
+}
+
+func main() {
+	var wg sync.WaitGroup			//
+	mutexLock := &sync.Mutex{}		//
+	count := 0
+	wg.Add(3)
+	go userMutex(&count, &wg, mutexLock)
+	go userMutex(&count, &wg, mutexLock)
+	go userMutex(&count, &wg, mutexLock)
+	wg.Wait()
+	fmt.Println("count 的值为：", count)
+}
+
+// count 的值为： 30000
+// 去除 锁相关代码，结果小于 30000
+```
+
+**注意**：
+
+- 同一协程里，不要在尚未解锁时再次使加锁
+- 同一协程里，不要对已解锁的锁再次解锁
+- 加了锁后，别忘了解锁，必要时使用 defer 语句
+
+## 读写锁
+
+RWMutex 里提供了两种锁，每种锁分别对应两个方法，为了避免死锁，两个方法应成对出现，必要时请使用 defer。
+
+- 读锁：调用 RLock 方法开启锁，调用 RUnlock 释放锁
+- 写锁：调用 Lock 方法开启锁，调用 Unlock 释放锁（和 Mutex类似）
+
+RWMutex 锁定义方式：
+
+```go
+var rwMutexLock *sync.RWMutex
+rwMutexLock = new(sync.RWMutex)
+
+// 第二种
+rwMutexLock := &sync.RWMutex{}
+```
+
+示例：
+
+```go
+func userRWMutex(rwMutexLock *sync.RWMutex) {
+	for i := 0; i < 4; i++ {
+		go func(i int) {
+			fmt.Printf("第 %d 个协程准备开始... \n", i)
+			// 读锁开启
+			rwMutexLock.RLock()
+			fmt.Printf("第 %d 个协程获得读锁, sleep 1s 后，释放锁\n", i)
+			time.Sleep(time.Second)
+			// 读锁释放
+			rwMutexLock.RUnlock()
+		}(i)
+	}
+	time.Sleep(time.Second * 2)
+}
+
+func main() {
+	rwMutexLock := &sync.RWMutex{}
+	// 写锁开启
+	rwMutexLock.Lock()
+	// 写锁释放
+	userRWMutex(rwMutexLock)
+	// 写锁释放完成,函数里面的读锁才能继续执行
+	rwMutexLock.Unlock()
+	// 函数里面的读锁释放完成，才能执行下面的写锁
+	rwMutexLock.Lock()
+	fmt.Println("程序退出...")
+	rwMutexLock.Unlock()
+}
+
+// 第 3 个协程准备开始...
+// 第 0 个协程准备开始...
+// 第 1 个协程准备开始...
+// 第 2 个协程准备开始...
+// 第 2 个协程获得读锁, sleep 1s 后，释放锁
+// 第 3 个协程获得读锁, sleep 1s 后，释放锁
+// 第 0 个协程获得读锁, sleep 1s 后，释放锁
+// 第 1 个协程获得读锁, sleep 1s 后，释放锁
+// 程序退出...
+```
+
+
+
 # 练习源码
 
-[Coroutine]()
+[Coroutine](https://gitee.com/myMagicRain/go-study/tree/master/src/Coroutine)
