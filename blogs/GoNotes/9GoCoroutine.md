@@ -527,6 +527,282 @@ func main() {
 // 程序退出...
 ```
 
+# Context
+
+Context，也叫上下文，接口定义如下：
+
+```go
+type Context interface {
+    Deadline() (deadline time.Time, ok bool)
+    Done() <-chan struct{}
+    Err() error
+    Value(key interface{}) interface{}
+}
+```
+
+## 4个方法：
+
+- `Deadline`：返回的第一个值是 **截止时间**，到了这个时间点，Context 会自动触发 Cancel 动作。返回的第二个值是 一个布尔值，true 表示设置了截止时间，false 表示没有设置截止时间，如果没有设置截止时间，就要手动调用 cancel 函数取消 Context。
+- `Done`：返回一个只读的通道（只有在被cancel后才会返回），类型为 `struct{}`。当这个通道可读时，意味着parent context已经发起了取消请求，根据这个信号，开发者就可以做一些清理动作，退出goroutine。
+- `Err`：返回 context 被 cancel 的原因。
+- `Value`：返回被绑定到 Context 的值，是一个键值对，所以要通过一个Key才可以获取对应的值，这个值一般是线程安全的。
+
+为什么需要Context
+
+协程goroutine开启后，我们是无法强制关闭它的，一般关闭协程的原因有如下的方式：
+
+* 协程执行完成，自己结束后退出，正常关闭
+* 主进程异常，导致协程被迫退出，异常关闭，需要优化代码
+* 通过通道发送信号，引导协程退出，开发者手动控制协程
+
+::: details 手动控制协程关闭
+
+```go
+func main() {
+	stopChan := make(chan bool)
+
+	manualControlChan(stopChan)
+	// 主进程延迟10秒，让协程可以运行，随后向stopChan信道传入true
+	time.Sleep(10 * time.Second)
+	fmt.Println("可以了，通知监控停止")
+	stopChan <- true
+}
+
+func manualControlChan(stopChan chan bool) {
+	go func() {
+		for {
+			select {
+			case <-stopChan:
+				// 当stopChan信道能检测到值后，模拟信道关闭
+				fmt.Println("监控退出，停止了...")
+				return
+			default:
+				fmt.Println("goroutine监控中...")
+				time.Sleep(2 * time.Second)
+			}
+		}
+	}()
+}
+
+// goroutine监控中...
+// goroutine监控中...
+// goroutine监控中...
+// goroutine监控中...
+// goroutine监控中...
+// 可以了，通知监控停止
+```
+
+::: 
+
+上面是一个协程的例子，如果是多个协程呢，采用标识的方式无疑很麻烦
+
+::: details 手动关闭多个协程，可以使用close(chan)
+
+```go
+func main() {
+	stopSingle := make(chan bool)
+	for i := 1; i <= 5; i++ {
+		go manualCloseChan(stopSingle, i)
+	}
+	time.Sleep(1 * time.Second)
+	// 关闭所有 goroutine
+	close(stopSingle)
+	// 等待5s，若此时屏幕没有输出 <正在监控中> 就说明所有的goroutine都已经关闭
+	time.Sleep(5 * time.Second)
+	fmt.Println("主程序退出！！")
+}
+
+func manualCloseChan(ch chan bool, number int) {
+	for {
+		select {
+		case v := <-ch:
+			// 仅当 ch 通道被 close，或者有数据发过来(无论是true还是false)才会走到这个分支
+			fmt.Printf("监控器%v，接收到通道值为：%v，监控结束。\n", number, v)
+			return
+		default:
+			fmt.Printf("监控器%v，正在监控中...\n", number)
+			time.Sleep(2 * time.Second)
+		}
+	}
+}
+
+// 监控器5，正在监控中...
+// 监控器4，正在监控中...
+// 监控器1，正在监控中...
+// 监控器2，正在监控中...
+// 监控器3，正在监控中...
+// 监控器2，接收到通道值为：false，监控结束。
+// 监控器5，接收到通道值为：false，监控结束。
+// 监控器1，接收到通道值为：false，监控结束。
+// 监控器4，接收到通道值为：false，监控结束。
+// 监控器3，接收到通道值为：false，监控结束。
+// 主程序退出！！
+```
+
+:::
+
+根Context
+
+一个是Background，主要用于main函数、初始化以及测试代码中，作为Context这个树结构的最顶层的Context，也就是根Context，它不能被取消。
+
+一个是TODO，如果我们不知道该使用什么Context的时候，可以使用这个，但是实际应用中，暂时还没有使用过这个TODO。
+
+他们两个本质上都是emptyCtx结构体类型，是一个不可取消，没有设置截止时间，没有携带任何值的Context
+
+```go
+var (
+    background = new(emptyCtx)
+    todo       = new(emptyCtx)
+)
+
+func Background() Context {
+    return background
+}
+
+func TODO() Context {
+    return todo
+}
+```
+
+```go
+type emptyCtx int
+
+func (*emptyCtx) Deadline() (deadline time.Time, ok bool) {
+    return
+}
+
+func (*emptyCtx) Done() <-chan struct{} {
+    return nil
+}
+
+func (*emptyCtx) Err() error {
+    return nil
+}
+
+func (*emptyCtx) Value(key interface{}) interface{} {
+    return nil
+}
+```
+
+## Context简单使用
+
+```go
+ctx, cancel := context.WithCancel(context.Background())
+```
+
+::: details 使用context，关闭多个协程
+
+```go
+func main() {
+	// 简单使用context关闭多个协程
+	ctx, cancel := context.WithCancel(context.Background())
+	for i := 1; i <= 5; i++ {
+		go manualCloseChanWithContext(ctx, i)
+	}
+	time.Sleep(1 * time.Second)	
+	// 关闭所有 goroutine
+	cancel()
+	// 等待5s，若此时屏幕没有输出 <正在监控中> 就说明所有的goroutine都已经关闭
+	time.Sleep(5 * time.Second)
+	fmt.Println("主程序退出！！")
+}
+
+func manualCloseChanWithContext(ctx context.Context, number int) {
+	for {
+		select {
+		// 其实可以写成 case <- ctx.Done(),这里为了便于查看 ctx.Done()返回内容
+		case v := <-ctx.Done():
+			fmt.Printf("监控器%v，接收到通道值为：%v，监控结束。\n", number, v)
+			return
+		default:
+			fmt.Printf("监控器%v，正在监控中...\n", number)
+			time.Sleep(2 * time.Second)
+		}
+	}
+}
+
+// 监控器1，正在监控中...
+// 监控器3，正在监控中...
+// 监控器2，正在监控中...
+// 监控器4，正在监控中...
+// 监控器5，正在监控中...
+// 监控器4，接收到通道值为：{}，监控结束。
+// 监控器1，接收到通道值为：{}，监控结束。
+// 监控器2，接收到通道值为：{}，监控结束。
+// 监控器5，接收到通道值为：{}，监控结束。
+// 监控器3，接收到通道值为：{}，监控结束。
+// 主程序退出！！
+```
+
+:::
+
+## Context的继承
+
+context的4个with函数
+
+```go
+func WithCancel(parent Context) (ctx Context, cancel CancelFunc)
+func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc)
+func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc)
+func WithValue(parent Context, key, val interface{}) Context
+```
+
+第一个参数都是父Context，初次创建都是传入根context，比如上面的WithCancel()创建的context，如果把这个context传入下一个withDeadline()创建的 context，那么它也同样具有cancel的功能
+
+```go
+// cancelCtx 具有cancel协程的功能
+cancelCtx, cancel := context.WithCancel(context.Background())
+// deadline 具有deadline和cancel协程的功能
+deadlineCtx, cancel := context.WithDeadline(cancelCtx, time.Now().Add(1 * time.Second))
+```
+
+WithDeadline 和 WithTimeout 
+
+```go
+// 传入的第二个参数是 time.Time 类型，它是一个绝对的时间，意思是在什么时间点超时取消
+func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc)
+
+// 传入的第二个参数是 time.Duration 类型，它是一个相对的时间，意思是多长时间后超时取消
+func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc)
+```
+
+::: details context继承 WithDeadline 和 WithDeadline
+
+```go
+func main() {
+	ctx01, cancel := context.WithCancel(context.Background())
+	ctx02, cancel := context.WithDeadline(ctx01, time.Now().Add(1 * time.Second))
+    // 相比例子1，仅有这一行改动
+    // ctx02, cancel := context.WithTimeout(ctx01, 1* time.Second)
+	defer cancel()
+	for i :=1 ; i <= 5; i++ {
+		go manualCloseChanWithContext(ctx02, i)
+	}
+	time.Sleep(5  * time.Second)
+	if ctx02.Err() != nil {
+		fmt.Println("监控器取消的原因: ", ctx02.Err())
+	}
+	fmt.Println("主程序退出！！")
+}
+
+// 监控器1，正在监控中...
+// 监控器5，正在监控中...
+// 监控器2，正在监控中...
+// 监控器3，正在监控中...
+// 监控器4，正在监控中...
+// 监控器4，接收到通道值为：{}，监控结束。
+// 监控器3，接收到通道值为：{}，监控结束。
+// 监控器5，接收到通道值为：{}，监控结束。
+// 监控器2，接收到通道值为：{}，监控结束。
+// 监控器1，接收到通道值为：{}，监控结束。
+// 监控器取消的原因:  context deadline exceeded
+// 主程序退出！
+```
+
+:::
+
+## WithValue
+
 
 
 # 练习源码
