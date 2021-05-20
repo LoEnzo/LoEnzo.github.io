@@ -363,7 +363,9 @@ func signChannel1(done chan bool) {
 :::
 
 ```
-var 实例名 sync.WaitGroup
+var 实例名 sync.WaitGroup 
+// 或
+wg := sync.WaitGroup{}
 ```
 
 实例化WaitGroup后有几个常用的方法：
@@ -803,7 +805,68 @@ func main() {
 
 ## WithValue
 
+通过context可以传递一些必须的元数据，这些数据附加在context上，元数据以key-value形式传入，key具有可以性，value必须是线程安全的
 
+::: details WithValue context携带 key-value，子context可以继承夫context的key-value
+
+```go
+func main() {
+	ctx01, cancel := context.WithCancel(context.Background())
+	ctx02, cancel := context.WithTimeout(ctx01, 1*time.Second)
+	// WithValue context携带元数据 key-value
+	ctx03 := context.WithValue(ctx02, "item", "CPU")
+	defer cancel()
+	for i := 1; i <= 5; i++ {
+		go manualCloseChanWithContext(ctx03, i)
+	}
+	time.Sleep(5 * time.Second)
+	if ctx02.Err() != nil {
+		fmt.Println("监控器取消的原因: ", ctx03.Err())
+	}
+	fmt.Println("主程序退出！！")
+}
+
+func manualCloseChanWithContext(ctx context.Context, number int) {
+	for {
+		select {
+		// 其实可以写成 case <- ctx.Done(),这里为了便于查看 ctx.Done()返回内容
+		case v := <-ctx.Done():
+			fmt.Printf("监控器%v，接收到通道值为：%v，监控结束。\n", number, v)
+			return
+		default:
+			// 获取context中携带的value值
+			value := ctx.Value("item")
+			fmt.Printf("监控器%v，正在监控 %v ...\n", number, value)
+			// 获取 item 的值
+			time.Sleep(2 * time.Second)
+		}
+	}
+}
+
+// 监控器2，正在监控 CPU ...
+// 监控器1，正在监控 CPU ...
+// 监控器4，正在监控 CPU ...
+// 监控器3，正在监控 CPU ...
+// 监控器5，正在监控 CPU ...
+// 监控器3，接收到通道值为：{}，监控结束。
+// 监控器4，接收到通道值为：{}，监控结束。
+// 监控器2，接收到通道值为：{}，监控结束。
+// 监控器1，接收到通道值为：{}，监控结束。
+// 监控器5，接收到通道值为：{}，监控结束。
+// 监控器取消的原因:  context deadline exceeded
+// 主程序退出！！
+```
+
+:::
+
+# Context使用的一些注意事项：
+
+* Context 作为函数的第一个参数传入，变量命名统一为ctx
+* Context 是线程安全的，可以放心地在多个 goroutine 中使用
+* Context 传递给多个 goroutine 时候，只要执行一次 cancel()，所有的 goroutine 都可以收到结束信号
+* 不要把原本可以由函数参数来传递的变量，交给 Context 的 Value 来传递
+* 当一个函数需要接收一个 Context 时，但是此时你还不知道要传递什么 Context 时，可以先用 context.TODO 来代替，而不要选择传递一个 nil
+* 当一个 Context 被 cancel 时，继承自该 Context 的所有 子 Context 都会被 cancel
 
 # 练习源码
 
