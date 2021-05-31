@@ -3,7 +3,7 @@ title: Logback的使用
 tags:
  - Logback
 categories:
- - LinuxNotes
+ - Framework
 date: 2020-05-14
 ---
 
