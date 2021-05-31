@@ -531,6 +531,11 @@ func main() {
 
 # Context
 
+## 使用场景
+
+* 超时请求，调用超时，直接返回错误，避免无线等待（WithTimeOut）
+* http服务的request之间相互传递数据，类似于session，可以传递信息（WithValue）
+
 Context，也叫上下文，接口定义如下：
 
 ```go
