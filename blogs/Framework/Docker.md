@@ -318,6 +318,42 @@ docker run -p 9000:9000 -p 8000:8000 --name portainer \
 
 下载后解压上传到`mydata/portainer/public`目录下，`unzip`解压，如果启动报错的，请找一下最新版的汉化包，重启解压后覆盖public文件夹，或者启动参数去除链接宿主机汉化那一步，启动原版即可
 
+## docker迁移默认目录
+
+docker 默认保存目录在 `/var/lib/docker`，随着拉取镜像镜像、构建的容器增加，内存不够，就会导致服务启动新的镜像
+
+[参考1](https://www.cnblogs.com/insist-forever/p/11739207.html)
+
+```shell
+# 挂载外置磁盘 mount 挂载的磁盘 需要挂载的目录
+mount dev/vdb /DATA 
+
+# 先停止docker服务，在挂载的磁盘目录创建一个docker保存的目录 /DATA/docker
+mkdir /DATA/docker
+
+# 迁移/var/lib/docker目录下面的文件到 /home/docker/lib
+rsync -r -avz /var/lib/docker /DATA/docker/lib/
+
+# 修改配置文件，（同步的时候把父文件夹一并同步过来，实际上的目录应在 /home/docker/lib/docker ）
+vi /usr/lib/systemd/system/docker.service
+
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd --graph=/DATA/docker/lib/docker
+
+# 重新加载docker
+systemctl disable docker
+systemctl enable docker
+systemctl daemon-reload
+systemctl restart docker
+
+# 查看配置是否修改
+docker info
+Docker Root Dir: /DATA/docker/lib/docker
+```
+
+
+
 ## 本机上传到服务器（自己当前情况）
 
 ```shell
