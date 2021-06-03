@@ -64,39 +64,47 @@ import _ "packgename"
 
 # Go包管理
 
-go的包管理方式，从`GOPATH`到`GO VENDOR`到`GO  MODULES`，推荐使用`Go Modules`
+## go包管理发展历程
 
-* GOPATH
+go的包管理方式，从`GOPATH`到`go vender`到`go modules`，推荐使用`go modules`
 
-  可以理解为工作目录，通常的目录结构如下，主要弊端无法在项目中使用指定版本的包，因为其没有包的概念，一个包只能保留一个版本
+* `GOPATH`
 
-```go
-|_bin：存放编译后生成的二进制可执行文件
-|_pkg：存放编译后生成的 .a 文件
-|_src：存放项目的源代码，可以是你自己写的代码，也可以是你 go get 下载的包
-```
+  可以理解为工作目录，通常的目录结构如下，包保存路径`$GOPATH/src`下，主要弊端无法在项目中使用指定版本的包，因为其没有包的概念，一个包只能保留一个版本
+  
+  ```shell
+  |_bin：存放编译后生成的二进制可执行文件
+  |_pkg：存放编译后生成的 .a 文件
+  |_src：存放项目的源代码，可以是你自己写的代码，也可以是你 go get 下载的包
+  ```
 
-* go vender
+* `go vender`
 
-  为了解决 GOPATH 方案下不同项目下无法使用多个版本库的问题，Go v1.5 开始支持 vendor	
+  为了解决 `GOPATH` 方案下不同项目下无法使用多个版本库的问题，Go v1.5 开始支持 `vendor`	
 
-  它在每个项目的下都创建一个`vendor`目录，每个项目需要的以来都下载到该目录下，项目之间不相互影响，但是项目同一个包极大可能被多个项目用到了，每个项目下都保留无疑是对磁盘空间的浪费，别人要使用你的项目，你还得想你依赖的包都上传，否则别人很可能无法使用】
+  它在每个项目的下都创建一个`vendor`目录，每个项目需要的以来都下载到该目录下，项目之间不相互影响，但是项目同一个包极大可能被多个项目用到了，每个项目下都保留无疑是对磁盘空间的浪费，别人要使用你的项目，你还得先将你依赖的包都上传，否则别人很可能无法使用
 
-* go modules
+* `go modules`
 
   [参考](https://segmentfault.com/a/1190000021854441)
 
   go v1.11版本开始，`go env`多了个环境变量`GO111MODULE`，通过它可以开启或关闭 go mod 模式，它有三个可选值：`off`、`on`、`auto`，默认值是`auto`
   
-  * `GO111MODULE=off`禁用模块支持，编译时会从`GOPATH`和`vendor`文件夹中查找包
-  * `GO111MODULE=on`启用模块支持，编译时会忽略`GOPATH`和`vendor`文件夹，只根据 `go.mod`下载依赖
-  * `GO111MODULE=auto`，当项目在`$GOPATH/src`外且项目根目录有`go.mod`文件时，自动开启模块支持
+  在项目根目录执行`go mod init`，会生成`go.mod`文件
+  
+* go包依赖顺序
+  
+  包保存路径在`$GOPATH/pkg/mod`下，有多版本区分，多个项目可以共享缓存的modules，可以结合vendor一起使用，将项目和vendor文件夹一起上传，可以让别人直接使用的依赖包，而不需要重复下载
+  
+  * `GO111MODULE=off`：禁用模块支持，编译时会从`GOPATH`和`vendor`文件夹中查找包，
+  * `GO111MODULE=on`：启用模块支持，编译时会忽略`GOPATH`和`vendor`文件夹，只根据 `go.mod`下载依赖，
+  * `GO111MODULE=auto`：当项目在`$GOPATH/src`外且项目根目录有`go.mod`文件时，自动开启模块支持，
 
 ```go
 // 开启go mod方式
 go env -w GO111MODULE="on"
 
-// 设置代理
+// 设置代理，加速依赖下载
 go env -w GOPROXY=https://goproxy.cn,direct
 ```
 
@@ -167,7 +175,59 @@ replace（
 | go mod verify   | 校验一个模块是否被篡改过                                     |
 | go mod why      | 查看为什么需要依赖某模块                                     |
 
-### go 编码规范
+## go 包管理器
+
+go get 有时候会下载不下来需要的包，这里就需要一个叫`gopm`，就是go的包管理器，类似于 node.js 的包管理器 npm一样，我本地有时又go下载快，选择使用吧
+
+`gopm`也是一个包，也需要先下载下来
+
+```shell
+# 下载
+go get -u github.com/gpmgo/gopm
+# 安装，先切换目录到 $GOPATH/src/github.com/gpmgo/gopm
+go install
+# 就可以在 $GOPATH/bin下看到可执行文件了
+gopm.exe
+# 检测是否安装成功
+gopm -v
+Gopm version 0.8.8.0307 Beta
+```
+
+注意：全局go配置 `set GO111MODULE=auto`，默认也是auto，如果改过on的需要修改为auto即可，`go env -w GO111MODULE="auto"`
+
+`gopm`使用方式
+
+```shell
+Commands
+NAME:
+   Gopm - Go Package Manager
+
+USAGE:
+   Gopm [global options] command [command options] [arguments...]
+
+COMMANDS:
+   list		list all dependencies of current project			# 列出当前项目的所有依赖项
+   gen		generate a gopmfile for current Go project			# 为当前Go项目生成gopmfile
+   get		fetch remote package(s) and dependencies			# 获取远程包和依赖项
+   bin		download and link dependencies and build binary		# 下载并链接依赖项，构建二进制文件
+   config	configure gopm settings								# 配置gopm设置
+   run		link dependencies and go run						# 链接依赖项并运行	
+   test		link dependencies and go test						# 链接相关性和go测试
+   build	link dependencies and go build						# 链接依赖项并开始构建
+   install	link dependencies and go install					# 链接依赖项并开始安装
+   clean	clean all temporary files							# 清除所有临时文件
+   update	check and update gopm resources including itself	# 检查和更新gopm资源，包括其自身
+   help, h	Shows a list of commands or help for one command	# 显示命令列表或一个命令的帮助
+
+GLOBAL OPTIONS:
+   --noterm, -n		disable color output
+   --strict, -s		strict mode
+   --debug, -d		debug mode
+   --help, -h		show help
+   --version, -v	print the version
+```
+
+## go 编码规范
 
 [参考](http://golang.iswbm.com/en/latest/c03/c03_04.html#)
 
