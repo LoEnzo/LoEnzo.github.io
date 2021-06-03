@@ -227,6 +227,17 @@ GLOBAL OPTIONS:
    --version, -v	print the version
 ```
 
+## go运行相关指令
+
+| **指令**       | **说明**                                                     |
+| -------------- | ------------------------------------------------------------ |
+| **go fmt**     | 格式化文档                                                   |
+| **go build**   | 构建出符合平台的二进制文件，windows下就位`.exe`              |
+| **go install** | 如果设置了`GOBIN`，执行后会在`$GOPATH/bin`目录生成`.exe`可执行文件 |
+| **go run**     | 编译后直接执行                                               |
+| **go test**    | 详细见上一篇文档                                             |
+| ...            | ...                                                          |
+
 ## go 编码规范
 
 [参考](http://golang.iswbm.com/en/latest/c03/c03_04.html#)
