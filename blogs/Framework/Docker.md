@@ -219,8 +219,6 @@ docker container cp nginx:/etc/nginx /mydata/nginx/
 docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearch:/usr/share/elasticsearch
 ```
 
-
-
 ## 示例：
 
 ### MySql
@@ -259,7 +257,6 @@ docker exec -it elasticsearch /bin/bash
 #此命令需要在容器中运行，如果成功，后面两个则不需要，直接重启容器即可
 elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v7.6.2/elasticsearch-analysis-ik-7.6.2.zip
 
-
 # 容器中直接下载安装可能会报错，注意版本要保持一致，可以在宿主机下载后复制到容器中，
 docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearch:/usr/share/elasticsearch
 
@@ -277,6 +274,7 @@ docker pull kibana:7.6.2
 
 # 启动服务
 docker run --name kibana -p 5601:5601 \
+--restart=always \
 --link elasticsearch:es \
 -e "elasticsearch.hosts=http://es:9200" \
 -d kibana:7.6.2
@@ -287,6 +285,9 @@ sudo docker container cp kibana:/usr/share/kibana/config/ /mydata/kibana/
 # 末尾添加 i18n.locale: zh-CN，可以启动中文
 vi /mydata/kibana/kibana.yml
 
+# 删除容器，添加参数，重启一次
+-v /mydata/kibana:/usr/share/kibana/config
+
 # 开启防火墙
 firewall-cmd --zone=public --add-port=5601/tcp --permanent
 firewall-cmd --reload
@@ -294,6 +295,34 @@ firewall-cmd --reload
 # 访问地址
 访问地址进行测试：http://192.168.3.101:5601
 ```
+
+::: nginx 代理 kibana
+
+kabana.yml
+
+```yaml
+server.name: kibana
+server.host: "0"
+server.basePath: "/kibana"
+server.rewriteBasePath: true
+elasticsearch.hosts: [ "http://elasticsearch:9200" ]
+xpack.monitoring.ui.container.elasticsearch.enabled: true
+i18n.locale: "zh-CN"
+```
+
+nginx.conf
+
+```shell
+server{
+	listen       80;
+	server_name  localhost;
+	location /kibana {
+ 		proxy_pass http://172.26.11.142:5601;
+ 	}
+}
+```
+
+:::
 
 ## 其他
 
@@ -318,7 +347,7 @@ docker run -p 9000:9000 -p 8000:8000 --name portainer \
 
 下载后解压上传到`mydata/portainer/public`目录下，`unzip`解压，如果启动报错的，请找一下最新版的汉化包，重启解压后覆盖public文件夹，或者启动参数去除链接宿主机汉化那一步，启动原版即可
 
-## docker迁移默认目录
+### docker迁移默认目录
 
 docker 默认保存目录在 `/var/lib/docker`，随着拉取镜像镜像、构建的容器增加，内存不够，就会导致服务启动新的镜像
 

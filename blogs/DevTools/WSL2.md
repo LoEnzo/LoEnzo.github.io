@@ -163,24 +163,62 @@ ubuntu2004 -c "service ssh start"
 
 ## ubuntu添加启动脚本
 
-```shell
-# ubuntu20.04添加启动脚本，开机启动nameserver，防止每次启动WSL2 nameserver被初始化覆盖
+ubuntu20.04添加启动脚本，开机启动nameserver，防止每次启动WSL2 nameserver被初始化覆盖
 
-# 编写脚本
-vim override_nameserver.sh
-echo -e "options timeout:1 attempts:1 rotate\nnameserver 114.114.114.114\nnameserver 8.8.8.8" >/etc/resolv.conf
+::: details 防止WSL2 nameserver 重启被覆盖
 
-# 保存脚本到
-mv override_nameserver.sh /etc/init.d/
+```
+Incredibly unhelpful.
 
-# 设置权限
-chmod 755 override_nameserver.sh
+It is the issue for many people, it is the same in issue trackers/forums/etc across the internet.
 
-# 将脚本添加为启动脚本，90为启动顺序，越大级别越低
-/etc/init.d/update-rc.d override_nameserver.sh defaults 90 
+The WSL instance cannot resolve domain names. Editing resolv.conf to point to a functioning nameserver "works" for the duration of the session, but as soon as the distro is rebooted resolv.conf is regenerated using WSL's original template. Because etc/resolv.conf is actually a symlink to run/resolvconf/resolv.conf
+
+Steps that have worked for me:
+
+Boot your distro.
+cd ~/../../etc
+Create wsl.conf, however you see fit. , and edit it later, whatever.sudo vim wsl.confsudo touch wsl.conf
+Add these lines to wsl.conf:
+[network]
+generateResolvConf=false
+exit or in Windows cmd wsl --terminate [YourDistroName]
+Boot your distro.
+At this point, thanks to wsl.conf, run/resolvconf should no longer exist and will never be created again.
+
+cd ~/../../etc
+sudo rm resolv.conf - this deletes the existing symlink file.
+Create a new resolv.conf, however you see fit. , and edit it later, whatever.sudo vim resolv.confsudo touch resolv.conf
+Add this line to resolv.conf:
+
+replace 8.8.8.8 with your preferred functional nameserver.nameserver 8.8.8.8
+exit or in Windows cmd wsl --terminate [YourDistroName]
+wsl --shutdown just to be sure that you've definitely killed everything.
+Boot your distro.
+Confirm that your resolv.conf changes are still in effect, or just ping a domain name and cry tears of joy after struggling to get this working for far too fucking long
 ```
 
+:::
 
+## 移除WSL中PATH共享Windows(可选)
+
+```shell
+sudo vim /etc/wsl.conf
+
+# 不加载Windows中的PATH内容
+[interop]
+appendWindowsPath = false
+
+# 不自动挂载Windows系统所有磁盘分区
+[automount]
+enabled = false
+
+启动powershell
+wsl --list
+# 适用于 Linux 的 Windows 子系统:
+# Ubuntu-20.04 (默认)
+wsl --terminate Ubuntu-20.04
+```
 
 ## ubuntu安装源
 
