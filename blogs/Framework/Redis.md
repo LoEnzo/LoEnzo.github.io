@@ -15,6 +15,25 @@ date: 2021-06-24
 
 # NoSql
 
+**NoSql**：Not Only Sql（不仅仅是Sql），泛指`非关系型数据库`
+
+随着互联网发展，对大数据的需求，不仅仅是简单的行列数据，更多是个人信息、社交网络、地理位置、图片、文档等，这些数据类型的存储不需要一个固定的格式，传统的关系型数据库就无法满足这些迫切的需求。
+
+* 关系型数据库：Oracle、MySql（表格，行、列）
+* 非关系型数据库：MongDB、
+
+特点：
+
+* 方便拓展（数据之间没有关系，方便扩展）
+* 大数据量，高性能（Redis 读：110000/s，写：80000/s）
+* 数据类型多样（不需要事先设计数据库，随取随用）
+
+大数据的3V+3高：
+
+* 3V：描述问题（海量：Volume，多样：Variety，实时：Velocity）
+
+* 3高：对程序要求（高并发、高可托、高性能）
+
 
 
 # Redis
@@ -25,9 +44,20 @@ date: 2021-06-24
 * [redis中文官方网站](http://www.redis.cn/)
 * [Redis 教程_redis教程](https://www.redis.net.cn/tutorial/3501.html)
 
-## 基础知识
+## Redis基础知识
 
-* redis默认有16个数据库
+* Redis默认有16个数据库，默认使用第0个
+* Redis是单线程的，Redis是内存数据库，瓶颈是内存和带宽，CPU不是，所以单线程就能实现，多线程CPU会进行上下文切换，耗时更多
+
+### Redis 连接 命令
+
+| 命令                                                         | 描述               |
+| :----------------------------------------------------------- | :----------------- |
+| [Redis Echo 命令](https://www.redis.net.cn/order/3650.html)  | 打印字符串         |
+| [Redis Select 命令](https://www.redis.net.cn/order/3653.html) | 切换到指定的数据库 |
+| [Redis Ping 命令](https://www.redis.net.cn/order/3651.html)  | 查看服务是否运行   |
+| [Redis Quit 命令](https://www.redis.net.cn/order/3652.html)  | 关闭当前连接       |
+| [Redis Auth 命令](https://www.redis.net.cn/order/3649.html)  | 验证密码是否正确   |
 
 ## 5种基本类型
 
@@ -195,17 +225,81 @@ date: 2021-06-24
 | [Redis Unwatch 命令](https://www.redis.net.cn/order/3641.html) | 取消 WATCH 命令对所有 key 的监视。                           |
 | [Redis Multi 命令](https://www.redis.net.cn/order/3640.html) | 标记一个事务块的开始。                                       |
 
+Redis单条命令保存原子性，但是事务不保证原子性
+
+Redis 事务本质：一组命令的集合，一个事务种的所有命令都会被序列化，按顺序执行
+
+开启事务->命令入队->执行命令
+
+特点：一致性、顺序性、排他性
+
+#### 正常和非正常事务
+
+::: details 正常事务
+
+```shell
+> multi
+OK
+> set k1 v1
+QUEUED
+> set k2 v2
+QUEUED
+> get k1
+QUEUED
+> get k2
+QUEUED
+> exec
+OK
+OK
+v1
+v2
+```
+
+:::
+
+::: details 编译异常，指命令错误
+
+```
+> multi
+OK
+> getk1
+QUEUED
+> exec
+ReplyError: EXECABORT Transaction discarded because of previous errors.
+```
+
+:::
+
+::: details 运行异常，指令语法正确，结果错误
+
+```shell
+> multi
+OK
+> incr k1
+QUEUED
+> get k2
+QUEUED
+> exec
+v2
+
+# 之前的版本会返回错误信息
+ERR value is not an integer or out of range
+v2
+```
+
+:::
+
+#### 悲观锁
+
+每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，Java中，synchronized的思想也是悲观锁
+
+#### 乐观锁
+
+每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在更新的时候回判断一下再次期间别人有没有去更新这个数据，可以使用`版本号`等机制。乐观锁适用于多读的应用类型，这样可以提高吞吐量，`提交版本必须大于记录当前版本才能执行更新`
+
+
+
 ## 其他命令
-
-### Redis 连接 命令
-
-| 命令                                                         | 描述               |
-| :----------------------------------------------------------- | :----------------- |
-| [Redis Echo 命令](https://www.redis.net.cn/order/3650.html)  | 打印字符串         |
-| [Redis Select 命令](https://www.redis.net.cn/order/3653.html) | 切换到指定的数据库 |
-| [Redis Ping 命令](https://www.redis.net.cn/order/3651.html)  | 查看服务是否运行   |
-| [Redis Quit 命令](https://www.redis.net.cn/order/3652.html)  | 关闭当前连接       |
-| [Redis Auth 命令](https://www.redis.net.cn/order/3649.html)  | 验证密码是否正确   |
 
 ### Redis 服务器 命令
 
