@@ -359,11 +359,104 @@ v2
 | [Redis Publish 命令](https://www.redis.net.cn/order/3634.html) | 将信息发送到指定的频道。           |
 | [Redis Psubscribe 命令](https://www.redis.net.cn/order/3632.html) | 订阅一个或多个符合给定模式的频道。 |
 
-## 整合
+## 使用
+
+### Jedis使用
+
+Jedis 是 Redis官方推荐的java链接开发工具，使用java操作Redis中间件
+
+* 依赖
+
+```xml
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>3.3.0</version>
+</dependency>
+```
+
+* 使用
+
+  jedis里面封装了前面详细的每条指令，直接 **.** 查看使用即可
+
+```java
+public static void main(){
+    Jedis jedis = new Jedis("127.0.0.1", 6379);		// 连接Redis数据库，具体参数可以看构造方法
+	jedis.ping()									// Redis操作指令
+	jedis.close()  									// 断开数据库
+}
+```
+
+* 事务
+
+::: details 事务基础使用范例
+
+```java
+public static void main(){
+    Jedis jedis=new Jedis("127.0.0.1",6379);
+	Transaction multi=jedis.multi();		// 开启redis事务
+	try {									
+		multi.set("key1", "value1");		// 设置数据
+		multi.set("key2", "value2");
+		int num=1/0;						// 代码抛出异常事务，执行失败						
+		multi.set("key3", "value3");
+        multi.exec();
+	} catch (Exception e) {
+		multi.discard();					// redis 事务回滚
+		e.printStackTrace();
+	} finally {
+        jedis.close();						
+    }
+}
+```
+
+:::
 
 ### SpringBoot整合
 
+SpringBoot操作数据库，使用SpringData项目，可以连接常用数据库
 
+* **注意**
+
+  在SpringBoot2.x之后，原来使用的`Jedis`被替换成了`lettuce`sdasd
+
+  **Jedis**：采用的直连，多个线程（多个终端连接Redis）操作，是不安全的，可以只用 Jedis pool 连接池避免线程不安全问题，但是会造成redis-server变大，性能受影响，类似`BIO`
+
+  **lettuce**：采用netty，示例可以在多个线程中进行共享，不存在线程不安全问题，可以剑圣线程数据，类似`NIO`
+
+* 依赖
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+    <version>2.5.2</version>
+</dependency>
+```
+
+* 配置
+
+```properties
+spring.redis.host=127.0.0.1
+spring.redis.port=6379
+spring.redis.lettuce.pool.max-active=8			# 配置连接池,使用lettuce这个
+```
+
+* 测试
+
+```java
+public class IbePlusApp {
+    
+    @Autowired
+    private RedisTemplate redisTemplate;
+    
+    public static void main(){
+    	redisTemplate.
+	} 
+}
+```
+
+* 
 
 ## Redis.conf详解
 
