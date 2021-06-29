@@ -10,7 +10,7 @@ module.exports = {
     socialLinks: [
       { icon: 'reco-github', link: 'https://github.com/loenzo' },
       { icon: 'reco-mayun', link: 'https://gitee.com/company_enzo/' },
-      { icon: 'reco-account', link: 'https://hjwu.cf/'},
+      { icon: 'reco-account', link: 'https://loenzo.cf/'},
       { icon: 'reco-other', link: 'https://biggerdrive.herokuapp.com/'},
       { icon: 'reco-lock', link: 'https://hjwudriver.herokuapp.com/'},
       { icon: 'reco-lock', link: 'https://rare-dour-bike.glitch.me/'}
