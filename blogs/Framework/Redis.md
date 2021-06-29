@@ -444,19 +444,82 @@ spring.redis.lettuce.pool.max-active=8			# 配置连接池,使用lettuce这个
 
 * 测试
 
+  注意：传入对象需要序列化，否则会报错`org.springframework.data.redis.serializer.SerializationException: Cannot serialize; `
+
 ```java
-public class IbePlusApp {
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+public class RedisTest {
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Test
+    public void testRedisTemplate() {
+        redisTemplate.opsForValue().set("k1", "v1");
+        redisTemplate.opsForValue().set("k2", "v1");
+        System.out.println(redisTemplate.opsForValue().get("k1"));
+    }
     
-    @Autowired
-    private RedisTemplate redisTemplate;
-    
-    public static void main(){
-    	redisTemplate.
-	} 
+        @Test
+    public void testSerialization() throws JsonProcessingException {
+        User user = new User("hjwu", 25);
+        System.out.println(redisTemplate.opsForValue().get("user"));
+        redisTemplate.delete("user");
+        redisTemplate.opsForValue().set("user", user);		// user实体类需要序列化，否则会报错
+        System.out.println(redisTemplate.opsForValue().get("user"));
+    }
 }
 ```
 
-* 
+* 常规方法说明
+
+```bash
+opsForValue()	# 操作字符串 String
+opsForList()	# 操作列表 List
+opsForeSet()	# 操作集合
+opsForHash()	# 操作哈希
+opsForZSet()	# 操作有序集合
+opsForGeo()		# 操作地理空间
+opsForHyperLogLog()		# 基数统计
+```
+
+* 自定义`RestTemplate`
+
+```java
+@Configuration
+public class RedisConfig {
+
+    @Bean
+    @SuppressWarnings("all")
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        // 自定义Jackson序列化配置
+        Jackson2JsonRedisSerializer jsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jsonRedisSerializer.setObjectMapper(om);
+        jsonRedisSerializer.setObjectMapper(om);
+
+        // key使用String的序列化方式
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        template.setKeySerializer(stringRedisSerializer);
+        // hash的key也是用String的序列化方式
+        template.setHashKeySerializer(stringRedisSerializer);
+        // value的key使用jackson的序列化方式
+        template.setValueSerializer(jsonRedisSerializer);
+        // hash的value也是用jackson的序列化方式
+        template.setHashValueSerializer(jsonRedisSerializer);
+        template.afterPropertiesSet();
+
+        return template;
+
+    }
+}
+```
 
 ## Redis.conf详解
 
