@@ -138,9 +138,7 @@ mysql安装以及使用
    All done! 
    ```
 
-		:::
-
-
+	:::
 
 
 ## QA：
@@ -187,3 +185,4 @@ Failed to obtain JDBC Connection; nested exception is java.sql.SQLException: The
 注：CST 代表的是中国上海时间（与北京时间，东八区相同）
 
 例：jdbc:mysql://localhost:3306**/your_database_name**?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=CST
+

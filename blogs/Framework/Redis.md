@@ -359,9 +359,25 @@ v2
 | [Redis Publish 命令](https://www.redis.net.cn/order/3634.html) | 将信息发送到指定的频道。           |
 | [Redis Psubscribe 命令](https://www.redis.net.cn/order/3632.html) | 订阅一个或多个符合给定模式的频道。 |
 
-## 整合
+## 使用
+
+### Jedis使用
+
+依赖
+
+```xml
+```
+
+
 
 ### SpringBoot整合
+
+依赖
+
+```xml
+```
+
+
 
 
 
