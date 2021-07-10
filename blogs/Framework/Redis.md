@@ -363,38 +363,408 @@ v2
 
 ### Jedis使用
 
-依赖
+Jedis 是 Redis官方推荐的java链接开发工具，使用java操作Redis中间件
+
+* 依赖
 
 ```xml
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>3.3.0</version>
+</dependency>
 ```
 
+* 使用
 
+  jedis里面封装了前面详细的每条指令，直接 **.** 查看使用即可
+
+```java
+public static void main(){
+    Jedis jedis = new Jedis("127.0.0.1", 6379);		// 连接Redis数据库，具体参数可以看构造方法
+	jedis.ping()									// Redis操作指令
+	jedis.close()  									// 断开数据库
+}
+```
+
+* 事务
+
+::: details 事务基础使用范例
+
+```java
+public static void main(){
+    Jedis jedis=new Jedis("127.0.0.1",6379);
+	Transaction multi=jedis.multi();		// 开启redis事务
+	try {									
+		multi.set("key1", "value1");		// 设置数据
+		multi.set("key2", "value2");
+		int num=1/0;						// 代码抛出异常事务，执行失败						
+		multi.set("key3", "value3");
+        multi.exec();
+	} catch (Exception e) {
+		multi.discard();					// redis 事务回滚
+		e.printStackTrace();
+	} finally {
+        jedis.close();						
+    }
+}
+```
+
+:::
 
 ### SpringBoot整合
 
-依赖
+SpringBoot操作数据库，使用SpringData项目，可以连接常用数据库
+
+* **注意**
+
+  在SpringBoot2.x之后，原来使用的`Jedis`被替换成了`lettuce`
+
+  **Jedis**：采用的直连，多个线程（多个终端连接Redis）操作，是不安全的，可以只用 Jedis pool 连接池避免线程不安全问题，但是会造成redis-server变大，性能受影响，类似`BIO`
+
+  **lettuce**：采用netty，示例可以在多个线程中进行共享，不存在线程不安全问题，可以剑圣线程数据，类似`NIO`
+
+* 依赖
 
 ```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+    <version>2.5.2</version>
+</dependency>
 ```
 
+* 配置
+
+```properties
+spring.redis.host=127.0.0.1
+spring.redis.port=6379
+spring.redis.lettuce.pool.max-active=8			# 配置连接池,使用lettuce这个
+```
+
+* 测试
+
+  注意：传入对象需要序列化，否则会报错`org.springframework.data.redis.serializer.SerializationException: Cannot serialize; `
+
+```java
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+public class RedisTest {
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Test
+    public void testRedisTemplate() {
+        redisTemplate.opsForValue().set("k1", "v1");
+        redisTemplate.opsForValue().set("k2", "v1");
+        System.out.println(redisTemplate.opsForValue().get("k1"));
+    }
+    
+        @Test
+    public void testSerialization() throws JsonProcessingException {
+        User user = new User("hjwu", 25);
+        System.out.println(redisTemplate.opsForValue().get("user"));
+        redisTemplate.delete("user");
+        redisTemplate.opsForValue().set("user", user);		// user实体类需要序列化，否则会报错
+        System.out.println(redisTemplate.opsForValue().get("user"));
+    }
+}
+```
+
+* 常规方法说明
+
+```bash
+opsForValue()	# 操作字符串 String
+opsForList()	# 操作列表 List
+opsForeSet()	# 操作集合
+opsForHash()	# 操作哈希
+opsForZSet()	# 操作有序集合
+opsForGeo()		# 操作地理空间
+opsForHyperLogLog()		# 基数统计
+```
+
+* 自定义`RestTemplate`
+
+```java
+@Configuration
+public class RedisConfig {
+
+    @Bean
+    @SuppressWarnings("all")
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        template.setConnectionFactory(connectionFactory);
+        // 自定义Jackson序列化配置
+        Jackson2JsonRedisSerializer jsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        jsonRedisSerializer.setObjectMapper(om);
+        jsonRedisSerializer.setObjectMapper(om);
+
+        // key使用String的序列化方式
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        template.setKeySerializer(stringRedisSerializer);
+        // hash的key也是用String的序列化方式
+        template.setHashKeySerializer(stringRedisSerializer);
+        // value的key使用jackson的序列化方式
+        template.setValueSerializer(jsonRedisSerializer);
+        // hash的value也是用jackson的序列化方式
+        template.setHashValueSerializer(jsonRedisSerializer);
+        template.afterPropertiesSet();
+
+        return template;
+    }
+}
+```
+
+# Redis.conf详解
+
+
+
+# Redis持久化
+
+
+
+# Redis主从复制
+
+主节点Master/Leader，子节点Slava/follower，默认每台Redis服务器都是主节点
+
+数据的复制是单向的，只能从主节点复制到子节点，Master以写为主，Slave节点以读为主，读写分离
+
+作用：
+
+1. 数据冗余：主从复制实现数据热备份，	
+2. 故障恢复：当主节点出现问题，可以由从节点提供服务，快速实现故障回复
+3. 负载均衡：主从复制基础上，实现读写分离，主节点负责写，多个从节点负责读，提高Redis服务器并发量
+4. 高可用（集群）：主从复制还是哨兵模式（至少一主二从）和集群的基础
+
+单台Redis最大使用内存不应该超过20G
+
+## 环境配置
+
+* 只配置从库，不用配置主库，默认都是主库
+
+```shell
+# 查看当前库信息
+info replication
+
+# Replication
+role:master				# 当前角色
+connected_slaves:0		# 从机数量
+master_repl_offset:0
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+```
+
+* 配置伪集群（单机多集群），一个服务器开启三个redis进程，复制三份默认配置文件进行修改
+
+```shell
+端口号
+pid名字
+log文件名
+dump.db文件名
+```
+
+* 配置主从，在从机中配置
+
+```shell
+# 命令方式配置，暂时的
+SLAVEOF 主机ip port
+
+# 配置文件方式配置，永久的
+replicaof masterip masterport	# 连接主机的ip port
+masterauth master-password		# 连接主机的密码
+
+# 重新查看主机、从机 info reolication 即可看到主机、从机角色等变化
+```
+
+主机断开重新回复，依旧可以主从复制，
+
+从机断开重新回复，也能接收到主机复制的信息
+
+* 复制原理
+
+Slave从机启动成功后会向Mater发送一个sync同步命令，Master接到命令，启动后台的存盘进程，收集所有指令整个数据文件发送到Slave，并完成一次同步
+
+全量复制：初次启动，断开重连，
+
+增量复制：连接中，Master继续将新收集到的数据复制同步给从机
+
+指定某个从机为主机
+
+```shell
+SLAVEOF NO ONE
+```
+
+# Redis哨兵模式
+
+主从切换技术的方法是:当主服务器宕机后，需要手动把一台从服务器切换为主服务器，这就需要人工干预，费事费力，还会造成一段时间内服务不可用。这不是一种推荐的方式，更多时候，我们优先考虑哨兵模式。
+
+ Redis从2.8开始正式提供了 Sentinel(哨兵)架构来解决这个问题，能够后台监控主机是否故暲，如果故障了根据投票数自动将从库转换为主库。
+
+哨兵模式是一种特殊的模式，首先 Redis提供了哨兵的命令，哨兵是一个独立的进程；作为进程，它会独立运行，其原理是哨兵通过发送命令，等待 Redis服务器响应，从而监控运行的多个 Redis实例。
+
+## 配置
+
+1. 配置哨兵配置文件`sentinel.conf`
+
+```shelll
+# sentinel monitor 被监控的名称 host port 1
+sentinel monitor myredis 127.0.0.1 6379 1
+
+# 数字1，代表主机挂了，salve投票看让谁成为新的主机
+```
+
+2. 启动哨兵
+
+```shell
+redis-sentinel sentinel_conf
+```
+
+* 如果Master节点宕机了，哨兵会从从机中选取新的主机，主机连接回来，只能成为新主机的从机
+
+优点：
+
+* 哨兵集群，基于主从复制，具有主从复制的所有优点
+* 可以主从切换，故障转移，系统可用性更好
+* 哨兵模式是主从模式的升级，手动到自动，健壮性更好
+
+缺点：
+
+* Redis不好在线扩容
+* 实现哨兵模式的配置，上面仅仅是简单的监控
+
+::: details 哨兵模式的全部配置
+
+哨兵集群同样需要配置多个文件，多个端口
+
+```shell
+# Example sentinel.conf
+
+# 哨兵 sentinel 实例运行的端口，默认 26379
+port 26379
+
+# 哨兵 sentinel 的工作目录
+dir /tmp
+
+# 哨兵 sentinel 监控的 redis主节点的 ip port
+# master-name可以自己命名的主节点名字只能由字母A-z、数字0-9、这三个字符组成
+# quorum配置多少个 sentinel1哨兵统一认为 master主节点失联那么这时客观上认为主节点失联了
+# sentinel monitor <master-name> <ip> <redis-port> <quorum>
+sentinel mon i tor mcmaster 127.0.0.1 6379 2
+
+# 当在 Redis实例中开启了 requi repass foobared授权密码这样所有连接 Redis实例的客户端都要提供密码
+# 设置哨兵 sentinel1连接主从的密码注意必须为主从设置一样的验证密码
+# sentinel auth-pass <master-name> <password>
+sentinel auth-pass mymaster MySUPER--secret-0123pas sword
+
+#指定多少毫秒之后主节点没有应答哨兵 sentinel1此时哨兵主观上认为主节点下线默认30秒
+# sentinel down-afte seconds <master-name> <milliseconds>
+sentinel down-after-milliseconds mymaster 30000
+
+# 这个配置项指定了在发生fai1over主备切换时最多可以有多少个s1ave同时对新的 master进行同步
+# 这个数字越小，完成fai1over所需的时间就越长，
+# 但是如果这个数字越大，就意味着越多的s1ave因为rep1 ication而不可用。
+# 可以通过将这个值设为1来保证每次只有一个s1ave处于不能处理命令请求的状态。
+# sentinel parallel-syncs <master-name> <nums laves>
+sentinel parallel-syncs mymaster 1
+
+# SCRIPTS EXECUTION
+
+# 配置当某一事件发生时所需要执行的脚本，可以通过脚本来通知管理员，例如当系统运行不正常时发邮件通知相关人员。
+# 对于脚本的运行结果有以下规则
+# 若脚本执行后返回1，那么该脚本稍后将会被再次执行，重复次数目前默认为10
+# 若脚本执行后返回2，或者比2更高的一个返回值，脚本将不会重复执行
+# 如果脚本在执行过程中由于收到系统中断信号被终止了，则同返回值为1时的行为相同
+# 一个脚本的最大执行时间为60s，如果超过这个时间，脚本将会被一个SIGKILL信号终止，之后重新执行
+
+# 通知型脚本:当 sentinel1有任何警告级别的事件发生时(比如说 redis实例的主观失效和客观失效等等)，将会去调用这个脚本，这时这个脚本应该通过邮件，SMS等方式去通知系统管理员关于系统不正常运行的信息。调用该脚本时，将传给脚本两个参数，一个是事件的类型，一个是事件的描述。如果 sentinel.conf配置文件中配置∫这个脚本路径，那么必须保证这个脚本存在于这个路径，并且是可执行的，否则 sentinel 无法正常启动成功。
+
+# 通知脚本
+# sentinel notification -script <master-name> <script-path>
+sentinel notification -script mymaster/var/redis/notify. sh
+
+# 客户端重新配置主节点参数脚本
+# 当一个 master由于fai1over而发生改变时，这个脚本将会被调用，通知相关的客户端关于 master地址已经发生改变的信息
+# 以下参数将会在调用脚本时传给脚本
+# <master-name> <role> <state> <from-ip> <from-port> <to-ip> <to-port>
+# 日前< state>总是“ failover”，
+# <ro1e>是“1 eaden”或者“ observer”中的一个。
+# 参数from-ip，from-port，to-ip，to-port是用来和旧的 master和新的 master(即旧的s1ave)通信的
+# 这个脚本应该是通用的，能被多次调用，不是针对性的。
+# sentinel client-reconfig-script <master-name> <script-path>
+sentinel client-reconfig-script mymaster /var/redis/reconfig sh
+```
+
+:::
+
+# Redis 缓存穿透和雪崩
+
+## 缓存穿透
+
+说明：指缓存查不到数据，去数据层查找
+
+缓存穿透的概念很简单，用户想要査询—个数据，发现 . redis内存数据库没有，也就是缓存没有命中，于是向持久层数据库査询。发现也没有，于是本次査询失败。当用户很多的时候，缓存都没有命中，于是都去请求了持久层数据库。这会给持久层数据库造成很大的压力，这时候就相当于出现了缓存穿透。
+
+**解决方案：**
+
+* 布隆过滤器
+
+  布隆过滤器是—种数据结构，对所有可能査询的参数以hash形式存储，在控制层先进行校验，不符合则丟弃，从而避免了对底层存储系统的查询压力
+
+* 缓存空对象
+
+  当存储层不命中后，即使返回的空对象也将其缓存起来，同时会设置一个过期时间，之后再访问这个数据将会从缓存中获取，保护了后端数据源；这种会造成存储空间浪费，且对需要保持一致性的业务有影响
+
+## 缓存击穿
+
+说明：查询量太大，缓存过期的空挡，全部查询到数据层
+
+这里需要注意和缓存击穿的区别，缓存击穿，是指一个key非常热点，在不停的扛着大并发，大并发集中对这一个点进行访问，当这个ke在失效的瞬间，持续的大并发就穿破缓存，直接请求数据库，就像在一个屏障上凿开了一个洞。
+
+当某个key在过期的瞬间，有大量的请求并发访问，这类数据一般是热点数据，由于缓存过期，会同时访问数据库来查询最新数据，并且回写缓存，会导使数据库瞬间压力过大。
+
+场景：微博热搜，导致服务器宕机
+
+**解决方案：**
+
+* 设置设点数据永不过期，也会浪费一定空间
+* 加互斥锁，使用分布式锁，保证对于每个key同时有一个线程去查询后端服务，也就是在缓存到数据层查询的时候，只允许一个线程去查询，其他线程没有获得分布式锁的权限，因此只需要等待即可。这种方式将高并发的压力转移到了分布式锁，因此对分布式锁的考验很大
+
+## 缓存雪崩
+
+缓存雪崩，是指在某一个时间段，缓存集中过期失效
+
+产生雪崩的原因之一，比如在写本文的时候，马上就要到双十二零点，很快就会迎来一波抢购，这波商品时间比较集中的放入了缓存，假设缓存一个小时。那么到了凌晨一点钟的时候，这批商品的缓存就都过期了。而对这批商品的访问査询，都落到了数据库上，对于数据库而言，就会产生周期性的压力波峰。于是所有的请求都会达到存储层，存储层的调用量会暴增，造成存储层也会挂掉的情况。
+
+**解决方案：**
+
+* Redis高可用，增加Redis集群数量（异地多活）
+* 降级限流，这个解决方案的思想是，在缓存失效后，通过加锁或者队列来控制读数据库写缓存的线程数量。比如对某个key只允许一个线程查询数据和写缓存，其他线程等待。
+* 数据预热，数据加热的含义就是在正式部署之前，我先把可能的数据先预先访问一遍，这样部分可能大量访问的数据就会加载到缓存中。在即将发生大并发访问前手动触发加载缓存不同的key，设置不同的过期时间，让缓存失效的时间点尽量均匀
 
 
 
 
-## Redis.conf详解
 
 
 
-## Redis持久化
 
 
 
-## Redis发布订阅
 
 
 
-## Redis主从复制
 
 
 
-## Redis缓存穿透和雪崩
+
+
+
+
+

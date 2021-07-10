@@ -366,17 +366,17 @@ public class RestTemplateConfig {
             //开始设置连接池
             PoolingHttpClientConnectionManager poolingHttpClientConnectionManager 
                                                     = new PoolingHttpClientConnectionManager();
-            poolingHttpClientConnectionManager.setMaxTotal(100);  //最大连接数
-            poolingHttpClientConnectionManager.setDefaultMaxPerRoute(20);  //同路由并发数
+            poolingHttpClientConnectionManager.setMaxTotal(100);			//最大连接数
+            poolingHttpClientConnectionManager.setDefaultMaxPerRoute(20);	//同路由并发数
             httpClientBuilder.setConnectionManager(poolingHttpClientConnectionManager);
 
             HttpClient httpClient = httpClientBuilder.build();
             // httpClient连接配置
             HttpComponentsClientHttpRequestFactory clientHttpRequestFactory 
                                                     = new HttpComponentsClientHttpRequestFactory(httpClient);
-            clientHttpRequestFactory.setConnectTimeout(30 * 1000);  //连接超时
-            clientHttpRequestFactory.setReadTimeout(60 * 1000);     //数据读取超时时间
-            clientHttpRequestFactory.setConnectionRequestTimeout(30 * 1000);  //连接不够用的等待时间
+            clientHttpRequestFactory.setConnectTimeout(30 * 1000);			//连接超时
+            clientHttpRequestFactory.setReadTimeout(60 * 1000);				//数据读取超时时间
+            clientHttpRequestFactory.setConnectionRequestTimeout(30 * 1000);//连接不够用的等待时间
             return clientHttpRequestFactory;
         }
         catch (Exception e) {
@@ -419,9 +419,6 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.StandardCharsets;
 
 /**
- * ProjectName: ibeplus-service-businesstravel-policy
- * ClassName: RestTemplateConfig
- * Class Description: RestTemplateConfig 配置类
  *
  * @Author hjwu
  * @Date2021/3/16 15:04
