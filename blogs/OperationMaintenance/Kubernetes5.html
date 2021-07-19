@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>K8s之service详解 | 杂乱无章</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon_vuepress_hjwu.png">
+    <link rel="mask-icon" href="/icon_vuepress_hjwu.svg" color="#42b983">
+    <script language="javascript" type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+    <script language="javascript" type="text/javascript" src="/js/mouseClickEffect.js"></script>
+    <meta name="description" content="前山微有雨, 永巷净无尘">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <meta name="author" content="Enzo">
+    <meta name="keywords" content="vuepress,enzo,hjwu">
+    <meta name="theme-color" content="#42b983">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="msapplication-TileImage" content="/icon_vuepress_hjwu.png">
+    <meta name="msapplication-TileColor" content="#000000">
+    
+    <link rel="preload" href="/assets/css/0.styles.579f7cb5.css" as="style"><link rel="preload" href="/assets/js/app.91d310fe.js" as="script"><link rel="preload" href="/assets/js/3.a1926ec9.js" as="script"><link rel="preload" href="/assets/js/1.d4d14a49.js" as="script"><link rel="preload" href="/assets/js/8.cf460414.js" as="script"><link rel="preload" href="/assets/js/22.34e1e12c.js" as="script"><link rel="prefetch" href="/assets/js/10.8637c7c5.js"><link rel="prefetch" href="/assets/js/11.352bdfcb.js"><link rel="prefetch" href="/assets/js/12.53379868.js"><link rel="prefetch" href="/assets/js/13.657de251.js"><link rel="prefetch" href="/assets/js/14.b4b70faa.js"><link rel="prefetch" href="/assets/js/15.b522d8bf.js"><link rel="prefetch" href="/assets/js/16.8959387c.js"><link rel="prefetch" href="/assets/js/17.e047d7f0.js"><link rel="prefetch" href="/assets/js/18.2f3ddd9e.js"><link rel="prefetch" href="/assets/js/19.37bb47ee.js"><link rel="prefetch" href="/assets/js/20.2b71b3aa.js"><link rel="prefetch" href="/assets/js/21.50deb5ec.js"><link rel="prefetch" href="/assets/js/23.7134045b.js"><link rel="prefetch" href="/assets/js/24.0ef955ce.js"><link rel="prefetch" href="/assets/js/25.2bfea501.js"><link rel="prefetch" href="/assets/js/26.7bb054c5.js"><link rel="prefetch" href="/assets/js/27.64a6150a.js"><link rel="prefetch" href="/assets/js/28.4aec4218.js"><link rel="prefetch" href="/assets/js/29.e7482853.js"><link rel="prefetch" href="/assets/js/30.4e112756.js"><link rel="prefetch" href="/assets/js/31.dce6f3a8.js"><link rel="prefetch" href="/assets/js/32.89645abd.js"><link rel="prefetch" href="/assets/js/33.90457159.js"><link rel="prefetch" href="/assets/js/34.8a0dc126.js"><link rel="prefetch" href="/assets/js/35.1f7c97c2.js"><link rel="prefetch" href="/assets/js/36.8a2d5bf6.js"><link rel="prefetch" href="/assets/js/37.1a63838e.js"><link rel="prefetch" href="/assets/js/38.59368757.js"><link rel="prefetch" href="/assets/js/39.6cfb9ea1.js"><link rel="prefetch" href="/assets/js/4.3861c1af.js"><link rel="prefetch" href="/assets/js/40.28a3fafe.js"><link rel="prefetch" href="/assets/js/41.53913c61.js"><link rel="prefetch" href="/assets/js/42.6bc4cf5c.js"><link rel="prefetch" href="/assets/js/43.554acd3d.js"><link rel="prefetch" href="/assets/js/44.a8893de0.js"><link rel="prefetch" href="/assets/js/45.1df7f0e0.js"><link rel="prefetch" href="/assets/js/46.4854a67c.js"><link rel="prefetch" href="/assets/js/47.ca5f3f58.js"><link rel="prefetch" href="/assets/js/48.6f9c83a9.js"><link rel="prefetch" href="/assets/js/49.071f2db1.js"><link rel="prefetch" href="/assets/js/5.8bfdfbd0.js"><link rel="prefetch" href="/assets/js/50.1f4cd98b.js"><link rel="prefetch" href="/assets/js/51.70f2e23a.js"><link rel="prefetch" href="/assets/js/52.eb4ead4d.js"><link rel="prefetch" href="/assets/js/53.e546f3c8.js"><link rel="prefetch" href="/assets/js/54.cedc0ffa.js"><link rel="prefetch" href="/assets/js/55.0a7033dc.js"><link rel="prefetch" href="/assets/js/56.de71e2cb.js"><link rel="prefetch" href="/assets/js/57.223c5549.js"><link rel="prefetch" href="/assets/js/58.ec91437f.js"><link rel="prefetch" href="/assets/js/59.45437db2.js"><link rel="prefetch" href="/assets/js/6.1b50542b.js"><link rel="prefetch" href="/assets/js/60.e460442a.js"><link rel="prefetch" href="/assets/js/61.bd971b88.js"><link rel="prefetch" href="/assets/js/62.263e2816.js"><link rel="prefetch" href="/assets/js/63.718773a6.js"><link rel="prefetch" href="/assets/js/64.41ab10b7.js"><link rel="prefetch" href="/assets/js/65.ead885e3.js"><link rel="prefetch" href="/assets/js/66.e739bb46.js"><link rel="prefetch" href="/assets/js/67.20c12c01.js"><link rel="prefetch" href="/assets/js/68.154cd108.js"><link rel="prefetch" href="/assets/js/69.91efb9e2.js"><link rel="prefetch" href="/assets/js/7.84708aec.js"><link rel="prefetch" href="/assets/js/70.30a19c3a.js"><link rel="prefetch" href="/assets/js/71.dbcde79d.js"><link rel="prefetch" href="/assets/js/72.9a1230f5.js"><link rel="prefetch" href="/assets/js/73.33876f01.js"><link rel="prefetch" href="/assets/js/74.56a7392b.js"><link rel="prefetch" href="/assets/js/75.3d0dbd61.js"><link rel="prefetch" href="/assets/js/76.2660d1cf.js"><link rel="prefetch" href="/assets/js/77.a4261cfb.js"><link rel="prefetch" href="/assets/js/78.18b4f662.js"><link rel="prefetch" href="/assets/js/79.ee523d96.js"><link rel="prefetch" href="/assets/js/80.e7e98d3d.js"><link rel="prefetch" href="/assets/js/81.6ebe13ad.js"><link rel="prefetch" href="/assets/js/82.f9f09f31.js"><link rel="prefetch" href="/assets/js/83.e73cadc1.js"><link rel="prefetch" href="/assets/js/84.0aa64e21.js"><link rel="prefetch" href="/assets/js/85.6e1d067f.js"><link rel="prefetch" href="/assets/js/86.9f0e15e7.js"><link rel="prefetch" href="/assets/js/87.7fc4e121.js"><link rel="prefetch" href="/assets/js/88.b42e6b15.js"><link rel="prefetch" href="/assets/js/89.6bf1382f.js"><link rel="prefetch" href="/assets/js/9.fc7b6377.js"><link rel="prefetch" href="/assets/js/90.6b412205.js"><link rel="prefetch" href="/assets/js/91.fc8ccc4b.js"><link rel="prefetch" href="/assets/js/92.764357e7.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.579f7cb5.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-1156296a><div data-v-1156296a><div id="loader-wrapper" class="loading-wrapper" data-v-d48f4d20 data-v-1156296a data-v-1156296a><div class="loader-main" data-v-d48f4d20><div data-v-d48f4d20></div><div data-v-d48f4d20></div><div data-v-d48f4d20></div><div data-v-d48f4d20></div></div> <!----> <!----></div> <div class="password-shadow password-wrapper-out" style="display:none;" data-v-4e82dffc data-v-1156296a data-v-1156296a><h3 class="title" data-v-4e82dffc data-v-4e82dffc>杂乱无章</h3> <p class="description" data-v-4e82dffc data-v-4e82dffc>前山微有雨, 永巷净无尘</p> <label id="box" class="inputBox" data-v-4e82dffc data-v-4e82dffc><input type="password" value="" data-v-4e82dffc> <span data-v-4e82dffc>Konck! Knock!</span> <button data-v-4e82dffc>OK</button></label> <div class="footer" data-v-4e82dffc data-v-4e82dffc><span data-v-4e82dffc><i class="iconfont reco-theme" data-v-4e82dffc></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-4e82dffc>vuePress-theme-reco</a></span> <span data-v-4e82dffc><i class="iconfont reco-copyright" data-v-4e82dffc></i> <a data-v-4e82dffc><span data-v-4e82dffc>Enzo</span>
+            
+          <span data-v-4e82dffc>2017 - </span>
+          2021
+        </a></span></div></div> <div class="hide" data-v-1156296a><header class="navbar" data-v-1156296a><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><img src="/logo.jpg" alt="杂乱无章" class="logo"> <span class="site-name">杂乱无章</span></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      Category
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/BigData/" class="nav-link"><i class="undefined"></i>
+  BigData
+</a></li><li class="dropdown-item"><!----> <a href="/categories/DevTools/" class="nav-link"><i class="undefined"></i>
+  DevTools
+</a></li><li class="dropdown-item"><!----> <a href="/categories/Framework/" class="nav-link"><i class="undefined"></i>
+  Framework
+</a></li><li class="dropdown-item"><!----> <a href="/categories/GoNotes/" class="nav-link"><i class="undefined"></i>
+  GoNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/JavaNotes/" class="nav-link"><i class="undefined"></i>
+  JavaNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/LinuxNotes/" class="nav-link"><i class="undefined"></i>
+  LinuxNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/OperationMaintenance/" class="nav-link"><i class="undefined"></i>
+  OperationMaintenance
+</a></li><li class="dropdown-item"><!----> <a href="/categories/Other/" class="nav-link"><i class="undefined"></i>
+  Other
+</a></li><li class="dropdown-item"><!----> <a href="/categories/SpringCloudNotes/" class="nav-link"><i class="undefined"></i>
+  SpringCloudNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/StudyNotes/" class="nav-link"><i class="undefined"></i>
+  StudyNotes
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  Tag
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  TimeLine
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-api"></i>
+      Tools
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://tool.lu/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-api"></i>
+  码农工具站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://67tool.com/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-api"></i>
+  在线工具站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://www.macrozheng.com/#/README" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-api"></i>
+  mall学习
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="/blogs/other/Projects-demo.html" class="nav-link"><i class="iconfont reco-category"></i>
+  ProjectsDemo
+</a></li></ul></div></div> <a href="https://github.com/LoEnzo/LoEnzo.github.io" target="_blank" rel="noopener noreferrer" class="repo-link"><i class="iconfont reco-github"></i>
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask" data-v-1156296a></div> <aside class="sidebar" data-v-1156296a><div class="personal-info-wrapper" data-v-828910c6 data-v-1156296a><img src="/avatar.jpg" alt="author-avatar" class="personal-img" data-v-828910c6> <h3 class="name" data-v-828910c6>
+    Enzo
+  </h3> <div class="num" data-v-828910c6><div data-v-828910c6><h3 data-v-828910c6>78</h3> <h6 data-v-828910c6>Articles</h6></div> <div data-v-828910c6><h3 data-v-828910c6>68</h3> <h6 data-v-828910c6>Tags</h6></div></div> <ul class="social-links" data-v-828910c6><li class="social-item" data-v-828910c6><i class="iconfont reco-github" style="color:#abbd81;" data-v-828910c6></i></li><li class="social-item" data-v-828910c6><i class="iconfont reco-mayun" style="color:#f47e60;" data-v-828910c6></i></li><li class="social-item" data-v-828910c6><i class="iconfont reco-account" style="color:#fb9b5f;" data-v-828910c6></i></li><li class="social-item" data-v-828910c6><i class="iconfont reco-other" style="color:#f8b26a;" data-v-828910c6></i></li><li class="social-item" data-v-828910c6><i class="iconfont reco-lock" style="color:#67cc86;" data-v-828910c6></i></li><li class="social-item" data-v-828910c6><i class="iconfont reco-lock" style="color:#fb9b5f;" data-v-828910c6></i></li></ul> <hr data-v-828910c6></div> <nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link"><i class="iconfont reco-home"></i>
+  Home
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      Category
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/categories/BigData/" class="nav-link"><i class="undefined"></i>
+  BigData
+</a></li><li class="dropdown-item"><!----> <a href="/categories/DevTools/" class="nav-link"><i class="undefined"></i>
+  DevTools
+</a></li><li class="dropdown-item"><!----> <a href="/categories/Framework/" class="nav-link"><i class="undefined"></i>
+  Framework
+</a></li><li class="dropdown-item"><!----> <a href="/categories/GoNotes/" class="nav-link"><i class="undefined"></i>
+  GoNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/JavaNotes/" class="nav-link"><i class="undefined"></i>
+  JavaNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/LinuxNotes/" class="nav-link"><i class="undefined"></i>
+  LinuxNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/OperationMaintenance/" class="nav-link"><i class="undefined"></i>
+  OperationMaintenance
+</a></li><li class="dropdown-item"><!----> <a href="/categories/Other/" class="nav-link"><i class="undefined"></i>
+  Other
+</a></li><li class="dropdown-item"><!----> <a href="/categories/SpringCloudNotes/" class="nav-link"><i class="undefined"></i>
+  SpringCloudNotes
+</a></li><li class="dropdown-item"><!----> <a href="/categories/StudyNotes/" class="nav-link"><i class="undefined"></i>
+  StudyNotes
+</a></li></ul></div></div><div class="nav-item"><a href="/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  Tag
+</a></div><div class="nav-item"><a href="/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  TimeLine
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-api"></i>
+      Tools
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://tool.lu/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-api"></i>
+  码农工具站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="https://67tool.com/" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-api"></i>
+  在线工具站
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="http://www.macrozheng.com/#/README" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-api"></i>
+  mall学习
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li><li class="dropdown-item"><!----> <a href="/blogs/other/Projects-demo.html" class="nav-link"><i class="iconfont reco-category"></i>
+  ProjectsDemo
+</a></li></ul></div></div> <a href="https://github.com/LoEnzo/LoEnzo.github.io" target="_blank" rel="noopener noreferrer" class="repo-link"><i class="iconfont reco-github"></i>
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav> <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Operation Maintenance</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/blogs/OperationMaintenance/Kubernetes1.html" class="sidebar-link">K8s之概念介绍和虚拟机环境搭建</a></li><li><a href="/blogs/OperationMaintenance/Kubernetes2.html" class="sidebar-link">K8s之资源管理</a></li><li><a href="/blogs/OperationMaintenance/Kubernetes3.html" class="sidebar-link">K8s之pod控制器详解一</a></li><li><a href="/blogs/OperationMaintenance/Kubernetes4.html" class="sidebar-link">K8s之pod控制器详解二</a></li><li><a href="/blogs/OperationMaintenance/Kubernetes5.html" aria-current="page" class="active sidebar-link">K8s之service详解</a></li><li><a href="/blogs/OperationMaintenance/Kubernetes6.html" class="sidebar-link">K8s之数据存储、安全认证、DashBoard</a></li></ul></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-4e82dffc data-v-1156296a><h3 class="title" data-v-4e82dffc data-v-4e82dffc>K8s之service详解</h3> <!----> <label id="box" class="inputBox" data-v-4e82dffc data-v-4e82dffc><input type="password" value="" data-v-4e82dffc> <span data-v-4e82dffc>Konck! Knock!</span> <button data-v-4e82dffc>OK</button></label> <div class="footer" data-v-4e82dffc data-v-4e82dffc><span data-v-4e82dffc><i class="iconfont reco-theme" data-v-4e82dffc></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-4e82dffc>vuePress-theme-reco</a></span> <span data-v-4e82dffc><i class="iconfont reco-copyright" data-v-4e82dffc></i> <a data-v-4e82dffc><span data-v-4e82dffc>Enzo</span>
+            
+          <span data-v-4e82dffc>2017 - </span>
+          2021
+        </a></span></div></div> <div data-v-1156296a><main class="page"><section><div class="page-title"><h1 class="title">K8s之service详解</h1> <div data-v-1ff7123e><i class="iconfont reco-account" data-v-1ff7123e><span data-v-1ff7123e>Enzo</span></i> <i class="iconfont reco-date" data-v-1ff7123e><span data-v-1ff7123e>7/18/2021</span></i> <i class="iconfont reco-eye" data-v-1ff7123e><span id="/blogs/OperationMaintenance/Kubernetes5.html" data-flag-title="Your Article Title" class="leancloud-visitors" data-v-1ff7123e><a class="leancloud-visitors-count" style="font-size:.9rem;font-weight:normal;color:#999;"></a></span></i> <i class="tags iconfont reco-tag" data-v-1ff7123e><span class="tag-item" data-v-1ff7123e>k8s</span></i></div></div> <div class="theme-reco-content content__default"><div class="custom-block tip"><p class="title"></p><p>本章主要学习K8s组件之一service，包含介绍，五种类型的service，ingress使用。根据<a href="https://www.bilibili.com/video/BV1cK4y1L7Am?p=1" target="_blank" rel="noopener noreferrer">哔哩哔哩黑马视频<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>学习，学习来源于搬迁，部分文档有根据自己学习进行修改和补充，<a href="https://www.orchome.com/1786" target="_blank" rel="noopener noreferrer">文档学习资源<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p></div> <h1 id="第七章-service详解"><a href="#第七章-service详解" class="header-anchor">#</a> 第七章 Service详解</h1> <p>本章节主要介绍kubernetes的流量负载组件：Service和Ingress。</p> <h2 id="service介绍"><a href="#service介绍" class="header-anchor">#</a> Service介绍</h2> <p>​    在kubernetes中，pod是应用程序的载体，我们可以通过pod的ip来访问应用程序，但是pod的ip地址不是固定的，这也就意味着不方便直接采用pod的ip对服务进行访问。</p> <p>​    为了解决这个问题，kubernetes提供了Service资源，Service会对提供同一个服务的多个pod进行聚合，并且提供一个统一的入口地址。通过访问Service的入口地址就能访问到后面的pod服务。</p> <img src="/assets/img/image-20200408194716912.934ff829.png" style="zoom:100%;border:1px solid;"> <p>​    Service在很多情况下只是一个概念，真正起作用的其实是kube-proxy服务进程，每个Node节点上都运行着一个kube-proxy服务进程。当创建Service的时候会通过api-server向etcd写入创建的service的信息，而kube-proxy会基于监听的机制发现这种Service的变动，然后<strong>它会将最新的Service信息转换成对应的访问规则</strong>。</p> <img src="/assets/img/image-20200509121254425.f304bf37.png" style="border:1px solid;"> <div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 10.97.97.97:80 是service提供的访问入口</span>
+<span class="token comment"># 当访问这个入口的时候，可以发现后面有三个pod的服务在等待调用，</span>
+<span class="token comment"># kube-proxy会基于rr（轮询）的策略，将请求分发到其中一个pod上去</span>
+<span class="token comment"># 这个规则会同时在集群内的所有节点上都生成，所以在任何一个节点上访问都可以。</span>
+<span class="token namespace">[root@node1 ~]</span><span class="token comment"># ipvsadm -Ln</span>
+IP Virtual Server version 1<span class="token punctuation">.</span>2<span class="token punctuation">.</span>1 <span class="token punctuation">(</span>size=4096<span class="token punctuation">)</span>
+Prot LocalAddress:Port Scheduler Flags
+  <span class="token operator">-</span>&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  10<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97:80 rr
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33:80               Masq    1      0          0
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><p>kube-proxy目前支持三种工作模式:</p> <p><strong>userspace 模式</strong></p> <p>​    userspace模式下，kube-proxy会为每一个Service创建一个监听端口，发向Cluster IP的请求被Iptables规则重定向到kube-proxy监听的端口上，kube-proxy根据LB算法选择一个提供服务的Pod并和其建立链接，以将请求转发到Pod上。
+​    该模式下，kube-proxy充当了一个四层负责均衡器的角色。由于kube-proxy运行在userspace中，在进行转发处理时会增加内核和用户空间之间的数据拷贝，虽然比较稳定，但是效率比较低。</p> <img src="/assets/img/image-20200509151424280.b618d57f.png" style="border:1px solid;zoom:57%;"> <p><strong>iptables 模式</strong></p> <p>​    iptables模式下，kube-proxy为service后端的每个Pod创建对应的iptables规则，直接将发向Cluster IP的请求重定向到一个Pod IP。
+​    该模式下kube-proxy不承担四层负责均衡器的角色，只负责创建iptables规则。该模式的优点是较userspace模式效率更高，但不能提供灵活的LB策略，当后端Pod不可用时也无法进行重试。</p> <img src="/assets/img/image-20200509152947714.967c05ad.png" style="zoom:57%;"> <p><strong>ipvs 模式</strong></p> <p>​    ipvs模式和iptables类似，kube-proxy监控Pod的变化并创建相应的ipvs规则。ipvs相对iptables转发效率更高。除此以外，ipvs支持更多的LB算法。</p> <img src="/assets/img/image-20200509153731363.425c1683.png" style="zoom:57%;"> <div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 此模式必须安装ipvs内核模块，否则会降级为iptables</span>
+<span class="token comment"># 开启ipvs</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl edit cm kube-proxy -n kube-system</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl delete pod -l k8s-app=kube-proxy -n kube-system</span>
+<span class="token namespace">[root@node1 ~]</span><span class="token comment"># ipvsadm -Ln</span>
+IP Virtual Server version 1<span class="token punctuation">.</span>2<span class="token punctuation">.</span>1 <span class="token punctuation">(</span>size=4096<span class="token punctuation">)</span>
+Prot LocalAddress:Port Scheduler Flags
+  <span class="token operator">-</span>&gt; RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  10<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97:80 rr
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33:80               Masq    1      0          0
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br></div></div><h2 id="service类型"><a href="#service类型" class="header-anchor">#</a> Service类型</h2> <p>Service的资源清单文件：</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">kind</span><span class="token punctuation">:</span> Service  <span class="token comment"># 资源类型</span>
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1  <span class="token comment"># 资源版本</span>
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span> <span class="token comment"># 元数据</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> service <span class="token comment"># 资源名称</span>
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev <span class="token comment"># 命名空间</span>
+<span class="token key atrule">spec</span><span class="token punctuation">:</span> <span class="token comment"># 描述</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span> <span class="token comment"># 标签选择器，用于确定当前service代理哪些pod</span>
+    <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> <span class="token comment"># Service类型，指定service的访问方式</span>
+  <span class="token key atrule">clusterIP</span><span class="token punctuation">:</span>  <span class="token comment"># 虚拟服务的ip地址</span>
+  <span class="token key atrule">sessionAffinity</span><span class="token punctuation">:</span> <span class="token comment"># session亲和性，支持ClientIP、None两个选项</span>
+  <span class="token key atrule">ports</span><span class="token punctuation">:</span> <span class="token comment"># 端口信息</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">protocol</span><span class="token punctuation">:</span> TCP 
+      <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">3017</span>  <span class="token comment"># service端口</span>
+      <span class="token key atrule">targetPort</span><span class="token punctuation">:</span> <span class="token number">5003</span> <span class="token comment"># pod端口</span>
+      <span class="token key atrule">nodePort</span><span class="token punctuation">:</span> <span class="token number">31122</span> <span class="token comment"># 主机端口</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><ul><li>ClusterIP：默认值，它是Kubernetes系统自动分配的虚拟IP，只能在集群内部访问</li> <li>NodePort：将Service通过指定的Node上的端口暴露给外部，通过此方法，就可以在集群外部访问服务</li> <li>LoadBalancer：使用外接负载均衡器完成到服务的负载分发，注意此模式需要外部云环境支持</li> <li>ExternalName： 把集群外部的服务引入集群内部，直接使用</li></ul> <h2 id="service使用"><a href="#service使用" class="header-anchor">#</a> Service使用</h2> <h3 id="实验环境准备"><a href="#实验环境准备" class="header-anchor">#</a> 实验环境准备</h3> <p>在使用service之前，首先利用Deployment创建出3个pod，注意要为pod设置<code>app=nginx-pod</code>的标签</p> <p>创建deployment.yaml，内容如下：</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> apps/v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Deployment      
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> pc<span class="token punctuation">-</span>deployment
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span> 
+  <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">3</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">matchLabels</span><span class="token punctuation">:</span>
+      <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+  <span class="token key atrule">template</span><span class="token punctuation">:</span>
+    <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+      <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+        <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+    <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+      <span class="token key atrule">containers</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> nginx
+        <span class="token key atrule">image</span><span class="token punctuation">:</span> nginx<span class="token punctuation">:</span>1.17.1
+        <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">containerPort</span><span class="token punctuation">:</span> <span class="token number">80</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl create -f deployment.yaml</span>
+deployment<span class="token punctuation">.</span>apps<span class="token operator">/</span>pc<span class="token operator">-</span>deployment created
+
+<span class="token comment"># 查看pod详情</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl get pods -n dev -o wide --show-labels</span>
+NAME                             READY   STATUS     IP            NODE     LABELS
+pc<span class="token operator">-</span>deployment<span class="token operator">-</span>66cb59b984<span class="token operator">-</span>8p84h   1<span class="token operator">/</span>1     Running    10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40   node1    app=nginx<span class="token operator">-</span>pod
+pc<span class="token operator">-</span>deployment<span class="token operator">-</span>66cb59b984<span class="token operator">-</span>vx8vx   1<span class="token operator">/</span>1     Running    10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33   node2    app=nginx<span class="token operator">-</span>pod
+pc<span class="token operator">-</span>deployment<span class="token operator">-</span>66cb59b984<span class="token operator">-</span>wnncx   1<span class="token operator">/</span>1     Running    10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39   node1    app=nginx<span class="token operator">-</span>pod
+
+<span class="token comment"># 为了方便后面的测试，修改下三台nginx的index.html页面（三台修改的IP地址不一致）</span>
+<span class="token comment"># kubectl exec -it pc-deployment-66cb59b984-8p84h -n dev /bin/sh</span>
+<span class="token comment"># echo &quot;10.244.1.40&quot; &gt; /usr/share/nginx/html/index.html</span>
+
+<span class="token comment">#修改完毕之后，访问测试</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># curl 10.244.1.40</span>
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40
+<span class="token namespace">[root@master ~]</span><span class="token comment"># curl 10.244.2.33</span>
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+<span class="token namespace">[root@master ~]</span><span class="token comment"># curl 10.244.1.39</span>
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><h3 id="clusterip类型的service"><a href="#clusterip类型的service" class="header-anchor">#</a> ClusterIP类型的Service</h3> <p>创建service-clusterip.yaml文件</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Service
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> service<span class="token punctuation">-</span>clusterip
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+  <span class="token key atrule">clusterIP</span><span class="token punctuation">:</span> 10.97.97.97 <span class="token comment"># service的ip地址，如果不写，默认会生成一个</span>
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> ClusterIP
+  <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">80</span>  <span class="token comment"># Service端口       </span>
+    <span class="token key atrule">targetPort</span><span class="token punctuation">:</span> <span class="token number">80</span> <span class="token comment"># pod端口</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建service</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl create -f service-clusterip.yaml</span>
+service<span class="token operator">/</span>service<span class="token operator">-</span>clusterip created
+
+<span class="token comment"># 查看service</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl get svc -n dev -o wide</span>
+NAME                <span class="token function">TYPE</span>        CLUSTER<span class="token operator">-</span>IP    EXTERNAL<span class="token operator">-</span>IP   PORT<span class="token punctuation">(</span>S<span class="token punctuation">)</span>   AGE   SELECTOR
+service<span class="token operator">-</span>clusterip   ClusterIP   10<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97   &lt;none&gt;        80<span class="token operator">/</span>TCP    13s   app=nginx<span class="token operator">-</span>pod
+
+<span class="token comment"># 查看service的详细信息</span>
+<span class="token comment"># 在这里有一个Endpoints列表，里面就是当前service可以负载到的服务入口</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl describe svc service-clusterip -n dev</span>
+Name:              service<span class="token operator">-</span>clusterip
+Namespace:         dev
+Labels:            &lt;none&gt;
+Annotations:       &lt;none&gt;
+Selector:          app=nginx<span class="token operator">-</span>pod
+<span class="token function">Type</span>:              ClusterIP
+IP:                10<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97
+Port:              &lt;unset&gt;  80<span class="token operator">/</span>TCP
+TargetPort:        80<span class="token operator">/</span>TCP
+Endpoints:         10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33:80
+Session Affinity:  None
+Events:            &lt;none&gt;
+
+<span class="token comment"># 查看ipvs的映射规则</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># ipvsadm -Ln</span>
+TCP  10<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97:80 rr
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33:80               Masq    1      0          0
+
+<span class="token comment"># 访问10.97.97.97:80观察效果</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># curl 10.97.97.97:80</span>
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br></div></div><p><strong>Endpoint</strong></p> <p>​    Endpoint是kubernetes中的一个资源对象，存储在etcd中，用来记录一个service对应的所有pod的访问地址，它是根据service配置文件中selector描述产生的。</p> <p>​    一个Service由一组Pod组成，这些Pod通过Endpoints暴露出来，<strong>Endpoints是实现实际服务的端点集合</strong>。换句话说，service和pod之间的联系是通过endpoints实现的。</p> <p><img src="/assets/img/image-20200509191917069.6d0c1442.png" alt="image-20200509191917069"></p> <p><strong>负载分发策略</strong></p> <p>对Service的访问被分发到了后端的Pod上去，目前kubernetes提供了两种负载分发策略：</p> <ul><li><p>如果不定义，默认使用kube-proxy的策略，比如随机、轮询</p></li> <li><p>基于客户端地址的会话保持模式，即来自同一个客户端发起的所有请求都会转发到固定的一个Pod上</p> <p>此模式可以使在spec中添加<code>sessionAffinity:ClientIP</code>选项</p></li></ul> <div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 查看ipvs的映射规则【rr 轮询】</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># ipvsadm -Ln</span>
+TCP  10<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97:80 rr
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33:80               Masq    1      0          0
+
+<span class="token comment"># 循环访问测试</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># while true;do curl 10.97.97.97:80; sleep 5; done;</span>
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+
+<span class="token comment"># 修改分发策略----sessionAffinity:ClientIP</span>
+
+<span class="token comment"># 查看ipvs规则【persistent 代表持久】</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># ipvsadm -Ln</span>
+TCP  10<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97<span class="token punctuation">.</span>97:80 rr persistent 10800
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40:80               Masq    1      0          0
+  <span class="token operator">-</span>&gt; 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33:80               Masq    1      0          0
+
+<span class="token comment"># 循环访问测试</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># while true;do curl 10.97.97.97; sleep 5; done;</span>
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+  
+<span class="token comment"># 删除service</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl delete -f service-clusterip.yaml</span>
+service <span class="token string">&quot;service-clusterip&quot;</span> deleted
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br></div></div><h3 id="headliness类型的service"><a href="#headliness类型的service" class="header-anchor">#</a> HeadLiness类型的Service</h3> <p>​    在某些场景中，开发人员可能不想使用Service提供的负载均衡功能，而希望自己来控制负载均衡策略，针对这种情况，kubernetes提供了HeadLiness  Service，这类Service不会分配Cluster IP，如果想要访问service，只能通过service的域名进行查询。</p> <p>创建service-headliness.yaml</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Service
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> service<span class="token punctuation">-</span>headliness
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+  <span class="token key atrule">clusterIP</span><span class="token punctuation">:</span> None <span class="token comment"># 将clusterIP设置为None，即可创建headliness Service</span>
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> ClusterIP
+  <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">80</span>    
+    <span class="token key atrule">targetPort</span><span class="token punctuation">:</span> <span class="token number">80</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建service</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl create -f service-headliness.yaml</span>
+service<span class="token operator">/</span>service<span class="token operator">-</span>headliness created
+
+<span class="token comment"># 获取service， 发现CLUSTER-IP未分配</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl get svc service-headliness -n dev -o wide</span>
+NAME                 <span class="token function">TYPE</span>        CLUSTER<span class="token operator">-</span>IP   EXTERNAL<span class="token operator">-</span>IP   PORT<span class="token punctuation">(</span>S<span class="token punctuation">)</span>   AGE   SELECTOR
+service<span class="token operator">-</span>headliness   ClusterIP   None         &lt;none&gt;        80<span class="token operator">/</span>TCP    11s   app=nginx<span class="token operator">-</span>pod
+
+<span class="token comment"># 查看service详情</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl describe svc service-headliness  -n dev</span>
+Name:              service<span class="token operator">-</span>headliness
+Namespace:         dev
+Labels:            &lt;none&gt;
+Annotations:       &lt;none&gt;
+Selector:          app=nginx<span class="token operator">-</span>pod
+<span class="token function">Type</span>:              ClusterIP
+IP:                None
+Port:              &lt;unset&gt;  80<span class="token operator">/</span>TCP
+TargetPort:        80<span class="token operator">/</span>TCP
+Endpoints:         10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33:80
+Session Affinity:  None
+Events:            &lt;none&gt;
+
+<span class="token comment"># 查看域名的解析情况</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl exec -it pc-deployment-66cb59b984-8p84h -n dev /bin/sh</span>
+<span class="token operator">/</span> <span class="token comment"># cat /etc/resolv.conf</span>
+nameserver 10<span class="token punctuation">.</span>96<span class="token punctuation">.</span>0<span class="token punctuation">.</span>10
+search dev<span class="token punctuation">.</span>svc<span class="token punctuation">.</span>cluster<span class="token punctuation">.</span>local svc<span class="token punctuation">.</span>cluster<span class="token punctuation">.</span>local cluster<span class="token punctuation">.</span>local
+
+<span class="token namespace">[root@master ~]</span><span class="token comment"># dig @10.96.0.10 service-headliness.dev.svc.cluster.local</span>
+service<span class="token operator">-</span>headliness<span class="token punctuation">.</span>dev<span class="token punctuation">.</span>svc<span class="token punctuation">.</span>cluster<span class="token punctuation">.</span>local<span class="token punctuation">.</span> 30 IN A 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>40
+service<span class="token operator">-</span>headliness<span class="token punctuation">.</span>dev<span class="token punctuation">.</span>svc<span class="token punctuation">.</span>cluster<span class="token punctuation">.</span>local<span class="token punctuation">.</span> 30 IN A 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>39
+service<span class="token operator">-</span>headliness<span class="token punctuation">.</span>dev<span class="token punctuation">.</span>svc<span class="token punctuation">.</span>cluster<span class="token punctuation">.</span>local<span class="token punctuation">.</span> 30 IN A 10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>33
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br></div></div><h3 id="nodeport类型的service"><a href="#nodeport类型的service" class="header-anchor">#</a> NodePort类型的Service</h3> <p>​    在之前的样例中，创建的Service的ip地址只有集群内部才可以访问，如果希望将Service暴露给集群外部使用，那么就要使用到另外一种类型的Service，称为NodePort类型。NodePort的工作原理其实就是<strong>将service的端口映射到Node的一个端口上</strong>，然后就可以通过<code>NodeIp:NodePort</code>来访问service了。</p> <img src="/assets/img/image-20200620175731338.57a3e689.png" style="border:1px solid;"> <p>创建service-nodeport.yaml</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Service
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> service<span class="token punctuation">-</span>nodeport
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> NodePort <span class="token comment"># service类型</span>
+  <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">80</span>
+    <span class="token key atrule">nodePort</span><span class="token punctuation">:</span> <span class="token number">30002</span> <span class="token comment"># 指定绑定的node的端口(默认的取值范围是：30000-32767), 如果不指定，会默认分配</span>
+    <span class="token key atrule">targetPort</span><span class="token punctuation">:</span> <span class="token number">80</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建service</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl create -f service-nodeport.yaml</span>
+service<span class="token operator">/</span>service<span class="token operator">-</span>nodeport created
+
+<span class="token comment"># 查看service</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl get svc -n dev -o wide</span>
+NAME               <span class="token function">TYPE</span>       CLUSTER<span class="token operator">-</span>IP      EXTERNAL<span class="token operator">-</span>IP   PORT<span class="token punctuation">(</span>S<span class="token punctuation">)</span>       SELECTOR
+service<span class="token operator">-</span>nodeport   NodePort   10<span class="token punctuation">.</span>105<span class="token punctuation">.</span>64<span class="token punctuation">.</span>191   &lt;none&gt;        80:30002<span class="token operator">/</span>TCP  app=nginx<span class="token operator">-</span>pod
+
+<span class="token comment"># 接下来可以通过电脑主机的浏览器去访问集群中任意一个nodeip的30002端口，即可访问到pod</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><h3 id="loadbalancer类型的service"><a href="#loadbalancer类型的service" class="header-anchor">#</a> LoadBalancer类型的Service</h3> <p>​    LoadBalancer和NodePort很相似，目的都是向外部暴露一个端口，区别在于LoadBalancer会在集群的外部再来做一个负载均衡设备，而这个设备需要外部环境支持的，外部服务发送到这个设备上的请求，会被设备负载之后转发到集群中。</p> <img src="/assets/img/image-20200510103945494.514ae73e.png" style="border:1px solid;"> <h3 id="externalname类型的service"><a href="#externalname类型的service" class="header-anchor">#</a> ExternalName类型的Service</h3> <p>​     ExternalName类型的Service用于引入集群外部的服务，它通过<code>externalName</code>属性指定外部一个服务的地址，然后在集群内部访问此service就可以访问到外部的服务了。</p> <img src="/assets/img/image-20200510113311209.c08c2b86.png" style="border:1px solid;"> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Service
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> service<span class="token punctuation">-</span>externalname
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> ExternalName <span class="token comment"># service类型</span>
+  <span class="token key atrule">externalName</span><span class="token punctuation">:</span> www.baidu.com  <span class="token comment">#改成ip地址也可以</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建service</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl  create -f service-externalname.yaml</span>
+service<span class="token operator">/</span>service<span class="token operator">-</span>externalname created
+
+<span class="token comment"># 域名解析</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># dig @10.96.0.10 service-externalname.dev.svc.cluster.local</span>
+service<span class="token operator">-</span>externalname<span class="token punctuation">.</span>dev<span class="token punctuation">.</span>svc<span class="token punctuation">.</span>cluster<span class="token punctuation">.</span>local<span class="token punctuation">.</span> 30 IN CNAME www<span class="token punctuation">.</span>baidu<span class="token punctuation">.</span>com<span class="token punctuation">.</span>
+www<span class="token punctuation">.</span>baidu<span class="token punctuation">.</span>com<span class="token punctuation">.</span>          30      IN      CNAME   www<span class="token punctuation">.</span>a<span class="token punctuation">.</span>shifen<span class="token punctuation">.</span>com<span class="token punctuation">.</span>
+www<span class="token punctuation">.</span>a<span class="token punctuation">.</span>shifen<span class="token punctuation">.</span>com<span class="token punctuation">.</span>       30      IN      A       39<span class="token punctuation">.</span>156<span class="token punctuation">.</span>66<span class="token punctuation">.</span>18
+www<span class="token punctuation">.</span>a<span class="token punctuation">.</span>shifen<span class="token punctuation">.</span>com<span class="token punctuation">.</span>       30      IN      A       39<span class="token punctuation">.</span>156<span class="token punctuation">.</span>66<span class="token punctuation">.</span>14
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br></div></div><h2 id="ingress介绍"><a href="#ingress介绍" class="header-anchor">#</a> Ingress介绍</h2> <p>​     在前面课程中已经提到，Service对集群之外暴露服务的主要方式有两种：NotePort和LoadBalancer，但是这两种方式，都有一定的缺点：</p> <ul><li>NodePort方式的缺点是会占用很多集群机器的端口，那么当集群服务变多的时候，这个缺点就愈发明显</li> <li>LB方式的缺点是每个service需要一个LB，浪费、麻烦，并且需要kubernetes之外设备的支持</li></ul> <p>​    基于这种现状，kubernetes提供了Ingress资源对象，Ingress只需要一个NodePort或者一个LB就可以满足暴露多个Service的需求。工作机制大致如下图表示：</p> <img src="/assets/img/image-20200623092808049.1414c953.png" style="border:1px solid;"> <p>​    实际上，Ingress相当于一个7层的负载均衡器，是kubernetes对反向代理的一个抽象，它的工作原理类似于Nginx，可以理解成在<strong>Ingress里建立诸多映射规则，Ingress Controller通过监听这些配置规则并转化成Nginx的反向代理配置 , 然后对外部提供服务</strong>。在这里有两个核心概念：</p> <ul><li>ingress：kubernetes中的一个对象，作用是定义请求如何转发到service的规则</li> <li>ingress controller：具体实现反向代理及负载均衡的程序，对ingress定义的规则进行解析，根据配置的规则来实现请求转发，实现方式有很多，比如Nginx, Contour, Haproxy等等</li></ul> <p>Ingress（以Nginx为例）的工作原理如下：</p> <ol><li>用户编写Ingress规则，说明哪个域名对应kubernetes集群中的哪个Service</li> <li>Ingress控制器动态感知Ingress服务规则的变化，然后生成一段对应的Nginx反向代理配置</li> <li>Ingress控制器会将生成的Nginx配置写入到一个运行着的Nginx服务中，并动态更新</li> <li>到此为止，其实真正在工作的就是一个Nginx了，内部配置了用户定义的请求转发规则</li></ol> <img src="/assets/img/image-20200516112704764.dfcca666.png" style="border:1px solid;zoom:100%;"> <h2 id="ingress使用"><a href="#ingress使用" class="header-anchor">#</a> Ingress使用</h2> <h3 id="环境准备"><a href="#环境准备" class="header-anchor">#</a> 环境准备</h3> <p><strong>搭建ingress环境</strong></p> <div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建文件夹</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># mkdir ingress-controller</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># cd ingress-controller/</span>
+
+<span class="token comment"># 获取ingress-nginx，本次案例使用的是0.30版本</span>
+<span class="token namespace">[root@master ingress-controller]</span><span class="token comment"># wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/mandatory.yaml</span>
+<span class="token namespace">[root@master ingress-controller]</span><span class="token comment"># wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.30.0/deploy/static/provider/baremetal/service-nodeport.yaml</span>
+
+<span class="token comment"># 修改mandatory.yaml文件中的仓库</span>
+<span class="token comment"># 修改quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0</span>
+<span class="token comment"># 为quay-mirror.qiniu.com/kubernetes-ingress-controller/nginx-ingress-controller:0.30.0</span>
+<span class="token comment"># 创建ingress-nginx</span>
+<span class="token namespace">[root@master ingress-controller]</span><span class="token comment"># kubectl apply -f ./</span>
+
+<span class="token comment"># 查看ingress-nginx</span>
+<span class="token namespace">[root@master ingress-controller]</span><span class="token comment"># kubectl get pod -n ingress-nginx</span>
+NAME                                           READY   STATUS    RESTARTS   AGE
+pod<span class="token operator">/</span>nginx<span class="token operator">-</span>ingress<span class="token operator">-</span>controller<span class="token operator">-</span>fbf967dd5<span class="token operator">-</span>4qpbp   1<span class="token operator">/</span>1     Running   0          12h
+
+<span class="token comment"># 查看service</span>
+<span class="token namespace">[root@master ingress-controller]</span><span class="token comment"># kubectl get svc -n ingress-nginx</span>
+NAME            <span class="token function">TYPE</span>       CLUSTER<span class="token operator">-</span>IP     EXTERNAL<span class="token operator">-</span>IP   PORT<span class="token punctuation">(</span>S<span class="token punctuation">)</span>                      AGE
+ingress<span class="token operator">-</span>nginx   NodePort   10<span class="token punctuation">.</span>98<span class="token punctuation">.</span>75<span class="token punctuation">.</span>163   &lt;none&gt;        80:32240<span class="token operator">/</span>TCP<span class="token punctuation">,</span>443:31335<span class="token operator">/</span>TCP   11h
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br></div></div><p><strong>准备service和pod</strong></p> <p>为了后面的实验比较方便，创建如下图所示的模型</p> <img src="/assets/img/image-20200516102419998.7a6e16c2.png" style="zoom:80%;border:1px solid;"> <p>创建tomcat-nginx.yaml</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> apps/v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Deployment
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>deployment
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">3</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">matchLabels</span><span class="token punctuation">:</span>
+      <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+  <span class="token key atrule">template</span><span class="token punctuation">:</span>
+    <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+      <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+        <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+    <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+      <span class="token key atrule">containers</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> nginx
+        <span class="token key atrule">image</span><span class="token punctuation">:</span> nginx<span class="token punctuation">:</span>1.17.1
+        <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">containerPort</span><span class="token punctuation">:</span> <span class="token number">80</span>
+
+<span class="token punctuation">---</span>
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> apps/v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Deployment
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">-</span>deployment
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">replicas</span><span class="token punctuation">:</span> <span class="token number">3</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">matchLabels</span><span class="token punctuation">:</span>
+      <span class="token key atrule">app</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">-</span>pod
+  <span class="token key atrule">template</span><span class="token punctuation">:</span>
+    <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+      <span class="token key atrule">labels</span><span class="token punctuation">:</span>
+        <span class="token key atrule">app</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">-</span>pod
+    <span class="token key atrule">spec</span><span class="token punctuation">:</span>
+      <span class="token key atrule">containers</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> tomcat
+        <span class="token key atrule">image</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">:</span>8.5<span class="token punctuation">-</span>jre10<span class="token punctuation">-</span>slim
+        <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> <span class="token key atrule">containerPort</span><span class="token punctuation">:</span> <span class="token number">8080</span>
+
+<span class="token punctuation">---</span>
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Service
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>service
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">app</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>pod
+  <span class="token key atrule">clusterIP</span><span class="token punctuation">:</span> None
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> ClusterIP
+  <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">80</span>
+    <span class="token key atrule">targetPort</span><span class="token punctuation">:</span> <span class="token number">80</span>
+
+<span class="token punctuation">---</span>
+
+<span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> v1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Service
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">-</span>service
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
+    <span class="token key atrule">app</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">-</span>pod
+  <span class="token key atrule">clusterIP</span><span class="token punctuation">:</span> None
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> ClusterIP
+  <span class="token key atrule">ports</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">port</span><span class="token punctuation">:</span> <span class="token number">8080</span>
+    <span class="token key atrule">targetPort</span><span class="token punctuation">:</span> <span class="token number">8080</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl create -f tomcat-nginx.yaml</span>
+
+<span class="token comment"># 查看</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl get svc -n dev</span>
+NAME             <span class="token function">TYPE</span>        CLUSTER<span class="token operator">-</span>IP   EXTERNAL<span class="token operator">-</span>IP   PORT<span class="token punctuation">(</span>S<span class="token punctuation">)</span>    AGE
+nginx<span class="token operator">-</span>service    ClusterIP   None         &lt;none&gt;        80<span class="token operator">/</span>TCP     48s
+tomcat<span class="token operator">-</span>service   ClusterIP   None         &lt;none&gt;        8080<span class="token operator">/</span>TCP   48s
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br></div></div><h3 id="http代理"><a href="#http代理" class="header-anchor">#</a> Http代理</h3> <p>创建ingress-http.yaml</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> extensions/v1beta1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Ingress
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> ingress<span class="token punctuation">-</span>http
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">rules</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">host</span><span class="token punctuation">:</span> nginx.itheima.com
+    <span class="token key atrule">http</span><span class="token punctuation">:</span>
+      <span class="token key atrule">paths</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /
+        <span class="token key atrule">backend</span><span class="token punctuation">:</span>
+          <span class="token key atrule">serviceName</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>service
+          <span class="token key atrule">servicePort</span><span class="token punctuation">:</span> <span class="token number">80</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">host</span><span class="token punctuation">:</span> tomcat.itheima.com
+    <span class="token key atrule">http</span><span class="token punctuation">:</span>
+      <span class="token key atrule">paths</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /
+        <span class="token key atrule">backend</span><span class="token punctuation">:</span>
+          <span class="token key atrule">serviceName</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">-</span>service
+          <span class="token key atrule">servicePort</span><span class="token punctuation">:</span> <span class="token number">8080</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl create -f ingress-http.yaml</span>
+ingress<span class="token punctuation">.</span>extensions<span class="token operator">/</span>ingress<span class="token operator">-</span>http created
+
+<span class="token comment"># 查看</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl get ing ingress-http -n dev</span>
+NAME           HOSTS                                  ADDRESS   PORTS   AGE
+ingress<span class="token operator">-</span>http   nginx<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com<span class="token punctuation">,</span>tomcat<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com             80      22s
+
+<span class="token comment"># 查看详情</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl describe ing ingress-http  -n dev</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+Rules:
+Host                Path  Backends
+<span class="token operator">--</span>-<span class="token operator">-</span>                <span class="token operator">--</span>-<span class="token operator">-</span>  <span class="token operator">--</span>-<span class="token operator">--</span>-<span class="token operator">--</span>
+nginx<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com   <span class="token operator">/</span> nginx<span class="token operator">-</span>service:80 <span class="token punctuation">(</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>96:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>97:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>112:80<span class="token punctuation">)</span>
+tomcat<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com  <span class="token operator">/</span> tomcat<span class="token operator">-</span>service:8080<span class="token punctuation">(</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>94:8080<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>95:8080<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>111:8080<span class="token punctuation">)</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token comment"># 接下来,在本地电脑上配置host文件,解析上面的两个域名到192.168.109.100(master)上</span>
+<span class="token comment"># 然后,就可以分别访问tomcat.itheima.com:32240  和  nginx.itheima.com:32240 查看效果了</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br></div></div><h3 id="https代理"><a href="#https代理" class="header-anchor">#</a> Https代理</h3> <p>创建证书</p> <div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 生成证书</span>
+openssl req <span class="token operator">-</span>x509 <span class="token operator">-</span>sha256 <span class="token operator">-</span>nodes <span class="token operator">-</span>days 365 <span class="token operator">-</span>newkey rsa:2048 <span class="token operator">-</span>keyout tls<span class="token punctuation">.</span>key <span class="token operator">-</span>out tls<span class="token punctuation">.</span>crt <span class="token operator">-</span>subj <span class="token string">&quot;/C=CN/ST=BJ/L=BJ/O=nginx/CN=itheima.com&quot;</span>
+
+<span class="token comment"># 创建密钥</span>
+kubectl create secret tls tls<span class="token operator">-</span>secret <span class="token operator">--</span>key tls<span class="token punctuation">.</span>key <span class="token operator">--</span>cert tls<span class="token punctuation">.</span>crt
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><p>创建ingress-https.yaml</p> <div class="language-yaml line-numbers-mode"><pre class="language-yaml"><code><span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> extensions/v1beta1
+<span class="token key atrule">kind</span><span class="token punctuation">:</span> Ingress
+<span class="token key atrule">metadata</span><span class="token punctuation">:</span>
+  <span class="token key atrule">name</span><span class="token punctuation">:</span> ingress<span class="token punctuation">-</span>https
+  <span class="token key atrule">namespace</span><span class="token punctuation">:</span> dev
+<span class="token key atrule">spec</span><span class="token punctuation">:</span>
+  <span class="token key atrule">tls</span><span class="token punctuation">:</span>
+    <span class="token punctuation">-</span> <span class="token key atrule">hosts</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> nginx.itheima.com
+      <span class="token punctuation">-</span> tomcat.itheima.com
+      <span class="token key atrule">secretName</span><span class="token punctuation">:</span> tls<span class="token punctuation">-</span>secret <span class="token comment"># 指定秘钥</span>
+  <span class="token key atrule">rules</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">host</span><span class="token punctuation">:</span> nginx.itheima.com
+    <span class="token key atrule">http</span><span class="token punctuation">:</span>
+      <span class="token key atrule">paths</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /
+        <span class="token key atrule">backend</span><span class="token punctuation">:</span>
+          <span class="token key atrule">serviceName</span><span class="token punctuation">:</span> nginx<span class="token punctuation">-</span>service
+          <span class="token key atrule">servicePort</span><span class="token punctuation">:</span> <span class="token number">80</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">host</span><span class="token punctuation">:</span> tomcat.itheima.com
+    <span class="token key atrule">http</span><span class="token punctuation">:</span>
+      <span class="token key atrule">paths</span><span class="token punctuation">:</span>
+      <span class="token punctuation">-</span> <span class="token key atrule">path</span><span class="token punctuation">:</span> /
+        <span class="token key atrule">backend</span><span class="token punctuation">:</span>
+          <span class="token key atrule">serviceName</span><span class="token punctuation">:</span> tomcat<span class="token punctuation">-</span>service
+          <span class="token key atrule">servicePort</span><span class="token punctuation">:</span> <span class="token number">8080</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br></div></div><div class="language-powershell line-numbers-mode"><pre class="language-powershell"><code><span class="token comment"># 创建</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl create -f ingress-https.yaml</span>
+ingress<span class="token punctuation">.</span>extensions<span class="token operator">/</span>ingress<span class="token operator">-</span>https created
+
+<span class="token comment"># 查看</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl get ing ingress-https -n dev</span>
+NAME            HOSTS                                  ADDRESS         PORTS     AGE
+ingress<span class="token operator">-</span>https   nginx<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com<span class="token punctuation">,</span>tomcat<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com   10<span class="token punctuation">.</span>104<span class="token punctuation">.</span>184<span class="token punctuation">.</span>38   80<span class="token punctuation">,</span> 443   2m42s
+
+<span class="token comment"># 查看详情</span>
+<span class="token namespace">[root@master ~]</span><span class="token comment"># kubectl describe ing ingress-https -n dev</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+TLS:
+  tls<span class="token operator">-</span>secret terminates nginx<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com<span class="token punctuation">,</span>tomcat<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com
+Rules:
+Host              Path Backends
+<span class="token operator">--</span>-<span class="token operator">-</span>              <span class="token operator">--</span>-<span class="token operator">-</span> <span class="token operator">--</span>-<span class="token operator">--</span>-<span class="token operator">--</span>
+nginx<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com  <span class="token operator">/</span>  nginx<span class="token operator">-</span>service:80 <span class="token punctuation">(</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>97:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>98:80<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>119:80<span class="token punctuation">)</span>
+tomcat<span class="token punctuation">.</span>itheima<span class="token punctuation">.</span>com <span class="token operator">/</span>  tomcat<span class="token operator">-</span>service:8080<span class="token punctuation">(</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>1<span class="token punctuation">.</span>99:8080<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>117:8080<span class="token punctuation">,</span>10<span class="token punctuation">.</span>244<span class="token punctuation">.</span>2<span class="token punctuation">.</span>120:8080<span class="token punctuation">)</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+<span class="token comment"># 下面可以通过浏览器访问https://nginx.itheima.com:31335 和 https://tomcat.itheima.com:31335来查看了</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br></div></div></div></section> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/LoEnzo/LoEnzo.github.io/edit/master/blogs/OperationMaintenance/Kubernetes5.md" target="_blank" rel="noopener noreferrer">在 GitHub 上编辑此页！</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">Last Updated: </span> <span class="time">7/19/2021, 2:47:06 AM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/blogs/OperationMaintenance/Kubernetes4.html" class="prev">
+            K8s之pod控制器详解二
+          </a></span> <span class="next"><a href="/blogs/OperationMaintenance/Kubernetes6.html">
+            K8s之数据存储、安全认证、DashBoard
+          </a></span></p></div> <div class="comments-wrapper"><!----></div> <ul class="side-bar sub-sidebar-wrapper" style="width:12rem;" data-v-70334359><li class="level-2" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#service介绍" class="sidebar-link reco-side-service介绍" data-v-70334359>Service介绍</a></li><li class="level-2" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#service类型" class="sidebar-link reco-side-service类型" data-v-70334359>Service类型</a></li><li class="level-2" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#service使用" class="sidebar-link reco-side-service使用" data-v-70334359>Service使用</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#实验环境准备" class="sidebar-link reco-side-实验环境准备" data-v-70334359>实验环境准备</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#clusterip类型的service" class="sidebar-link reco-side-clusterip类型的service" data-v-70334359>ClusterIP类型的Service</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#headliness类型的service" class="sidebar-link reco-side-headliness类型的service" data-v-70334359>HeadLiness类型的Service</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#nodeport类型的service" class="sidebar-link reco-side-nodeport类型的service" data-v-70334359>NodePort类型的Service</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#loadbalancer类型的service" class="sidebar-link reco-side-loadbalancer类型的service" data-v-70334359>LoadBalancer类型的Service</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#externalname类型的service" class="sidebar-link reco-side-externalname类型的service" data-v-70334359>ExternalName类型的Service</a></li><li class="level-2" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#ingress介绍" class="sidebar-link reco-side-ingress介绍" data-v-70334359>Ingress介绍</a></li><li class="level-2" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#ingress使用" class="sidebar-link reco-side-ingress使用" data-v-70334359>Ingress使用</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#环境准备" class="sidebar-link reco-side-环境准备" data-v-70334359>环境准备</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#http代理" class="sidebar-link reco-side-http代理" data-v-70334359>Http代理</a></li><li class="level-3" data-v-70334359><a href="/blogs/OperationMaintenance/Kubernetes5.html#https代理" class="sidebar-link reco-side-https代理" data-v-70334359>Https代理</a></li></ul></main> <!----></div></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div><!----><!----></div></div>
+    <script src="/assets/js/app.91d310fe.js" defer></script><script src="/assets/js/3.a1926ec9.js" defer></script><script src="/assets/js/1.d4d14a49.js" defer></script><script src="/assets/js/8.cf460414.js" defer></script><script src="/assets/js/22.34e1e12c.js" defer></script>
+  </body>
+</html>
