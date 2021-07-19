@@ -159,6 +159,14 @@ git tag new_tag_name old_tag_name
 git tag -d old_tag_name
 git push origin :refs/tags/old_tag_name
 git push --tags
+
+// 清除之前所有的commit，因为修改错误remote.origin.url地址，导致把不是这个项目的文件拉取下来了，虽然文件删除，但所有历史commit同步到当前项目了，看起来非常杂乱
+git checkout --orphan latest_branch
+git add -A
+git commit -am "commit message"
+git branch -D master
+git branch -m master
+git push -f origin master
 ```
 
 ### QA：
