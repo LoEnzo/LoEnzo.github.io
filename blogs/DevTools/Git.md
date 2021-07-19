@@ -173,9 +173,9 @@ git push -f origin master
 
 #### git clone 报错 
 
-`warning: Clone succeeded, but checkout failed.` 或者`filename too long`，原因：
+报错：`warning: Clone succeeded, but checkout failed.` 或者`filename too long`，
 
-这个是你本地放置的仓库地址在多级文件夹里面，且自己要拉取的项目某些文件的层级也很多导致的，一般拉取到最外层的磁盘即可，当然，可以修改git配置解决
+原因：这个是你本地放置的仓库地址在多级文件夹里面，且自己要拉取的项目某些文件的层级也很多导致的，一般拉取到最外层的磁盘即可，当然，可以修改git配置解决
 
 解决：`git config --system core.longpaths true`
 
@@ -183,12 +183,7 @@ git push -f origin master
 
 报错： `SSL_connect: SSL_ERROR_SYSCALL in connection to github.com:443`，
 
-原因：
-
-```
-因为Git的Http代理的问题，Git支持三种协议：git://、ssh://和http://，
-本来push的时候应该走ssh隧道的，但是因为设置了http代理，所以就走了http的代理，于是就提交不了了
-```
+原因：因为Git的Http代理的问题，Git支持三种协议：git://、ssh://和http://；本来push的时候应该走ssh隧道的，但是因为设置了http代理，所以就走了http的代理，于是就提交不了了
 
 解决：取消代理`git config --global --unset http.proxy`	
 
@@ -208,9 +203,9 @@ git push -f origin master
 
 #### git push 报错403
 
-原因：开始还可以推送，后面就报错了，暂时不知道为啥，详细错误：  `fatal: unable to access 'https://XXX.git/': The requested URL returned error: 403`
+报错：`fatal: unable to access 'https://XXX.git/': The requested URL returned error: 403`，开始还可以推送，后面就报错了，暂时不知道为啥，详细错误
 
-解决：
+解决：临时办法
 
 ```shell
 vim .git/config
@@ -229,12 +224,15 @@ vim .git/config
 
 #### 设置和取消代理
 
-```shell
-# 设置代理
-git config --global https.proxy `http://127.0.0.1:8081`
-# 取消代理
-git config --global --unset https.proxy
-```
+设置代理：`git config --global https.proxy http://127.0.0.1:8081`
+
+取消代理：`git config --global --unset https.proxy`
+
+#### Git status无法显示修改的文件
+
+原因：git 默认修改文件不区分大小写
+
+解决：可以查看状态：`git config --get core.ignorecase`，修改为false即可：`git config core.ignorecase false`
 
 #### Git修改凭证
 
