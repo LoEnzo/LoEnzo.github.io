@@ -1,0 +1,14 @@
+node_modules/
+LoEnzo.github.io/.vuepress/theme/
+LoEnzo.github.io/.vuepress/dist/
+
+y
+y.pub
+y./
+
+yarn.lock
+yarn-error.log
+
+public/
+
+!.vuepress/public/
