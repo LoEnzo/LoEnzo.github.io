@@ -381,7 +381,39 @@ docker info
 Docker Root Dir: /DATA/docker/lib/docker
 ```
 
+### IDEA连接虚拟机docker
 
+IDEA直接连接虚拟机docker，本地即可执行打包构建，docker默认通讯方式只支持本地形式调用，不支持TCP远程，需要修改配置文件实现
+
+* 方法一（推荐）
+
+```shell
+# sudo vim /etc/docker/daemon.js    没有新建
+
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "registry-mirrors": ["https://kn0t2bca.mirror.aliyuncs.com"],
+  "hosts": ["tcp://0.0.0.0:2376","unix:///var/run/docker.sock"]				# 支持本地和tcp调用
+}
+```
+
+* 方法二
+
+```shell
+# sudo vim /lib/systemd/system/docker.service
+
+# 在ExecStart配置文件的后面追加  -H tcp://0.0.0.0:2376 即可，
+```
+
+重新加载`daemon.js`：`systemctl daemon-reload`
+
+重启docker：`systemctl start docker`
+
+查看端口是否开放：`netstat -tulp | grep 2376`
+
+* IDEA连接验证
+
+settings --> Build, Execution, Deployment --> docker ： TCP socket， Engine API URL输入 `tcp://192.168.40.100:2376`，虚拟机的ip:设置的端口，软件会自动识别，下方出现`Connection successful`说明连接成功，下方的Service拓展栏里可以查看docker的镜像、容器等，本地的工程的`Dockerfile`也可以愉快的进行build镜像了
 
 ## 本机上传到服务器（自己当前情况）
 
