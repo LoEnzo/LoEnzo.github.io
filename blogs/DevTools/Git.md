@@ -167,6 +167,10 @@ git commit -am "commit message"
 git branch -D master
 git branch -m master
 git push -f origin master
+
+// 迁移项目
+// 由于将git项目迁移到了其他地址，怎么让本地的修改能推送到新的git仓库
+git remote set-url origin 变更后的git仓库地址	// 注意，推送前确保本地未提交的文件先提交到暂存区，确保和原git仓库master代码没有冲突，有冲突先解决，然后就可以同步主干代码了
 ```
 
 ### QA：
