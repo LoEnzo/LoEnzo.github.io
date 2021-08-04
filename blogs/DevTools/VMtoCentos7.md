@@ -16,7 +16,44 @@ date: 2020-05-11
 
 ### 1. 安装`VMware 15`虚拟机
 
-### 2. 安装`SSH`
+官网下载安装报，默认安装即可
+
+### 2. 安装centos
+
+网上找`CentOS-7-x86_64-DVD-1804.iso`镜像
+
+打开VMware，新建虚拟机，选择自定义，稍后安装操作系统，系统选择linux，版本选择Centos 64位，取名字，选择安装位置，选择配置，一般2G，2核，使用NAT网络模式，其他模式自行了解，选择磁盘大小，一般50G，存储为单个文件，性能好点，其他自定义硬件根据需求自行选择即可，只做命令练习，声卡，打印机这些可以不需要了。
+
+服务器启动后进行一些基本设置：
+
+- 软件选择：基础设施服务器
+
+- 分区选择：自动分区
+
+- 网络配置：按照下面配置网路地址信息
+
+  网络地址：192.168.109.100，根据自己的`VMware Network Adapter VMnet8`网关来，192.168.109前三位一致，最后一位自信修改即可
+  子网掩码：255.255.255.0
+  默认网关：192.168.109.2
+  DNS：    223.5.5.5
+
+IP输入错误，导致无法上网，ping baidu.com有响应则说明能联网成功，需要修改虚拟网卡设置
+
+```shell
+vim /etc/sysconfig/network-scripts/ifcfg-eth0	//这个根据自己使用的来，有些是 eth33等
+DEVICE=eth0 //网卡名字 不用改
+BOOTPROTO=static //默认为dhcp 修改为static
+IPADDR=x.x.x.x //ip 地址
+NETMASK=255.255.255.0 //子网掩码
+GATEWAY=x.x.x.1 //网关地址
+
+保存退出，重启网络
+service network restart
+```
+
+
+
+### 3. 安装`SSH`
 
 ```shell
 # 安装ssh
@@ -50,9 +87,9 @@ sudo systemctl start postfix
 在安装Postfix期间，可能会出现配置屏幕。选择“Internet Site”并按enter键。使用您的服务器的外部DNS以“mail name”并按enter。如果出现额外的屏幕，继续按enter键接受默认值。
 ```
 
-### 3. 防火墙
+### 4. 防火墙
 
-#### 		3.1  `iptable`防火墙
+#### 		4.1  `iptable`防火墙
 
 ```shell
 # 查看防火墙状态
@@ -82,7 +119,7 @@ vim /etc/sysconfig/iptables
 -A INPUT -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
 ```
 
-#### 		3.2  `firwall`防火墙
+#### 		4.2  `firwall`防火墙
 
 ```shell
 # 开启
@@ -121,7 +158,7 @@ firewall-cmd --reload
 3、--add-port：标识添加的端口；
 ```
 
-#### 3.3. 同步虚拟机和主机时间
+#### 4.3. 同步虚拟机和主机时间
 
 ```shell
 # 下载依赖（这步我没有做）
@@ -155,9 +192,9 @@ cd vmware-tools-distrib/
 # 虚拟机里可以在设置中勾选将主机与虚拟机时间同步
 ```
 
-### 4. 其他配置
+### 5. 其他配置
 
-#### 4.1 访问虚拟机服务器慢
+#### 5.1 访问虚拟机服务器慢
 
 ​		SecureCRT、Xshell 访问本地虚拟机linux系统慢的问题，原因是ssh的服务端在连接时会自动检测dns环境是否一致导致的，修改为不检测即可，操作如下：
 

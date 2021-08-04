@@ -108,7 +108,7 @@ net start LxssManager
 // 后续ssh，ftp连接，ip可以直接设置为127.0.0.1即可
 ```
 
-3. DNS配置
+2. DNS配置
 
 WSL会自动在启动时根据虚拟交换机WSL生成`/etc/resolv.conf`文件，如下为默认的文件内容：
 
@@ -127,7 +127,7 @@ nameserver 172.27.96.1
 echo -e "options timeout:1 attempts:1 rotate\nnameserver 114.114.114.114\nnameserver 8.8.8.8" >/etc/resolv.conf
 ```
 
-4. 设置root用户登陆
+3. 设置root用户登陆
 
 ```shell
 # 设置ubuntu登录默认用户为root，我的是 ubuntu2004，根据自己对应版本来
@@ -152,7 +152,7 @@ net stop lxssmanager
 C:\Users\用户名\AppData\Local\Microsoft\WindowsApps\ubuntu2004.exe config --default-user root
 ```
 
-5. 设置开机自启动ssh服务，让三方软件可以通过ssh连接
+3. 设置开机自启动ssh服务，让三方软件可以通过ssh连接
 
 每次开机，终端管理软件无法通过ssh连接Linux, 需要先通过自带命令行，或者启动ubuntu客户端，输入`service ssh restart`，之后才能连接
 
@@ -268,3 +268,9 @@ sudo apt-get update
 sudo apt-get upgrade
 ```
 
+## WLS和VMware冲突解决
+
+使用`powershell`工具，输入下面指令：
+
+* 启用VMware：`bcdedit /set hypervisorlaunchtype off`
+* 启用WSL：`bcdedit /set hypervisorlaunchtype auto`
