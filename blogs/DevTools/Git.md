@@ -143,24 +143,72 @@ $ git push
 ### 8. 回退
 
 ```shell
-// 版本回退，回退到该版本之后的提交记录都会丢失
+# 版本回退，回退到该版本之后的提交记录都会丢失，然后强制推送到远端，慎用
 git reset --hard commit_id
 git push -f
 ```
 
-### 9. 其他
+### 9. git pull | fetch 区别
+
+git pull 可以选择拉取远端的更新代码，通常我们是拉取远端master更新的代码到本地分支，确保分支推送到远端后,合并时没有冲突，
+
+git pull指令拉取后会自动执行git merge操作，有冲突需要我们手动解决冲突，
+
+拉取指令：`git pull origin master`，
+
+git fetch 是拉取远端分支更新的代码，并不会自动合并，我们自己观察是否有冲突，选择是否合并到本地分支
+
+拉取指令：`git fetch origin master`
+
+查看拉取回的更新信息：`git log -p FETCH_HEAD`
 
 ```shell
-// 修改.ignore 使其生效
+git pull = git fetch + git merge FETCH_HEAD 
+git pull --rebase = git fetch + git rebase FETCH_HEAD 
+
+# 个人在b节点创建了Feature分支，并有 e-f-g 提交记录，主干Master在这之后有 c-d 提交记录
+ a - b - c - d   Master
+      \
+       e - f - g Feature
+       
+# git pull 场景 合并后, 新增一条h commit记录，如果有冲突，解决冲突后再提交 git push
+ a - b - c - d - h
+      \         /
+       e - f - g
+# 顺序参考：
+git add . --> 
+git commit -m "Feature update" --> 
+git pull --> 
+git add . -->
+git commit -m "Conflict Fix" --> 
+git push
+       
+# git pull --rebase 场景 合并后，显示为一条提交记录，git提交记录看起来更为清晰，方便回退，不会产生新的merge commit hashId，
+# 如果有冲突，解决冲突后，git rebase --continue 再 git push
+# git pull --rebase 拉取到的远端记录有冲突会新建立一个随机分支解决冲突，避免了直接污染原来的分区
+ a - b - e - f - g - c' - d'
+
+# 顺序参考：
+git add . -->
+git commit -m "Feature update" -->
+git pull --rebase --> 
+git rebase --continue --> 
+git push
+```
+
+### 10. 其他
+
+```shell
+# 修改.ignore 使其生效
 git rm -r --cached
 
-// 修改tag标签名
+# 修改tag标签名
 git tag new_tag_name old_tag_name
 git tag -d old_tag_name
 git push origin :refs/tags/old_tag_name
 git push --tags
 
-// 清除之前所有的commit，因为修改错误remote.origin.url地址，导致把不是这个项目的文件拉取下来了，虽然文件删除，但所有历史commit同步到当前项目了，看起来非常杂乱
+# 清除之前所有的commit，因为修改错误remote.origin.url地址，导致把不是这个项目的文件拉取下来了，虽然文件删除，但所有历史commit同步到当前项目了，看起来非常杂乱
 git checkout --orphan latest_branch
 git add -A
 git commit -am "commit message"
@@ -168,8 +216,7 @@ git branch -D master
 git branch -m master
 git push -f origin master
 
-// 迁移项目
-// 由于将git项目迁移到了其他地址，怎么让本地的修改能推送到新的git仓库
+# 迁移项目，由于将git项目迁移到了其他地址，怎么让本地的修改能推送到新的git仓库
 git remote set-url origin 变更后的git仓库地址	// 注意，推送前确保本地未提交的文件先提交到暂存区，确保和原git仓库master代码没有冲突，有冲突先解决，然后就可以同步主干代码了
 ```
 
