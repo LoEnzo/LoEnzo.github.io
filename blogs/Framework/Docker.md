@@ -95,7 +95,7 @@ apt-get install -y docker-ce
 
 :::
 
-### 常规指令
+### 查看docker信息
 
 | 指令               | 说明                                  | 参数 | 示例 |
 | ------------------ | ------------------------------------- | ---- | ---- |
@@ -144,6 +144,8 @@ apt-get install -y docker-ce
 
 ### 容器管理
 
+#### 常用指令
+
 | 指令            | 说明                     | 参数                                                         | 示例                           |
 | --------------- | ------------------------ | ------------------------------------------------------------ | ------------------------------ |
 | **docker ps**   | 列出容器                 | `-a`：所有容器                                               | `docker ps -a`                 |
@@ -176,6 +178,8 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 
 ### 镜像管理
 
+#### 常用指令
+
 | 指令                    | 说明                                                         | 示例                  |
 | ----------------------- | ------------------------------------------------------------ | --------------------- |
 | **docker login/logout** | 登陆到一个Docker镜像仓库，如果未指定镜像仓库地址，默认为官方仓库 | `docker login`        |
@@ -204,6 +208,54 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 | **docker load**   | 将文件导入为镜像                                             |                                                              |                          |
 | **docker export** | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大   |                                                              |                          |
 | **docker import** | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                              |                          |
+
+### 容器间通信
+
+* 通过容器ip访问（不推荐）
+
+  容器重启后，ip会变动，查看还得进入容器内查看（其他方式暂时不知道）
+
+* 通过宿主机ip访问
+
+  容器启动后对外暴露一个端口，通过 宿主机ip : 容器暴露对外的端口 完成访问，
+
+* 通过link建立连接（官方不推荐使用）
+
+  容器启动的时候带参数 `--link container_name: container_alias_name(可选)`，是的 源容器可以和被链接的容器相互通信，并且被链接的容器可以获得源容器的一些数据，比如环境变量
+
+  ```shell
+  # 源容器：mysql
+  docker run -itd --name test-mysql -e MYSQL_ROOT_PASSWORD=root mysql:5.7
+  #被链接容器 centos
+  docker run -itd --name test-centos --link test-mysql:mysql  centos /bin/bash
+  #进入test-centos
+  docker exec -it test-centos /bin/bash
+  # 通过 连接名 或者别名 连接mysql
+  [root@23423423234]# mysql -h test-mysql -uroot -p 
+  [root@23423423234]# mysql -h mysql -uroot -p 
+  
+  # centos 能ping通 mysql, 返过来不行
+  ```
+
+* 通过networks （推荐）
+
+   docker network来创建一个桥接网络，在docker run的时候将容器指定到新创建的桥接网络中，这样同一桥接网络中的容器就可以通过互相访问
+
+  ```shell
+  # 创建网络
+  docker network create my_net
+  
+  # 查看创建的网络
+  docker network ls
+  
+  # 创建 mysql 容器，加入 test-network 网络，
+  docker run -it --network my_net --network-alias mysql_net  -e MYSQL_ROOT_PASSWORD=123 mysql:5.7
+  
+  docker run -it --network my_net --network-alias centos_net  centos /bin/bash
+  
+  # 容器之间可以相互ping通，因为两个容器都再同一个 network内
+  docker exec -it centos ping php
+  ```
 
 ### 其他：
 
