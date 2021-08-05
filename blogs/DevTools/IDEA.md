@@ -94,7 +94,7 @@ web工程热更新插件；无法安装可选择网上下载插件包，离线�
 
 ### 3. 其他
 
-#### 3.1 springboot启动报错启动报错
+#### 3.1 springboot程序启动报错启动报错
 
 ```shell
 Error running 'App': Command line is too long. Shorten command line for App
@@ -109,7 +109,7 @@ Error running 'App': Command line is too long. Shorten command line for App
 <property name="dynamic.classpath" value="true" />
 ```
 
-* 加载mysql驱动显示以下信息
+#### 3.2 加载mysql驱动显示以下信息
 
 ```javascript
 Loading class com.mysql.jdbc.Driver'. This is deprecated. The new driver class is com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
@@ -127,6 +127,18 @@ spring:
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
 ```
+
+#### 3.3 IDEA软件启动报错
+
+报错如下，原因：软件和其他软件有端口冲突，可能是`vmware`和`Hyper-V`，因为我当时正好再弄那个
+
+```java
+java.util.concurrent.CompletionException: java.net.BindException: Address already in use: bind
+```
+
+解决：
+
+使用管理员身份打开命令提示符，执行命令`net stop winnat`和`net start winnat`，不用重启
 
 
 
