@@ -259,16 +259,26 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 
 ### 其他：
 
-将容器配配置文件复制到宿主机：`docker container cp 容器名:容器内文件的路径  宿主机路径`
+#### 容器和宿主机相互拷贝文件
 
 ```shell
+# 将容器配配置文件复制到宿主机：docker container cp 容器名:容器内文件的路径  宿主机路径
 docker container cp nginx:/etc/nginx /mydata/nginx/
+
+# 将宿主机的文件拷贝到容器中：docker cp 宿主机路径 容器名:容器内路径
+docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearch:/usr/share/elasticsearch
 ```
 
-将宿主机的文件拷贝到容器中：`docker cp 宿主机路径 容器名:容器内路径`
+#### dive分析工具
+
+dive是镜像构建分析工具，有效查看你的镜像构建浪费的空间
 
 ```shell
-docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearch:/usr/share/elasticsearch
+# 项目地址
+https://github.com/wagoodman/dive
+
+# 常用指令
+dive <your-image-tag>
 ```
 
 ## 示例：
@@ -484,4 +494,3 @@ get remote_file local_file
 # 服务器连接sftp
 sudo sftp name@ip
 ```
-
