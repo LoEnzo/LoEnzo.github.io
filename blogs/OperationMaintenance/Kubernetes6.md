@@ -1203,9 +1203,9 @@ service/kubernetes-dashboard       NodePort   10.104.178.171  <none>       443:3
 
 # 获取账号token
 [root@master ~]#  kubectl get secrets -n kubernetes-dashboard | grep dashboard-admin
-dashboard-admin-token-xbqhh        kubernetes.io/service-account-token   3      2m35s
+dashboard-admin-token-g5fp7        kubernetes.io/service-account-token   3      2m35s
 
-[root@master ~]# kubectl describe secrets dashboard-admin-token-xbqhh -n kubernetes-dashboard
+[root@master ~]# kubectl describe secrets dashboard-admin-token-g5fp7 -n kubernetes-dashboard
 Name:         dashboard-admin-token-xbqhh
 Namespace:    kubernetes-dashboard
 Labels:       <none>
@@ -1217,11 +1217,13 @@ Type:  kubernetes.io/service-account-token
 Data
 ====
 namespace:  20 bytes
-token:      eyJhbGciOiJSUzI1NiIsImtpZCI6ImJrYkF4bW5XcDhWcmNGUGJtek5NODFuSXl1aWptMmU2M3o4LTY5a2FKS2cifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tdG9rZW4teGJxaGgiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiOTVkODRkODAtYmU3YS00ZDEwLWEyZTAtNjhmOTAyMjJkMDM5Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmVybmV0ZXMtZGFzaGJvYXJkOmRhc2hib2FyZC1hZG1pbiJ9.NAl7e8ZfWWdDoPxkqzJzTB46sK9E8iuJYnUI9vnBaY3Jts7T1g1msjsBnbxzQSYgAG--cV0WYxjndzJY_UWCwaGPrQrt_GunxmOK9AUnzURqm55GR2RXIZtjsWVP2EBatsDgHRmuUbQvTFOvdJB4x3nXcYLN2opAaMqg3rnU2rr-A8zCrIuX_eca12wIp_QiuP3SF-tzpdLpsyRfegTJZl6YnSGyaVkC9id-cxZRb307qdCfXPfCHR_2rt5FVfxARgg_C0e3eFHaaYQO7CitxsnIoIXpOFNAR8aUrmopJyODQIPqBWUehb7FhlU1DCduHnIIXVC_UICZ-MKYewBDLw
+token:     eyJhbGciOiJSUzI1NiIsImtpZCI6IjBwb3BQdjNibDlfeDVjeWtHQXB3R2R5QkdQUXpWaG4xNkRwTHdSdkZ1NlEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tdG9rZW4tZzVmcDciLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiZTk3ZGQzZjQtMzMwNi00YmJkLTgxMWQtY2JhYjQyMmVlYTI4Iiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmVybmV0ZXMtZGFzaGJvYXJkOmRhc2hib2FyZC1hZG1pbiJ9.Mtqa0sbBvnF2XFnrmdkoQCbegBqpr9kRBKGZFrnBn_qldCUVS0Fswyouws-sTEGvguD91veHLHrXNzoR5OPoEG3b11RT5mGRff7v2Rarau3E9GwprrMfqzaDpNNdLr9edFNrGnJD68SSSMuLpKRkG5wiMKq7VXS357XrzHD7B5rwIwY3FWROtqxw2M6uldB87PWKuBWAucy0stXco9G1az3YoHWxdH_Ce44TK3851vF1VikdyWj9F6ILw-f2czcRMUxfgynaZ7YSuLYAs4uSr8LoDwlh0gm-tW2uceA9rm0WxORfGFMbyC4X-DXSErqIx8EQiILahN4t7cjzfFRfBQ
 ca.crt:     1025 bytes
 ~~~
 
 3）通过浏览器访问Dashboard的UI
+
+https://192.168.40.100:30009/#/login
 
 在登录页面上输入上面的token
 

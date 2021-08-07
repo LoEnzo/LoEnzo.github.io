@@ -72,6 +72,7 @@ kube-proxy目前支持三种工作模式:
 # 此模式必须安装ipvs内核模块，否则会降级为iptables
 # 开启ipvs
 [root@master ~]# kubectl edit cm kube-proxy -n kube-system
+# 搜索mode，修改值为ipvs
 [root@master ~]# kubectl delete pod -l k8s-app=kube-proxy -n kube-system
 [root@node1 ~]# ipvsadm -Ln
 IP Virtual Server version 1.2.1 (size=4096)
