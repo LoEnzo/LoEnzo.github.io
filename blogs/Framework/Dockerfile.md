@@ -79,12 +79,15 @@ date: 2021-08-05
 ### MAINTAINER
 
 ```dockerfile
-格式：
+# 格式：
     MAINTAINER <name>
-示例：
+# 示例：
     MAINTAINER Jasper Xu
     MAINTAINER sorex@163.com
     MAINTAINER Jasper Xu <sorex@163.com>
+# 注：
+	# maintainer已过时，通过label设置元数据
+	# LABEL maintainer="loenzo"
 ```
 
 ### LABEL
@@ -149,6 +152,7 @@ date: 2021-08-05
 ### COPY
 
 ```dockerfile
+# 复制本地文件推荐使用COPY
 # 格式：
     COPY <src>... <dest>
 # 示例：
@@ -275,5 +279,145 @@ date: 2021-08-05
 
 ## Dockerfile示例
 
+```dockerfile
+# This my first nginx Dockerfile
+# Version 1.0
 
+# Base images 基础镜像
+FROM centos
 
+#MAINTAINER 维护者信息
+MAINTAINER tianfeiyu 
+
+#ENV 设置环境变量
+ENV PATH /usr/local/nginx/sbin:$PATH
+
+#ADD  文件放在当前目录下，拷过去会自动解压
+ADD nginx-1.8.0.tar.gz /usr/local/  
+ADD epel-release-latest-7.noarch.rpm /usr/local/  
+
+#RUN 执行以下命令 
+RUN rpm -ivh /usr/local/epel-release-latest-7.noarch.rpm
+RUN yum install -y wget lftp gcc gcc-c++ make openssl-devel pcre-devel pcre && yum clean all
+RUN useradd -s /sbin/nologin -M www
+
+#WORKDIR 相当于cd
+WORKDIR /usr/local/nginx-1.8.0 
+
+RUN ./configure --prefix=/usr/local/nginx --user=www --group=www --with-http_ssl_module --with-pcre && make && make install
+
+RUN echo "daemon off;" >> /etc/nginx.conf
+
+#EXPOSE 映射端口
+EXPOSE 80
+
+#CMD 运行以下命令
+CMD ["nginx"]
+```
+
+::: details 其他示例
+
+```dockerfile
+# 基础镜像
+FROM debian:buster-slim
+
+# maintainer已过时，通过label设置元数据
+LABEL maintainer="jiangliu"
+
+# 指定工作目录
+WORKDIR /usr/local
+
+ENV LANG C.UTF-8
+ENV JAVA_HOME /usr/local/jdk1.8.0_111
+ENV PATH $JAVA_HOME/bin:$PATH
+
+# 指定时区，针对基于Debian和CentOS的镜像，可以直接指定环境变量即可
+ENV TZ Asia/Shanghai
+
+ENV JAVA_OPTS ""
+ENV JAVA_ARGS ""
+
+# 其它镜像按此方法修改时区
+# RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
+
+# 更换源
+RUN echo 'deb http://mirrors.aliyun.com/debian/ buster main non-free contrib\n \
+    deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib\n \
+    deb http://mirrors.aliyun.com/debian-security buster/updates main\n \
+    deb-src http://mirrors.aliyun.com/debian-security buster/updates main\n \
+    deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib\n \
+    deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib\n \
+    deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib\n \
+    deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib\n' \
+    > /etc/apt/sources.list 
+
+RUN apt-get update
+
+RUN apt-get install -y wget
+
+# RUN wget -O jdk.tar.gz https://github.com/AdoptOpenJDK/openjdk8-upstream-binaries/releases/download/jdk8u265-b01/OpenJDK8U-jre_x64_linux_8u265b01.tar.gz \
+# -- no-check-certificate
+
+RUN wget -O jdk.tar.gz http://ftp.cqrd.x/software/RDTools/jdk/javase/8/jdk-8u111-linux-x64.tar.gz
+
+RUN tar -xf jdk.tar.gz
+
+RUN rm -fr jdk.tar.gz
+
+# 复制文件到镜像中
+COPY file-server-1.0-SNAPSHOT.jar /app.jar
+
+# 容器启动执行入口
+# java [options] -jar filename [args]
+ENTRYPOINT java ${JAVA_OPTS} -jar /app.jar ${JAVA_ARGS}
+# 声明容器提供服务的端口，方便配置映射
+EXPOSE 8080
+
+# 指定默认的参数
+# CMD [""]
+```
+
+:::
+
+::: details 整合run指令，优化后：
+
+```dockerfile
+# 基础镜像
+FROM debian:buster-slim
+
+# maintainer已过时，通过label设置元数据
+LABEL maintainer="jiangliu"
+
+# 指定工作目录
+WORKDIR /usr/local
+
+ENV LANG C.UTF-8
+ENV JAVA_HOME /usr/local/jdk1.8.0_111
+ENV PATH $JAVA_HOME/bin:$PATH
+
+# 指定时区，针对基于Debian和CentOS的镜像，可以直接指定环境变量即可
+ENV TZ Asia/Shanghai
+
+# 其它镜像按此方法修改时区
+# RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone
+
+# 合并所有的可执行脚本
+RUN set -x \
+    echo 'deb http://mirrors.aliyun.com/debian/ buster main non-free contrib\n \
+    deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib\n \
+    deb http://mirrors.aliyun.com/debian-security buster/updates main\n \
+    deb-src http://mirrors.aliyun.com/debian-security buster/updates main\n \
+    deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib\n \
+    deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib\n \
+    deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib\n \
+    deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib\n'  > /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y wget \
+    && wget -O jdk.tar.gz http://ftp.cqrd.x/software/RDTools/jdk/javase/8/jdk-8u111-linux-x64.tar.gz \
+    && tar -xf jdk.tar.gz \
+    && rm -fr jdk.tar.gz \
+    && apt-get remove --purge --auto-remove -y wget \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+:::

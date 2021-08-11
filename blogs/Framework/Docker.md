@@ -102,7 +102,7 @@ apt-get install -y docker-ce
 | **docker info**    | 查看docker 系统信息，包括镜像和容器数 |      |      |
 | **docker version** | 查看docker的版本信息                  |      |      |
 
-## Docker指令
+## Docker全局概览
 
 ![](./images/docker/docker02.png)
 
@@ -234,7 +234,7 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
   [root@23423423234]# mysql -h test-mysql -uroot -p 
   [root@23423423234]# mysql -h mysql -uroot -p 
   
-  # centos 能ping通 mysql, 返过来不行
+  # centos 能ping通 mysql, 反过来不行
   ```
 
 * 通过networks （推荐）
@@ -268,6 +268,12 @@ docker container cp nginx:/etc/nginx /mydata/nginx/
 # 将宿主机的文件拷贝到容器中：docker cp 宿主机路径 容器名:容器内路径
 docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearch:/usr/share/elasticsearch
 ```
+
+#### daemon.json
+
+配置docker的守护进程（dockerd），常规配置私有仓库，个人测试允许tcp访问等
+
+[官网详细配置示例](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file)
 
 #### dive分析工具
 
