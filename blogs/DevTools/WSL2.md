@@ -274,3 +274,11 @@ sudo apt-get upgrade
 
 * 启用VMware：`bcdedit /set hypervisorlaunchtype off`
 * 启用WSL：`bcdedit /set hypervisorlaunchtype auto`
+
+## 重启WSL2
+
+有些配置需要重启生效，可以选择宿主机也就是电脑重启，也可以以管理员运行命令控制台，重启WSL服务
+
+停止：`net stop LxssManager`
+
+启动：`net start LxssManager`

@@ -40,13 +40,19 @@ date: 2021-08-05
 
 ## 安装
 
-[项目地址](https://github.com/docker/compose/releases)
+* [docker-compose 项目地址](https://github.com/docker/compose/releases)
 
-直接下载最新稳定版`$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`，添加到`/user/local/bin`，添加可执行权限`sudo chmod +x /usr/local/bin/docker-compose`
+直接下载最新稳定版`sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose`，添加到`/user/local/bin`，添加可执行权限`sudo chmod +x /usr/local/bin/docker-compose`
 
 也可以通过`yum`、`apt`等直接搜索安装，
 
 **验证**：`docker-compose --version`
+
+* [docker-compose命令补全工具](https://raw.githubusercontent.com/docker/compose)
+
+直接下载，根据项目选择最新的版本号即可：`sudo curl -L https://raw.githubusercontent.com/docker/compose/1.27.4/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose`
+
+重启即可生效
 
 ## 基本结构
 
@@ -304,4 +310,3 @@ image: postgres
 
 * 当配置文件变更时，`docker-compose up`更新容器
 * 会删除旧容器，创建新容器，生成新的ip，所有指向旧容器的连接会关闭，重新指向新容器
-
