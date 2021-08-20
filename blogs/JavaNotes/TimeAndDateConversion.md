@@ -25,6 +25,10 @@ public static LocalDate DateToLocalDate(Date date) {
     ZoneId zone = ZoneId.systemDefault();
     return LocalDateTime.ofInstant(instant, zone).toLocalDate();
 }
+
+public static LocalDate DateToLocalDate(Date date) {
+    return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+}
 ```
 
 ### LocalDate -> Date
@@ -64,6 +68,10 @@ public static LocalDateTime DateToLocalDateTime(Date date) {
     ZoneId zone = ZoneId.systemDefault();
     return LocalDateTime.ofInstant(instant, zone);
 }
+
+public static LocalDateTime dateToLocalDateTime(Date date) {
+    return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+}
 ```
 
 ### LocalDateTime -> Date
@@ -74,9 +82,15 @@ public static Date LocalTimeToDate(LocalDateTime localDateTime) {
     Instant instant = localDateTime.atZone(zone).toInstant();
     return Date.from(instant);
 }
+
+public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+}
 ```
 
-# 常用日期Fomatter
+
+
+### 常用日期Fomatter
 
 ```java
 /**
@@ -141,27 +155,51 @@ public static final DateTimeFormatter FORMATTER_yyMMMdd = new DateTimeFormatterB
 public static final DateTimeFormatter FORMATTER_ddMMMyyyyHHmm = new DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("ddMMMyyyyHHmm").toFormatter(Locale.ENGLISH);
 ```
 
-### DateToLocalDate
+### String -> LocalDate
 
 ```java
-public static LocalDate dateToLocalDate(Date date) {
-    return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+public static LocalDate stringToLocalDate(String date) {
+    return LocalDate.parse(date).format(FORMATTER_yyyyMMdd)
 }
 ```
 
-### DateToLocalDateTime
+### String -> LocalTime
 
 ```java
-public static LocalDateTime dateToLocalDateTime(Date date) {
-    return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+public static LocalTime stringToLocalTime(String date) {
+    return LocalTime.parse(date).format(FORMATTER_ddMMMyyHHmm)
 }
 ```
 
-### LocalDateTimeToDate
+### String -> LocalDateTime
 
 ```java
-public static Date localDateTimeToDate(LocalDateTime localDateTime) {
-    return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+public static LocalDateTime stringToLocalDateTime(String date) {
+    return LocalDateTime.parse(date).format(FORMATTER_ddMMMyyHHmm)
+}
+```
+
+### LocalDate -> String 
+
+```java
+public static String localDateToString(LocalDate localDate) {
+    return localDate.format(FORMATTER_yyyyMMdd)
+}
+```
+
+### LocalTime -> String
+
+```java
+public static String localTimeToString(LocalTime localTime) {
+    return localTime.parse(date).format(FORMATTER_yyyyMMdd)
+}
+```
+
+### LocalDateTime -> String
+
+```java
+public static String LocalDateTimeToString(LocalDateTime localDateTime ) {
+    return localDateTime.parse(date).format(FORMATTER_ddMMMyyHHmm)
 }
 ```
 

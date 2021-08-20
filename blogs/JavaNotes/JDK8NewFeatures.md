@@ -149,7 +149,20 @@ e
 s ...
 ```
 
-### 1.6 IntSummaryStatistics
+### 1.6 reduce
+
+```java
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(3, 2, 2, 3, 7, 3, 5);
+        // 规约,第一个是初始值
+        int sum = numbers.stream().reduce(0, Integer::sum);
+        // 或者详细的逻辑操作，上面是 加法规约的简写
+        int sum = numbers.stream().reduce(0, (x,y) -> x+y);
+        System.out.println("reduce结果：" + sum);
+    }
+```
+
+### 1.7 IntSummaryStatistics
 
 ```java
 public static void main(String[] args) {
