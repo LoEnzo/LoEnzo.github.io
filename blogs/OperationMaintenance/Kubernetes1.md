@@ -518,5 +518,18 @@ service/nginx        NodePort    10.104.121.45   <none>        80:30073/TCP   17
 
 <img src="./images/k8s/image-20200405142656921.png" alt="image-20200405142656921" style="zoom:80%; border:1px solid" />
 
+## 命令自动补全
 
+* k8s < 1.3版本
+
+可以通过如下命令：`source ./contrib/completions/bash/kubectl`
+
+* k8s >= 1.3 版本
+
+```shell
+yum install -y bash-completion
+source /usr/share/bash-completion/bash_completion
+source <(kubectl completion bash)
+echo "source <(kubectl completion bash)" >> ~/.bashrc
+```
 

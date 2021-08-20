@@ -1176,23 +1176,23 @@ Affinity主要分为三类：
 
 首先来看一下`NodeAffinity`的可配置项：
 
-~~~markdown
+~~~yaml
 pod.spec.affinity.nodeAffinity
-  requiredDuringSchedulingIgnoredDuringExecution  Node节点必须满足指定的所有规则才可以，相当于硬限制
-    nodeSelectorTerms  节点选择列表
-      matchFields   按节点字段列出的节点选择器要求列表
-      matchExpressions   按节点标签列出的节点选择器要求列表(推荐)
-        key    键
-        values 值
-        operator 关系符 支持Exists, DoesNotExist, In, NotIn, Gt, Lt
-  preferredDuringSchedulingIgnoredDuringExecution 优先调度到满足指定的规则的Node，相当于软限制 (倾向)
-    preference   一个节点选择器项，与相应的权重相关联
-      matchFields   按节点字段列出的节点选择器要求列表
-      matchExpressions   按节点标签列出的节点选择器要求列表(推荐)
-        key    键
-        values 值
-        operator 关系符 支持In, NotIn, Exists, DoesNotExist, Gt, Lt
-	weight 倾向权重，在范围1-100。
+  requiredDuringSchedulingIgnoredDuringExecution  # Node节点必须满足指定的所有规则才可以，相当于硬限制
+    nodeSelectorTerms  # 节点选择列表
+      matchFields      # 按节点字段列出的节点选择器要求列表
+      matchExpressions  #  按节点标签列出的节点选择器要求列表(推荐)
+        key    # 键
+        values # 值
+        operator # 关系符 支持Exists, DoesNotExist, In, NotIn, Gt, Lt
+  preferredDuringSchedulingIgnoredDuringExecution # 优先调度到满足指定的规则的Node，相当于软限制 (倾向)
+    preference   # 一个节点选择器项，与相应的权重相关联
+      matchFields       # 按节点字段列出的节点选择器要求列表
+      matchExpressions  # 按节点标签列出的节点选择器要求列表(推荐)
+        key    # 键
+        values # 值
+        operator # 关系符 支持In, NotIn, Exists, DoesNotExist, Gt, Lt
+	weight # 倾向权重，在范围1-100。
 ~~~
 
 ~~~markdown

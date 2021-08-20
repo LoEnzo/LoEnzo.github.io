@@ -1095,7 +1095,8 @@ http://192.168.109.100:31928/
 **删除Service**
 
 ~~~powershell
-[root@master ~]# kubectl delete svc svc-nginx-1 -n dev                                   service "svc-nginx-1" deleted
+[root@master ~]# kubectl delete svc svc-nginx-1 -n dev                                   
+service "svc-nginx-1" deleted
 ~~~
 
 **配置方式**
