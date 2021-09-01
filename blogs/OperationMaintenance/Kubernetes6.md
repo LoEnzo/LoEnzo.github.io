@@ -1064,7 +1064,7 @@ Error from server (Forbidden): pods is forbidden: User "devman" cannot list reso
 Switched to context "kubernetes-admin@kubernetes".
 ~~~
 
-2） 创建Role和RoleBinding，为devman用户授权
+2） 创建Role和RoleBinding，为devman用户授权`dev-role.yaml`
 
 ~~~yaml
 kind: Role

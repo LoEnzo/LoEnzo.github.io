@@ -159,7 +159,7 @@ public static final DateTimeFormatter FORMATTER_ddMMMyyyyHHmm = new DateTimeForm
 
 ```java
 public static LocalDate stringToLocalDate(String date) {
-    return LocalDate.parse(date).format(FORMATTER_yyyyMMdd)
+    return LocalDate.parse(date).format(FORMATTER_yyyyMMdd);
 }
 ```
 
@@ -167,7 +167,7 @@ public static LocalDate stringToLocalDate(String date) {
 
 ```java
 public static LocalTime stringToLocalTime(String date) {
-    return LocalTime.parse(date).format(FORMATTER_ddMMMyyHHmm)
+    return LocalTime.parse(date).format(FORMATTER_ddMMMyyHHmm);
 }
 ```
 
@@ -175,7 +175,7 @@ public static LocalTime stringToLocalTime(String date) {
 
 ```java
 public static LocalDateTime stringToLocalDateTime(String date) {
-    return LocalDateTime.parse(date).format(FORMATTER_ddMMMyyHHmm)
+    return LocalDateTime.parse(date).format(FORMATTER_ddMMMyyHHmm);
 }
 ```
 
@@ -183,7 +183,7 @@ public static LocalDateTime stringToLocalDateTime(String date) {
 
 ```java
 public static String localDateToString(LocalDate localDate) {
-    return localDate.format(FORMATTER_yyyyMMdd)
+    return FORMATTER_yyyyMMdd.format(localDate);
 }
 ```
 
@@ -191,7 +191,7 @@ public static String localDateToString(LocalDate localDate) {
 
 ```java
 public static String localTimeToString(LocalTime localTime) {
-    return localTime.parse(date).format(FORMATTER_yyyyMMdd)
+    return FORMATTER_yyyyMMdd.format(localTime);
 }
 ```
 
@@ -199,7 +199,7 @@ public static String localTimeToString(LocalTime localTime) {
 
 ```java
 public static String LocalDateTimeToString(LocalDateTime localDateTime ) {
-    return localDateTime.parse(date).format(FORMATTER_ddMMMyyHHmm)
+    return FORMATTER_ddMMMyyHHmm.format(localDateTime);
 }
 ```
 
