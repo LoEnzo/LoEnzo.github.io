@@ -436,3 +436,9 @@ public class UserService implements UserDetailsService {
 
 
 * 通过浏览器访问，每次访问接口，跳转到到认证中心，认证通过后后续访问接口都是当前用户，因为只是简单权限校验，没有退出登陆，清除 Session、Cookie 等操作，所以需要手动清除以下：浏览器邮件检查，或者F12，下方选择网络，清除应用数据即可，后续访问接口则需要重新登陆认证，确认权限
+
+# 参考
+
+[OAuth2实现单点登录SSO - 废物大师兄 - 博客园 (cnblogs.com)](https://www.cnblogs.com/cjsblog/p/10548022.html)，[对应代码](https://github.com/liuminglei/spring-security-oauth2-sso-sample)
+
+[Spring Cloud Security：Oauth2实现单点登录](http://www.macrozheng.com/#/cloud/oauth2_sso?id=单点登录简介)
