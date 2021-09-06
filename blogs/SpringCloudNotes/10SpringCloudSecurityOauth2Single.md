@@ -4,6 +4,7 @@ tags:
  - Spring Cloud Security
  - Oauth2
  - JWT
+ - SSO
 categories:
  - SpringCloudNotes
 date: 2021-09-02
@@ -21,6 +22,124 @@ Spring Cloud Security 为构建安全的SpringBoot应用提供了一系列解决
 ## 单点登陆
 
 单点登录（Single Sign On）指的是当有多个系统需要登录时，用户只需登录一个系统，就可以访问其他需要登录的系统而无需登录
+
+Spring Security：用于安全访问的，这里我们我们用来做访问权限控制
+
+OAuth2：是用来允许用户授权第三方应用访问他在另一个服务器上的资源的一种协议，它不是用来做单点登录的，但我们可以利用它来实现单点登录。在本例实现SSO的过程中，受保护的资源就是用户的信息（包括，用户的基本信息，以及用户所具有的权限），而我们想要访问这这一资源就需要用户登录并授权，OAuth2服务端负责令牌的发放等操作，
+
+JWT：这令牌的生成我们采用JWT，也就是说JWT是用来承载用户的Access_Token的
+
+SSO：是一种点单登陆思想，或者说是一种解决方案，是抽象的，我们要做的就是按照它的这种思想去实现它
+
+# 流程
+
+* 单点登陆：登陆任何一个子系统，其他子系统可以直接进入
+
+![sso](./images/sso.png)
+
+* 单点注销：注销任何一个子系统，其他子系统也会被注销
+
+![sso1](./images/sso1.png)
+
+## 涉及参数
+
+::: details Oauth2-client涉及参数详细说明
+
+[客户端配置说明](https://andaily.com/spring-oauth-server/db_table_description.html)
+
+`clientId`：（必须的）第三方用户的id（可理解为账号）。 
+
+`clientSecret`：第三方应用和授权服务器之间的安全凭证(可理解为密码)
+
+`scope`：指定客户端申请的权限范围,可选值包括read,write,trust;其实授权赋予第三方用户可以在资源服务器获取资源，第三方访问资源的一个权限，访问范围。
+
+`resourceIds`：客户端所能访问的资源id集合
+
+`authorizedGrantTypes`：此客户端可以使用的授权类型，默认为空。
+
+可选值包括`authorization_code`,`password,refresh_token`,`implicit,client_credentials`
+
+最常用的grant_type组合有: "`authorization_code,refresh_token`"(针对通过浏览器访问的客户端); "`password,refresh_token`"(针对移动设备的客户端)
+
+`registeredRedirectUris`：客户端的重定向URI
+
+`autoApproveScopes`：设置用户是否自动`Approval`操作, 默认值为 `false`, 可选值包括 `true`,`false`, `read`,`write`.
+
+该字段只适用于`grant_type="authorization_code`的情况,当用户登录成功后,
+
+若该值为`true`或支持的scope值,则会跳过用户Approve的页面, 直接授权.
+
+`authorities`：指定客户端所拥有的Spring Security的权限值。
+
+`accessTokenValiditySeconds`：设定客户端的`access_token`的有效时间值(单位:秒),可选, 若不设定值则使用默认的有效时间值(60 * 60 * 12, 12小时).
+
+`refreshTokenValiditySeconds`：设定客户端的`refresh_token`的有效时间值(单位:秒),可选, 若不设定值则使用默认的有效时间值(60 * 60 * 24 * 30, 30天).
+
+`additionalInformation`：这是一个预留的字段,在`Oauth`的流程中没有实际的使用,可选,但若设置值,必须是`JSON`格式的数据
+
+`security.oauth2.client.client-id`：指定OAuth2 client ID.
+
+`security.oauth2.client.client-secret`：指定OAuth2 client secret. 默认是一个随机的密码.
+
+`security.oauth2.client.user-authorization-uri`：用户跳转去获取access token的URI（授权端）
+
+`security.oauth2.client.access-token-uri`：指定获取access token的URI（令牌端）
+
+`security.oauth2.resource.jwt.key-uri`：JWT token的URI
+
+需要确保以上URL都是存在的，不然启动会报错
+
+注：在客户端配置文件中指定`security.oauth2.client.registered-redirect-uri`客户端跳转URI不生效，需要在认证中心中指定
+
+:::
+
+::: details Oauth2获取token，刷新token流程
+
+### 重点：
+
+`/oauth/authorize`：验证 `/oauth/token`：获取token
+
+ `/oauth/confirm_access`：用户授权
+
+ `/oauth/error`：认证失败
+
+ `/oauth/check_token`：资源服务器用来校验token
+
+ `/oauth/token_key`：如果jwt模式则可以用此来从认证服务器获取公钥
+
+ 以上这些endpoint都在源码里的endpoint包里面。
+
+#### OAuth2获取token的主要流程：
+
+1.用户发起获取`token`的请求。
+
+2.过滤器会验证`path`是否是认证的请求`/oauth/token`，如果为`false`，则直接返回没有后续操作。
+
+3.过滤器通过`clientId`查询生成一个`Authentication`对象。
+
+4.然后会通过`username`和生成的`Authentication`对象生成一个`UserDetails`对象，并检查用户是否存在。
+
+5.以上全部通过会进入地址`/oauth/token`，即`TokenEndpoint`的`postAccessToken`方法中。
+
+6.`postAccessToken`方法中会验证`Scope`，然后验证是否是`refreshToken`请求等。
+
+7.之后调用AbstractTokenGranter中的grant方法。
+
+8.`grant`方法中调用`AbstractUserDetailsAuthenticationProvider`的`authenticate`方法，通过`username`和`Authentication`对象来检索用户是否存在。
+
+9.然后通过`DefaultTokenServices`类从`tokenStore`中获取`OAuth2AccessToken`对象。
+
+10.然后将`OAuth2AccessToken`对象包装进响应流返回。
+
+#### OAuth2刷新token的流程
+
+刷新token（refresh token）的流程与获取token的流程只有⑨有所区别：
+
+获取`token`调用的是`AbstractTokenGranter`中的`getAccessToken`方法，然后调用`tokenStore`中的`getAccessToken`方法获取`token`。
+
+刷新`token`调用的是`RefreshTokenGranter`中的`getAccessToken`方法，然后使用`tokenStore`中的`refreshAccessToken`方法获取`token`。
+
+:::
 
 ## 模块划分
 
@@ -295,6 +414,14 @@ public class UserService implements UserDetailsService {
 ![image-20210903171613170](./images/image-20210903171613170.png)
 
 * 其他可以尝试访问 controller 中验证相应角色、权限的接口
+
+* 启动另外一个 `oauth2-client` 模拟多个子系统单点登陆，修改配置文件`application-client1.yml`，只改变端口为9502即可，注意，`oauth2-jwt-server`中，权限配置，需要配置多个回调地址
+
+  ```java
+  .redirectUris("http://localhost:9501/login","http://localhost:9502/login")
+  ```
+
+* 测试，访问`http://localhost:9501/user/admin-role`，分别 登陆 macro、andy 用户，登陆成功后，再访问`http://localhost:9502/user/admin-role`发现不再需要验证
 
 ## 注意：
 
