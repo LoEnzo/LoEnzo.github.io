@@ -284,3 +284,61 @@ public class CircleBreakerController {
 ```
 
 :::
+
+# 使用Nacos存储规则
+
+可能大家实验的时候，因为修改配置，或者代码，重启了`sentinel-service`服务，重新调用接口，发现 限流、熔断规则失效了，查看 Sentinel 控制台，发现规则消失了。
+
+默认情况下，当我们在Sentinel控制台中配置规则时，控制台推送规则方式是通过API将规则推送至客户端并直接更新到内存中。一旦我们重启应用，规则将消失。
+
+下面我们介绍下如何将配置规则进行持久化，以存储到Nacos为例
+
+## 原理
+
+* 我们再 Nacos 配置中心创建 限流、熔断规则，配置中心将规则推送到 Sentinel 客户端
+* Sentinel 控制台 也从配置中心获取配置信息
+
+![image-20210907180210235](./images/image-20210907180210235.png)
+
+## 实现
+
+* 添加依赖
+
+```xml
+<dependency>
+    <groupId>com.alibaba.csp</groupId>
+    <artifactId>sentinel-datasource-nacos</artifactId>
+</dependency>
+```
+
+* `application.yaml`，添加Nacos数据源配置：
+
+```yaml
+spring:
+  cloud:
+    sentinel:
+      datasource:
+        ds1:
+          nacos:
+            server-addr: localhost:8848
+            dataId: ${spring.application.name}-sentinel
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+```
+
+* 在 Nacos 中添加配置
+
+![image-20210907181148111](./images/image-20210907181148111.png)
+
+相关参数解释：
+
+- resource：资源名称；
+- limitApp：来源应用；
+- grade：阈值类型，0表示线程数，1表示QPS；
+- count：单机阈值；
+- strategy：流控模式，0表示直接，1表示关联，2表示链路；
+- controlBehavior：流控效果，0表示快速失败，1表示Warm Up，2表示排队等待；
+- clusterMode：是否集群。
+
+返回 Sentinel 控制台可以发现 已经有一条限流规则了，且访问接口验证生效，重启 `sentinel-service` ，查看 sentinel 控制台，限流规则仍然存在
