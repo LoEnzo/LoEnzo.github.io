@@ -230,7 +230,9 @@ public class RateLimitController {
 
 # 熔断
 
-Sentinel 支持对服务间调用进行保护，对故障应用进行熔断操作，这里我们使用RestTemplate来调用nacos-user-service服务所提供的接口来演示下该功能
+`Sentinel` 支持对服务间调用进行保护，对故障应用进行熔断操作，这里我们使用`RestTemplate`来调用`nacos-user-service`服务所提供的接口来演示下该功能，对于使用RestTemplate调用的服务，如果发生故障，回直接熔断，快速返回失败
+
+## @SentinelRestTemplate注解
 
 * 使用`@SentinelRestTemplate`来包装下`RestTemplate`实例：
 
@@ -292,6 +294,241 @@ public class CircleBreakerController {
 ```
 
 :::
+
+* 验证：
+
+访问 `http://localhost:8401/breaker/fallback/1` 成功返回，访问编号4，不存在，或者断开 `nacos-user-service`，返回失败信息
+
+```json
+{
+    "data": {
+        "id": -1,
+        "username": "defaultUser",
+        "password": "123456"
+    },
+    "message": "服务降级返回",
+    "code": 200
+}
+```
+
+访问 `http://localhost:8401/breaker/fallbackException/2`，代码中抛出一个 NullPointerException 异常，所以不会发生降级处理，其他的访问 1 或者 不存在的服务则会发生对应的异常，因为 `exceptionsToIgnore`参数中排除了该异常
+
+```json
+{
+    "data": {
+        "id": -2,
+        "username": "defaultUser",
+        "password": "123456"
+    },
+    "message": "服务降级返回",
+    "code": 200
+}
+
+// 空指针不发生熔断降级
+{
+    "timestamp": "2021-09-09T05:42:14.105+0000",
+    "status": 500,
+    "error": "Internal Server Error",
+    "message": "No message available",
+    "path": "/breaker/fallbackException/2"
+}
+```
+
+## @SentinelRestTemplate全局代理
+
+前面可以发现，对于每个不通类型的请求，映射的每个 RequestMapping 请求方法都需要 @SentinelResource()，如果有自定义注解，势必会写更多的方法。其实 @SentinelRestTemplate注解也支持统一的降级熔断处理，
+
+```java
+@Configuration
+public class RibbonConfig {
+
+    @Bean
+//    负载均衡
+    @LoadBalanced
+//    @SentinelRestTemplate 注解的限流(blockHandler, blockHandlerClass)和降级(fallback, fallbackClass)属性不强制填写
+//    给所有调用 restTemplate 的方法都添加 限流、降级，原理是给 restTemplate 添加了自定义拦截器
+//    CustomBlockHandler 公共处理 限流、降级的类，注意返回对象需要为原本方法要返回的对象（前端需要的对象）
+    @SentinelRestTemplate(blockHandlerClass = CustomBlockHandler.class, blockHandler = "handleBlock",
+            fallbackClass = CustomBlockHandler.class, fallback = "handleFallback"
+    )
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+}
+```
+
+对应的自定义限流熔断方法
+
+```java
+public class CustomBlockHandler {
+
+    //限流业务逻辑
+    public static SentinelClientHttpResponse handleBlock(HttpRequest request,
+                                           byte[] body, ClientHttpRequestExecution execution, BlockException ex) {
+        return new SentinelClientHttpResponse("自定义限流信息");
+    }
+
+    //异常熔断降级业务逻辑
+    public static SentinelClientHttpResponse handleFallback(HttpRequest request,
+                                              byte[] body, ClientHttpRequestExecution execution, BlockException ex) {
+        return new SentinelClientHttpResponse("自定义降级信息");
+    }
+}
+```
+
+注意：
+
+* `@LoadBalanced`要添加，否则会报错`java.net.UnknownHostException: nacos-user-service`，[详细参考网友分析](https://www.jianshu.com/p/2c10bf7f26dd)，添加后有多个 `nacos-user-service`服务，可以自动实现负载均衡
+
+* 全局的 @SentinelRestTemplate()，我这里没有生效，网上参考解决办法，**待处理**
+
+  * SpringBoot SpringCloud SpringAlibaba 版本需要对应正确，[参考版本对应](https://hub.fastgit.org/alibaba/spring-cloud-alibaba/wiki/版本说明)，这个最直观
+
+  * 配置中添加下面配置，并把 RestTemplate 移动到Main主启动类中，[参考](https://blog.csdn.net/liuhenghui5201/article/details/113839889)
+
+    ```yaml
+    # 开启或关闭@SentinelRestTemplate注解
+    resttemplate:
+      sentinel:
+        enabled: true
+    ```
+
+# 整合Fegin
+
+Sentinel也适配了Feign组件，我们使用Feign来进行服务间调用时，也可以使用它来进行熔断
+
+* pom.xml
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-openfeign</artifactId>
+</dependency>
+```
+
+* application.yaml
+
+```yaml
+feign:
+  sentinel:
+    enabled: true #打开sentinel对feign的支持
+```
+
+* 主启动类添加`@EnableFeignClients`启动`Feign`的功能
+* 创建`UserService`接口用于对`nacos-user-service`服务的调用，对应的实现类，用于对降级进行具体实现处理
+
+::: details 定义UserService 接口
+
+```java
+@FeignClient(value = "nacos-user-service",fallback = UserFallbackService.class)
+public interface UserService {
+    @PostMapping("/user/create")
+    CommonResult create(@RequestBody User user);
+
+    @GetMapping("/user/{id}")
+    CommonResult<User> getUser(@PathVariable Long id);
+
+    @GetMapping("/user/getByUsername")
+    CommonResult<User> getByUsername(@RequestParam String username);
+
+    @PostMapping("/user/update")
+    CommonResult update(@RequestBody User user);
+
+    @PostMapping("/user/delete/{id}")
+    CommonResult delete(@PathVariable Long id);
+}
+```
+
+:::
+
+::: details UserService 实现类
+
+```java
+@Component
+public class UserFallbackService implements UserService {
+    @Override
+    public CommonResult create(User user) {
+        User defaultUser = new User(-1L, "defaultUser", "123456");
+        return new CommonResult<>(defaultUser,"服务降级返回",200);
+    }
+
+    @Override
+    public CommonResult<User> getUser(Long id) {
+        User defaultUser = new User(-1L, "defaultUser", "123456");
+        return new CommonResult<>(defaultUser,"服务降级返回",200);
+    }
+
+    @Override
+    public CommonResult<User> getByUsername(String username) {
+        User defaultUser = new User(-1L, "defaultUser", "123456");
+        return new CommonResult<>(defaultUser,"服务降级返回",200);
+    }
+
+    @Override
+    public CommonResult update(User user) {
+        return new CommonResult("调用失败，服务被降级",500);
+    }
+
+    @Override
+    public CommonResult delete(Long id) {
+        return new CommonResult("调用失败，服务被降级",500);
+    }
+}
+```
+
+:::
+
+::: 添加 UserFeignController 中使用 UserService 通过 Feign 调用 nacos-user-service 服务中的接口
+
+```java
+@RestController
+@RequestMapping("/user")
+public class UserFeignController {
+    @Autowired
+    private UserService userService;
+
+    @GetMapping("/{id}")
+    public CommonResult getUser(@PathVariable Long id) {
+        return userService.getUser(id);
+    }
+
+    @GetMapping("/getByUsername")
+    public CommonResult getByUsername(@RequestParam String username) {
+        return userService.getByUsername(username);
+    }
+
+    @PostMapping("/create")
+    public CommonResult create(@RequestBody User user) {
+        return userService.create(user);
+    }
+
+    @PostMapping("/update")
+    public CommonResult update(@RequestBody User user) {
+        return userService.update(user);
+    }
+
+    @PostMapping("/delete/{id}")
+    public CommonResult delete(@PathVariable Long id) {
+        return userService.delete(id);
+    }
+}
+```
+
+:::
+
+* 验证：调用`http://localhost:8401/user/4`，返回降级
+
+```json
+{
+    "data": {
+        "id": -1,
+        "username": "defaultUser",
+        "password": "123456"
+    },
+    "message": "服务降级返回",
+    "code": 200
+}
+```
 
 # 使用Nacos存储规则
 
