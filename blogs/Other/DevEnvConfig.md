@@ -147,6 +147,14 @@ ctrl+shift+p	打开命令面板
 
 同上，输入html-css-js prettify enter
 注意，默认使用nodejs环境，安装插件完成后，在首选项，设置，插件设置中修改该插件的设置，修改文件的node path即可
+
+# 每次启动会卡顿一下
+ctrl+~ 查看后台日志:
+Package Control: Attempting to use Urllib downloader due to XXXXXXXXXXXXXXXXXX
+打开 Sublime Text，选择 references -> Package Setting -> Package Control -> Settings User，修改下列配置
+"channels": [
+    "http://www.miaoqiyuan.cn/products/proxy.php/https://packagecontrol.io/channel_v3.json"
+],
 ```
 
 ### Typora
@@ -157,7 +165,7 @@ ctrl+shift+p	打开命令面板
 打开 安装路径\resources\app\style base-control.css
 搜索 typora-source .CodeMirror-lines，修改 max-width: 1200px
 打开typora偏好设置，打开 github 主题配置，其他主题同理
-搜索 write标签，修改 max-width: 1060ox
+搜索 write标签，修改 max-width: 1060px
 ```
 
 ## Other
