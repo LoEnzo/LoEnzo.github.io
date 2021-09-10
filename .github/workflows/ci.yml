@@ -25,7 +25,7 @@ jobs:
         server: '${{ secrets.Aliyun_IP }}' #引用之前创建好的secret
         ssh_private_key: ${{ secrets.Aliyun_KEY }} #引用之前创建好的secret
         local_path: './build/*'  # 对应我们项目build的文件夹路径
-        remote_path: '/var/www/react-app'
+        remote_path: '/opt/app/blog'
 
     # 推送构建的静态网页到myblog分支
     - name: Deploy
