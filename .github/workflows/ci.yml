@@ -13,20 +13,29 @@ jobs:
     - uses: actions/checkout@v1
     - run: yarn install
     - run: yarn build
-    # - run: npm install
-    # - run: npm run build
-        # npm 使用下面这种
     # - run: npm ci
     # - run: npm install vuepress
     # - run: npm run build
-    
+
+    # 推送到阿里云服务器
+    - name: deploy file to server
+      uses: wlixcc/SFTP-Deploy-Action@v1.0 
+      with:  
+        username: 'root'   #ssh user name
+        server: '${{ secrets.Aliyun_IP }}' #引用之前创建好的secret
+        ssh_private_key: ${{ secrets.Aliyun_KEY }} #引用之前创建好的secret
+        local_path: './build/*'  # 对应我们项目build的文件夹路径
+        remote_path: '/var/www/react-app'
+
+    # 推送构建的静态网页到myblog分支
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2.5.0
       env:
         ACTIONS_DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
         PUBLISH_BRANCH: myblog
         PUBLISH_DIR: public
-#   按顺序执行
+
+#   推送到 CleanCloud 云函数平台
 #   leancloud-deploy:
 #     runs-on: ubuntu-latest
 #     steps:
