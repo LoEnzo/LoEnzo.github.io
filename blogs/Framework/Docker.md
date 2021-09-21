@@ -275,6 +275,21 @@ docker cp /mydata/elasticsearch/elasticsearch-analysis-ik-7.6.2.zip elasticsearc
 
 [官网详细配置示例](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file)
 
+::: details 配置个人镜像加速器 阿里云 centos
+
+```shell
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://y2pt19bq.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+:::
+
 #### dive分析工具
 
 dive是镜像构建分析工具，有效查看你的镜像构建浪费的空间
