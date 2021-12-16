@@ -48,8 +48,8 @@ jobs:
   build-docker-images-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
     - name: Build And Push Docker image
+      uses: actions/checkout@v2
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
         image_name: blog        # 指定镜像名称
