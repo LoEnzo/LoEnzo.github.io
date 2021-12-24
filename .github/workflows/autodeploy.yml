@@ -34,31 +34,23 @@ jobs:
         ACTIONS_DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
         PUBLISH_BRANCH: myblog
         PUBLISH_DIR: public
-
-  # 推送到 CleanCloud 云函数平台
-  leancloud-deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Deploy to LeanEngine
-      uses: enflo/curl-action@v1.2
-      with:
-        curl: -X POST https://us-w1-console-api.leancloud.app/1.1/engine/groups/web/production/version?gitTag=myblog&token=${{ secrets.DEPLOY_LEANCLOUD_TOKEN }}
   
   # 推送镜像到阿里云私有仓库
   build-docker-images-deploy:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v2
     - name: Build And Push Docker image
-      uses: actions/checkout@v2
+      uses: aliyun/acr-login@v1         # 使用阿里云镜像服务action
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
-        image_name: blog        # 指定镜像名称
-        tag: latest             # 指定镜像标签
+        image_name: daxigua             # 指定镜像名称
+        tag: latest                     # 指定镜像标签
       run: |
-        docker version 
-      # 登录阿里云镜像仓库
+        docker version
+        # 登录阿里云镜像仓库
         docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
-      # 使用Dockerfile构建镜像
+        # 使用Dockerfile构建镜像
         docker build . --file Dockerfile --tag $docker_repo/$image_name:$tag
-      # 推送镜像到镜像仓库
+        # 推送镜像到镜像仓库
         docker push $docker_repo/$image_name:$tag
