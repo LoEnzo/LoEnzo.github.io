@@ -1,5 +1,5 @@
 # 设置继承镜像
-FROM nginx
+FROM rbgoodall/alpine-nginx
 
 # 提供作者信息
 LABEL maintainer="loenzo"
