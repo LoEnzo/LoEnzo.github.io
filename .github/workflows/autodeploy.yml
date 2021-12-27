@@ -48,14 +48,14 @@ jobs:
   build-docker-images-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
     - name: Build And Push Docker image
-    - uses: aliyun/acr-login@v1         # 使用阿里云镜像服务action
+      uses: aliyun/acr-login@v1         # 使用阿里云镜像服务action
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
         image_name: daxigua             # 指定镜像名称
         tag: latest                     # 指定镜像标签
-    - run: |
+      run: |
         docker version
         # 登录阿里云镜像仓库
         docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
