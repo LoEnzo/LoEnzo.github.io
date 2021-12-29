@@ -6,11 +6,10 @@ on:
       - master
 
 jobs:
-  # 构建静态页面
   build-deploy:
     runs-on: ubuntu-latest
+    
     steps:
-    - name: build-github-pages  
     - uses: actions/checkout@v1
     - run: yarn install
     - run: yarn build
@@ -22,10 +21,10 @@ jobs:
     - name: deploy file to server
       uses: wlixcc/SFTP-Deploy-Action@v1.0 
       with:  
-        username: '${{ secrets.ALIYUN_USERNAME}}'           # ssh user name
-        server: '${{ secrets.Aliyun_IP }}'                  # 引用之前创建好的secret
-        ssh_private_key: ${{ secrets.Aliyun_KEY }}          # 引用之前创建好的secret
-        local_path: 'public/*'                              # 对应我们项目public的文件夹路径
+        username: '${{ secrets.ALIYUN_USERNAME}}' #ssh user name
+        server: '${{ secrets.Aliyun_IP }}' #引用之前创建好的secret
+        ssh_private_key: ${{ secrets.Aliyun_KEY }} #引用之前创建好的secret
+        local_path: 'public/*'  # 对应我们项目public的文件夹路径
         remote_path: '${{ secrets.ALIYUN_BLOG_CATALOG }}'
 
     # 推送构建的静态网页到myblog分支
@@ -36,10 +35,10 @@ jobs:
         PUBLISH_BRANCH: myblog
         PUBLISH_DIR: public
 
-  # 推送到 CleanCloud 云函数平台
-  leancloud-deploy:
-    runs-on: ubuntu-latest
-    steps:
+#   推送到 CleanCloud 云函数平台
+#   leancloud-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
     - name: Deploy to LeanEngine
       uses: enflo/curl-action@v1.2
       with:
