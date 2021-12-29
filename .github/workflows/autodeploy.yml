@@ -30,18 +30,18 @@ jobs:
 
     # 推送镜像到阿里云私有仓库
     - name: Build And Push Docker image
-      uses: aliyun/acr-login@v1                                           # 使用阿里云镜像服务action
+    - uses: aliyun/acr-login@v1                                           # 使用阿里云镜像服务action
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
         image_name: blog                                                  # 指定镜像名称
         tag: latest                                                       # 指定镜像标签
-      run: docker version
+    - run: docker version
       # 登录阿里云镜像仓库
-      run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
+    - run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com
       # 使用Dockerfile构建镜像
-      run: docker build . --file Dockerfile --tag $docker_repo/$image_name:$tag
+    - run: docker build . --file Dockerfile --tag $docker_repo/$image_name:$tag
       # 推送镜像到镜像仓库
-      run: docker push $docker_repo/$image_name:$tag
+    - run: docker push $docker_repo/$image_name:$tag
 
     # 推送构建的静态网页到myblog分支
     - name: Deploy
