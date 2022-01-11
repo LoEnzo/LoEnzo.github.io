@@ -745,7 +745,7 @@ SLAVEOF NO ONE
 
 1. 配置哨兵配置文件`sentinel.conf`
 
-```shelll
+```shell
 # sentinel monitor 被监控的名称 host port 1
 sentinel monitor myredis 127.0.0.1 6379 1
 

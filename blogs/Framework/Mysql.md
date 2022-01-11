@@ -160,7 +160,7 @@ mysql安装以及使用
 * 登录`MySql`，输入指令`mysql -u root -p`，初始化密码在**data**目录下`.err`文件里
 * 登录成功后修改为之前的密码，或者新密码，按顺序推荐，二三未试过
 
-```mysql
+```shell
 # 方案一
 mysql> alter user 'root'@'localhost' identified by 'cy7m0ypu8CpLFperzI45';
 # 方案二
