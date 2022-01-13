@@ -47,7 +47,7 @@ jobs:
         tag: latest                                # 指定镜像标签
     - run: docker version
     - run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com # 登录阿里云镜像仓库
-    - run: docker build . --file Dockerfile --tag blog:latest # 使用Dockerfile构建镜像
+    - run: docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:latest # 使用Dockerfile构建镜像
     - run: docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:latest     # 推送镜像到镜像仓库
 
     - name: Docker Images List # 列出所有镜像
