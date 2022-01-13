@@ -44,11 +44,11 @@ jobs:
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
         image_name: blog                                                  # 指定镜像名称
-        tag: $docker_repo/$image_name:$tag                                # 指定镜像标签
+        tag: latest                                # 指定镜像标签
     - run: docker version
     - run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com # 登录阿里云镜像仓库
-    - run: docker build . --file Dockerfile --tag $tag # 使用Dockerfile构建镜像
-    - run: docker push $docker_repo/$image_name:$tag     # 推送镜像到镜像仓库
+    - run: docker build . --file Dockerfile --tag blog:latest # 使用Dockerfile构建镜像
+    - run: docker push blog:latest     # 推送镜像到镜像仓库
 
     - name: Docker Images Lst # 列出所有镜像
       run: docker images
