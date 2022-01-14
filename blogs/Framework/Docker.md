@@ -207,6 +207,7 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 | **docker load**   | 将文件导入为镜像                                                             |                                                                                                                                                                                                                     |                            |
 | **docker export** | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大             |                                                                                                                                                                                                                     |                            |
 | **docker import** | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                                                                                                                                                                                     |                            |
+| **docker image prune ** | 删除无效镜像，镜像被更新覆盖的时候，老镜像会变成这种`<none>`标识 |  | |
 
 ### 容器间通信
 
