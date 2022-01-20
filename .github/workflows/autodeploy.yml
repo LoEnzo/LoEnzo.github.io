@@ -39,6 +39,7 @@ jobs:
       with:
         curl: -X POST https://us-w1-console-api.leancloud.app/1.1/engine/groups/web/production/version?gitTag=myblog&token=${{ secrets.DEPLOY_LEANCLOUD_TOKEN }}
 
+    # 推送 docker 镜像到阿里云私有仓库
     - name: Build And Push Docker image
       uses: aliyun/acr-login@v1                                           # 使用阿里云镜像服务action
       env:
@@ -52,3 +53,8 @@ jobs:
 
     - name: Docker Images List # 列出所有镜像
       run: docker images
+    
+    # 推送 github action 执行成功到iphone
+    - name: push github action to iphone
+      run: curl --location --request POST 'https://api2.pushdeer.com/message/push?pushkey=${{ PUSHDEER_KEY }}&text='github action Execute successfully'
+     
