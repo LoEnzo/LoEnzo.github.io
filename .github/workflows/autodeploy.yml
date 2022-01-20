@@ -56,5 +56,5 @@ jobs:
     
     # 推送 github action 执行成功到iphone
     - name: push github action to iphone
-      run: curl --location --request POST 'https://api2.pushdeer.com/message/push?pushkey=${{ secrets.PUSHDEER_KEY }}&text="github action Execute successfully"'
+      run: curl --location --request POST 'https://api2.pushdeer.com/message/push?pushkey=${{ secrets.PUSHDEER_KEY }}&text='github_action_execute_successfully''
      
