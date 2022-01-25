@@ -25,7 +25,7 @@ date: 2020-07-09
 
 * **[Mysql](https://dev.mysql.com/downloads/installer/)**
 
-* [Redis](https://github.com/tporadowski/redis/releases)
+* [**Redis**](https://github.com/tporadowski/redis/releases)
 
 * [**Go**](https://golang.google.cn/dl/)
 
@@ -35,19 +35,21 @@ date: 2020-07-09
 
 * [**Yarn**](https://www.jianshu.com/go-wild?ac=2&url=https%3A%2F%2Fclassic.yarnpkg.com%2Flatest.msi)
 
-* [BCompare]，[class反编译插件,选择对应版本，搜索class，下载，导入，重启](http://www.scootersoftware.com/download.php?zz=moreformats)
+* [**BCompare**]，[class反编译插件,选择对应版本，搜索class，下载，导入，重启](http://www.scootersoftware.com/download.php?zz=moreformats)
 
   过期报错，删除`C:\Users\用户名\AppData\Roaming\Scooter Software`
 
 * [**JD-gui：查看jar包**](https://github.com/java-decompiler/jd-gui/releases)
 
-* [Navicat Premuim]
+* [**Navicat Premuim**：数据库连接工具]
 
 * [**TortoiseGit**](https://tortoisegit.org/download/)
 
-* [**XMLSpy2013：查看xsd，xml**]
+* [**XMLSpy2013**：查看xsd，xml]
 
 * [**Postman**](https://www.postman.com/downloads/)
+
+* [**Fiddler**：抓包工具]()
 
 #### 文档编辑器：
 
