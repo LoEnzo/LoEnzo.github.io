@@ -25,7 +25,8 @@ module.exports = {
   // 作者头像
   authorAvatar: "/avatar.jpg",
   // 备案号
-  record: "not yet",
+  record: "渝ICP备2022001000",
+  recordLink: 'https://beian.miit.gov.cn/',
   // 项目开始时间
   startYear: "2017",
   // git地址
