@@ -13,6 +13,8 @@ date: 2021-01-18
 
 Linux防火墙，作为公网和内网之间的保护屏障，在保障数据安装性方面有至关重要的作用。常用的防火墙有 firewall，iptables，ufw，centos7开始默认是firewall。
 
+[参考一](https://www.cnblogs.com/johnnyblog/p/11372561.html)
+
 :::
 
 <!-- more -->
