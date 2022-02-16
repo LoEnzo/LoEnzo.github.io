@@ -387,7 +387,7 @@ public class RestTemplateConfig {
 } 
 ```
 
-::: details 工程配置样例
+::: details 工程配置样例 RestTemplateBuilder 模板 Builder
 
 通过一个`HttpClient`实例创建`HttpComponentsClientHttpRequestFactory`，
 
@@ -396,9 +396,6 @@ public class RestTemplateConfig {
 Registry< ConnectionSocketFactory>（忽略/使用自定义证书，待学习）参考：[绕过证书](https://blog.csdn.net/xiaoxian8023/article/details/49865335)，[信任自定义证书](https://blog.csdn.net/xiaoxian8023/article/details/49866397?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.channel_param)
 
 ```java
-package com.travelsky.ibeplus.service.impl.businesstravelpolicy.application.config;
-
-import com.travelsky.ibeplus.util.http.IbeplusRestTemplateBuilder;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Registry;
@@ -406,71 +403,332 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.DefaultConnectionReuseStrategy;
+import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
+import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import javax.net.ssl.SSLContext;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-/**
- *
- * @Author hjwu
- * @Date2021/3/16 15:04
- */
-@Configuration
-public class RestTemplateConfig {
 
-    @Value("${connectTimeout}")
-    private Integer connectTimeout;
+public class RestTemplateBuilder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RestTemplateBuilder.class);
 
-    @Value("${readTimeout}")
-    private Integer readTimeout;
+    private static final String HTTP = "http";
+    private static final String HTTPS = "https";
 
-    @Value("${requestTimeout}")
-    private Integer requestTimeout;
+    /** 等待数据超时时间 */
+    private int readTimeout = 60000;
 
-    @Value("${maxPool}")
-    private Integer maxPool;
+    /** 连接超时时间 */
+    private int connectTimeout = 10000;
 
-    @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate(httpRequestFactory());
-        restTemplate.getMessageConverters().set(1, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+    /** 从连接池获取连接的等待超时时间 */
+    private int connectRequestTimeout = 10000;
+
+    /** 设置最大连接数 */
+    private int maxPool = 10;
+
+    /** 每个路由的最大连接 */
+    private int maxPerRoute = 10;
+
+    /** 最长空闲时间 */
+    private long maxIdleTime = 60000;
+
+    /** 连接存活时间 */
+    private long connTimeToLive = 60000;
+
+    /** 重试次数 */
+    private int retryCount = 3;
+
+    private final RestTemplateProxy proxy = new RestTemplateProxy();
+
+    private RestTemplateBuilder() {
+    }
+
+    public static RestTemplateBuilder create() {
+        return new RestTemplateBuilder();
+    }
+
+    public RestTemplate build() {
+        // 设置代理，可以用于调用 RestTemplate 调用三方的一些日志记录
+        RestTemplate restTemplate = proxy.getInstance();
+        restTemplate.setRequestFactory(httpRequestFactory());
+        restTemplate.setMessageConverters(convertCharsetToUtf8(restTemplate.getMessageConverters()));
         return restTemplate;
     }
 
-    public ClientHttpRequestFactory httpRequestFactory() {
+    private List<HttpMessageConverter<?>> convertCharsetToUtf8(List<HttpMessageConverter<?>> defaultMessageConverters) {
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        for (HttpMessageConverter<?> messageConverter : defaultMessageConverters) {
+            if (messageConverter instanceof StringHttpMessageConverter) {
+                // 设置字符编码
+                messageConverters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
+            } else {
+                messageConverters.add(messageConverter);
+            }
+        }
+        return messageConverters;
+    }
+
+    private ClientHttpRequestFactory httpRequestFactory() {
         return new HttpComponentsClientHttpRequestFactory(httpClient());
     }
 
-    public HttpClient httpClient() {
+    private HttpClient httpClient() {
+        // 注册访问协议相关的Socket工厂
         Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                .register("https", SSLConnectionSocketFactory.getSocketFactory())
-                .build();
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
-        //整个连接池最大连接数
-        connectionManager.setMaxTotal(maxPool);
-        //路由是对maxTotal的细分  只有一个地址，就可以和MaxTotal设置为一样
-        connectionManager.setDefaultMaxPerRoute(maxPool);
-        RequestConfig requestConfig = RequestConfig.custom()
-                //服务器返回数据(response)的时间，超过该时间抛出read timeout
-                .setSocketTimeout(readTimeout)
-                //连接上服务器(握手成功)的时间，超出该时间抛出connect timeout
-                .setConnectTimeout(connectTimeout)
-                //从连接池中获取连接的超时时间，超过该时间未拿到可用连接，会抛出异常
-                .setConnectionRequestTimeout(requestTimeout)
+                .register(HTTP, PlainConnectionSocketFactory.getSocketFactory())
+                .register(HTTPS, createSslConnectionSocketFactory())
                 .build();
 
-        return HttpClientBuilder.create()
-                .setDefaultRequestConfig(requestConfig)
+        // 创建连接池管理器
+        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
+        // 设置最大连接数。高于这个值时，新连接请求，需要阻塞，排队等待
+        connectionManager.setMaxTotal(maxPool);
+        // 每个路由的最大连接
+        connectionManager.setDefaultMaxPerRoute(maxPerRoute);
+        // 配置默认的请求参数
+        RequestConfig requestConfig = RequestConfig.custom()
+                // 等待数据超时时间
+                .setSocketTimeout(readTimeout)
+                // 连接超时时间
+                .setConnectTimeout(connectTimeout)
+                // 从连接池获取连接的等待超时时间
+                .setConnectionRequestTimeout(connectRequestTimeout)
+                .build();
+
+        return HttpClients.custom()
                 .setConnectionManager(connectionManager)
+                // 连接池不是共享模式，这个共享是指与其它httpClient是否共享
+                .setConnectionManagerShared(false)
+                // 定期回收空闲连接
+                .evictIdleConnections(maxIdleTime, TimeUnit.MILLISECONDS)
+                // 回收过期连接
+                .evictExpiredConnections()
+                // 连接存活时间，如果不设置，则根据长连接信息决定
+                .setConnectionTimeToLive(connTimeToLive, TimeUnit.MILLISECONDS)
+                // 设置默认的请求参数
+                .setDefaultRequestConfig(requestConfig)
+                // 连接重用策略，即是否能keepAlive
+                .setConnectionReuseStrategy(DefaultConnectionReuseStrategy.INSTANCE)
+                // 长连接配置，即获取长连接生产多长时间
+                .setKeepAliveStrategy(DefaultConnectionKeepAliveStrategy.INSTANCE)
+                // 设置重试次数，默认为3次
+                .setRetryHandler(new DefaultHttpRequestRetryHandler(retryCount, false))
+            	// 可以配合 Fiddler 本地抓包测试，默认端口是 8888
+            	.setProxy(new HttpHost("127.0.0.1",8888))
+                .build();
+    }
+
+
+    public RestTemplateBuilder setMaxPool(int maxPool) {
+        this.maxPool = maxPool;
+        return this;
+    }
+
+    public RestTemplateBuilder setMaxPerRoute(int maxPerRoute) {
+        this.maxPerRoute = maxPerRoute;
+        return this;
+    }
+
+    public RestTemplateBuilder setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
+        return this;
+    }
+
+    public RestTemplateBuilder setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+        return this;
+    }
+
+    public RestTemplateBuilder setConnectRequestTimeout(int connectRequestTimeout) {
+        this.connectRequestTimeout = connectRequestTimeout;
+        return this;
+    }
+
+    public RestTemplateBuilder setMaxIdleTime(long maxIdleTime) {
+        this.maxIdleTime = maxIdleTime;
+        return this;
+    }
+
+    public RestTemplateBuilder setConnTimeToLive(long connTimeToLive) {
+        this.connTimeToLive = connTimeToLive;
+        return this;
+    }
+
+    public TemplateBuilder setRetryCount(int retryCount) {
+        this.retryCount = retryCount;
+        return this;
+    }
+
+    private SSLContext createSslContext() {
+        try {
+            //忽略证书
+            return new SSLContextBuilder().loadTrustMaterial(null, (TrustStrategy) (arg0, arg1) -> true)
+                    .build();
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+            LOGGER.error("createSSLContext error:", e);
+            return null;
+        }
+    }
+
+    private SSLConnectionSocketFactory createSslConnectionSocketFactory() {
+        SSLContext sslContext = createSslContext();
+        return null != sslContext ? new SSLConnectionSocketFactory(sslContext)
+                : SSLConnectionSocketFactory.getSocketFactory();
+    }
+}
+```
+
+:::
+
+::: RestTemplateProxy 代理类
+
+```java
+import org.springframework.cglib.proxy.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.lang.reflect.Method;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
+
+class RestTemplateProxy implements MethodInterceptor {
+    private static final String NOT_URL = "NOT_URL";
+    private static final String SPLIT_TAG = "|";
+
+    private static final String SUCCESS = "SUCCESS";
+    private static final String FAILED = "FAILED";
+
+    private static final HttpPerfHandlerFilter FILTER = new HttpPerfHandlerFilter();
+    private static final Callback[] CALLBACKS = new Callback[]{new RestTemplateProxy(), NoOp.INSTANCE};
+
+    RestTemplate getInstance() {
+        Enhancer enhancer = new Enhancer();
+        enhancer.setSuperclass(RestTemplate.class);
+        enhancer.setCallbackFilter(FILTER);
+        enhancer.setCallbacks(CALLBACKS);
+        return (RestTemplate) enhancer.create();
+    }
+
+    @Override
+    public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+        Object result = null;
+        Instant start = Instant.now();
+        try {
+            result = proxy.invokeSuper(obj, args);
+        } finally {
+            // 记录用户 IP
+            String clientIp = ContextManager.getClientIP();
+            // 记录花销时间
+            String cost = String.valueOf(Instant.now().toEpochMilli() - start.toEpochMilli());
+            // 记录返回状态码
+            String httpCode = getHttpCode(result);
+            // 记录成功与否标识
+            String resultFlag = String.valueOf(HttpStatus.EXPECTATION_FAILED.value()).equals(httpCode) ? FAILED : SUCCESS;
+            // 记录调用地址
+            String uri = fetchUrl(args);
+			// 拼接日志记录格式
+            StringJoiner msg = new StringJoiner(SPLIT_TAG);
+            msg.add(SPLIT_TAG + clientIp).add(cost).add(httpCode).add(resultFlag).add(uri + SPLIT_TAG);
+        }
+        return result;
+    }
+
+    private String getHttpCode(Object result) {
+        if (Objects.isNull(result)) {
+            return String.valueOf(HttpStatus.EXPECTATION_FAILED.value());
+        }
+        if (result instanceof ResponseEntity) {
+            return String.valueOf(((ResponseEntity) result).getStatusCodeValue());
+        }
+        return String.valueOf(HttpStatus.EXPECTATION_FAILED.value());
+    }
+
+    private String fetchUrl(Object[] args) {
+        String url = NOT_URL;
+        if (null != args && args.length > 1 && args[0] instanceof String) {
+            url = (String) args[0];
+        }
+        return url;
+    }
+}
+
+class HttpPerfHandlerFilter implements CallbackFilter {
+	// 代理 RestTemplate 中的 exchange、postForEntity 方法
+    private static final List<String> REST_TEMPLATE_METHODS = Arrays.asList("exchange", "postForEntity");
+
+    @Override
+    public int accept(Method arg) {
+        return REST_TEMPLATE_METHODS.contains(arg.getName()) ? 0 : 1;
+    }
+}
+
+```
+
+:::
+
+::: 使用 RestTemplateBuilder 构建自己的 RestTemplate
+
+* 根据自己情况可自定义一些连接、超时 时间配置
+
+```java
+@Configuration
+public class HttpCommonRestTemplateConfig {
+
+    @Value("${http.common.readTimeout:30000}")
+    private Integer readTimeout;
+
+    @Value("${http.common.connectTimeout:1000}")
+    private Integer connectTimeout;
+
+    @Value("${http.common.connectRequestTimeout:1000}")
+    private Integer connectRequestTimeout;
+
+    @Value("${http.common.maxPool:100}")
+    private Integer maxPool;
+
+    @Value("${http.common.maxPerRoute:5}")
+    private Integer maxPerRoute;
+
+    @Value("${http.common.maxIdleTime:6000}")
+    private long maxIdleTime;
+
+    @Value("${http.common.connTimeToLive:6000}")
+    private long connTimeToLive;
+
+    @Bean(name = "httpCommonRestTemplate")
+    public RestTemplate httpCommonRestTemplate() {
+        return RestTemplateBuilder.create()
+                .setReadTimeout(readTimeout)
+                .setConnectTimeout(connectTimeout)
+                .setConnectRequestTimeout(connectRequestTimeout)
+                .setMaxPool(maxPool)
+                .setMaxPerRoute(maxPerRoute)
+                .setMaxIdleTime(maxIdleTime)
+                .setConnTimeToLive(connTimeToLive)
                 .build();
     }
 }

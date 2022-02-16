@@ -35,7 +35,7 @@ date: 2022-02-09
 * pip pip3 安装问题，网络问题
 * 成功启动，hass 提示是python 3.8.6 版本问题
 * hass 无法搜索hacs集成
-* 采用 新建`custom_componets`目录直接下载github 项目 hacs 导入，搜索集成显示 空白行，安装后台报错；切换各个版本，清楚浏览器缓存都不行
+* 采用 新建`custom_components`目录直接下载github 项目 hacs 导入，搜索集成显示 空白行，安装后台报错；切换各个版本，清楚浏览器缓存都不行
 * WSL+docker安装 home-assistant，本地成功启动，网络问题，偶尔无法连接github，能安装 hacs、xiaomi_gataway3、homekit 等集成，但是 homekit 产生二维码 iphone 无法添加
 * 阿里云服务器+docker 安装 home-assistant，成功启动，安装各种集成， 无法登陆小米账号，确定账号正确
 * 后续自己配置 `configuration.yaml` 语法了解

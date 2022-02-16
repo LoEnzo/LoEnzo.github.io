@@ -59,3 +59,17 @@ public static void main(String[] args) {
 
 :::
 
+### Base64
+
+```java
+import org.apache.commons.codec.binary.Base64;
+
+private HttpEntity<String> fillHttpEntity() {
+    HttpHeaders httpHeaders = new HttpHeaders();
+    String userInfo = Base64.encodeBase64String((userName + ":" + Password).getBytes());
+    httpHeaders.add(AUTHORIZATION_KEY, "Basic " + userInfo);
+    httpHeaders.add(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+    return new HttpEntity<>(httpHeaders);
+}
+```
+
