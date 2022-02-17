@@ -158,12 +158,248 @@ jobs:
 
 ### 阶段四
 
-打算实现 github action 通过 dockerfiles 构建最新镜像，推送到阿里云个人仓库，通过 k3s cronjob 定时任务定时拉取最新的镜像进行打包部署，学习下 k3s.yaml 文件编写
+打算实现 github action 通过 dockerfiles 构建最新镜像，推送到阿里云个人仓库，再通过 远程连接 kubectl 远程访问 apiserver 拉取最新的镜像进行部署即可，学习下 k3s.yaml 文件编写
 
 要点：
 
+* [找到一篇人家实践过的文章](https://www.it610.com/article/1333652759500627968.htm)
+
 * dockerfiles 编写
-* dockerfiles 优化
+
+::: details 放置项目根目录 dockerfiles
+
+```yaml
+# 设置继承镜像
+FROM rbgoodall/alpine-nginx
+
+# 提供作者信息
+LABEL maintainer="loenzo"
+
+# 将编译后的静态文件拷贝到镜像
+ADD /public /usr/share/nginx/html
+
+# 用本地的 default.conf 配置来替换nginx镜像里的默认配置
+# ADD default.conf /etc/nginx/conf.d/default.conf
+
+# 更改 ubuntu:18.04
+# RUN echo "deb http://mirros.163.com/ubuntu/ bionic main restricted universe multiverse" > /etc/apt/sources.list
+# RUN echo "deb http://mirros.163.com/ubuntu/ bionic-security main restricted universe multiverse" >> /etc/apt/sources.list
+# RUN echo "deb http://mirros.163.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
+# RUN echo "deb http://mirros.163.com/ubuntu/ bionic-proposed main restricted universe multiverse" >> /etc/apt/sources.list
+# RUN echo "deb http://mirros.163.com/ubuntu/ bionic-backports main restricted universe multiverse" >> /etc/apt/sources.list
+# RUN apt-get update
+
+# VOLUME [ "/etc/nginx/conf.d/" ]
+
+# 开放端口
+EXPOSE 80
+EXPOSE 443
+
+ENTRYPOINT ["nginx"]
+
+# 设置启动命令
+CMD ["-g","daemon off;"]
+```
+
+:::
+
 * github actions 结合 dockefiles 执行，推送到个人阿里云仓库
-* k3s cronjob.yaml 编写
-* k3s 拉取个人仓库加速
+
+::: details  workflow
+
+```yaml
+name: master
+on:
+  push:
+      branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    # node 编译
+    - name: build
+      uses: actions/setup-node@v1
+    - run: |
+        npm i -g hexo-cli
+        npm i
+        hexo clean
+        hexo g
+    # docker build，并 push
+    - name: Docker push
+      uses: azure/docker-login@v1
+      with:
+        login-server: reg.qiniu.com
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - run: |
+        docker build -t reg.qiniu.com/holo-blog/blog:${{ github.sha }} -t reg.qiniu.com/holo-blog/blog .
+        docker push reg.qiniu.com/holo-blog/blog:${{ github.sha }}
+        docker push reg.qiniu.com/holo-blog/blog
+    # 让K8s应用deployment
+    - run: |
+        sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
+    - name: deploy to cluster
+      uses: steebchen/kubectl@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        KUBECTL_VERSION: "1.15"
+      with:
+        args: apply -f deployment.yaml
+    - name: verify deployment
+      uses: steebchen/kubectl@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        KUBECTL_VERSION: "1.15"
+      with:
+        args: '"rollout status -n blog deployment/blog"'
+```
+
+:::
+
+::: details github密钥获取、配置
+
+```shell
+# secrets.KUBE_CONFIG_DATA 
+kubectl config view | base64
+```
+
+:::
+
+* k3s deployment.yml
+
+::: details  k3s 指令yaml文件
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: blog
+  namespace: blog
+spec:
+  rules:
+  - host: dalaocarryme.com
+    http:
+      paths:
+      - backend:
+          serviceName: blog
+          servicePort: 80
+  - host: www.dalaocarryme.com
+    http:
+      paths:
+      - backend:
+          serviceName: blog
+          servicePort: 80
+  - host: blog.dalaocarryme.com
+    http:
+      paths:
+      - backend:
+          serviceName: blog
+          servicePort: 80
+  backend:
+    serviceName: blog
+    servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blog
+  namespace: blog
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: blog
+  sessionAffinity: ClientIP
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blog
+  namespace: blog
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: blog
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: blog
+    spec:
+      containers:
+      - image: reg.qiniu.com/holo-blog/blog:{TAG}
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 2
+          successThreshold: 1
+          timeoutSeconds: 2
+        name: blog
+        ports:
+        - containerPort: 80
+          name: 80tcp02
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 2
+          successThreshold: 2
+          timeoutSeconds: 2
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities: {}
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+        stdin: true
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        tty: true
+        volumeMounts:
+        - mountPath: /usr/share/nginx/html/db.json
+          name: db
+        - mountPath: /usr/share/nginx/html/Thumbs.json
+          name: thumbs
+      dnsConfig: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - hostPath:
+          path: /data/db.json
+          type: ""
+        name: db
+      - hostPath:
+          path: /data/Thumbs.json
+          type: ""
+        name: thumbs
+```
+
+:::
+
+* 待测试，部分命名，变量需要对应修改
