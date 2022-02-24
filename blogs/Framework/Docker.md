@@ -465,9 +465,13 @@ docker run --name registry \
 # 修改 daemon.js，使其信任该仓库，添加下列内容，需要重启docker生效
 "insecure-registries": ["ip:5000"]
 
+git tag images_before:version images_new:version # 将需要推送的镜像重命名
+git tag push ip_addr:5000/images_new:version # 推送镜像到仓库
+
 # http://ip_add:5000/v2/ 访问验证
 # http://ip_add:5000/v2/_catalog 查看镜像
 # http://ip_add:5000/v2/image_name/tags/list 查看指定镜像
+# 服务器指令查看前面带 curl -XGET 即可
 ```
 
 :::
