@@ -136,8 +136,8 @@ git reset --hard hash_code
          \
            e - f - g Feature
 # 切换到Master，将f提交部分内容同步到Master，支持多个commitHash一起提交，最后再推送到远端
-$ git cherry-pick <HashA> <HashB>
-$ git push
+git cherry-pick <HashA> <HashB>
+git push
 ```
 
 ### 8. 回退
@@ -148,7 +148,31 @@ git reset --hard commit_id
 git push -f
 ```
 
-### 9. git pull | fetch 区别
+### 9. 储藏
+
+```shell
+# 本地仓库，当前正在开发，修改的代码还处于混乱状态，不好针对当前状态进行一个说明不清晰的commit，但是又需要切换到其他分支进行其他任务处理，这时候就需要 git stash 场景了，可以多次储藏
+# 将修改的内容储藏
+git stash
+git stash save "可以添加注释，本次储藏内容"
+
+# 此时再查看状态就不会有提示已经修改而未提交的状态
+git status
+nothing to commit
+
+# 查看储藏
+git stash list
+stash@{0}: On master: test2
+stash@{1}: On master: test1
+
+# 切换回原分支，还原储藏，后面跟对应的储藏名
+git stash apply stash@{0}
+
+# 删除堆栈的储藏，后面跟对应的储藏名
+git stash drop stash@{0} 
+```
+
+### 10. git pull | fetch 区别
 
 git pull 可以选择拉取远端的更新代码，通常我们是拉取远端master更新的代码到本地分支，确保分支推送到远端后,合并时没有冲突，
 
@@ -196,7 +220,7 @@ git rebase --continue -->
 git push
 ```
 
-### 10. 其他
+### 11. 其他
 
 ```shell
 # 修改.ignore 使其生效
