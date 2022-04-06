@@ -25,6 +25,9 @@ private static String matchFirst(String requestJson, Pattern pattern) {
 	}
 	return "";
 }
+
+// 匹配特殊字符
+private static final String SPECIAL_CHAR = "[\\x00-\\x08\\x0B-\\x0C\\x0E-\\x1F\\x7F]";
 ```
 
 ## 替换

@@ -4,7 +4,7 @@ tags:
  - k3s
  - k9s
 categories:
- - OperationMaintenance
+ - K8sNotes
 date: 2021-10-03
 ---
 

@@ -3,7 +3,7 @@ title: Maven Settings配置详解
 tags:
  - Maven
 categories:
- - StudyNotes
+ - DevTools
 date: 2020-06-22
 ---
 

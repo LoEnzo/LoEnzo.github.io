@@ -3,7 +3,7 @@ title: K8s之数据存储、安全认证、DashBoard
 tags:
  - k8s
 categories:
- - OperationMaintenance
+ - K8sNotes
 date: 2021-07-18
 ---
 

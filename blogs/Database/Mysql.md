@@ -3,7 +3,7 @@ title: Mysql 操作手册
 tags:
  - SQL
 categories:
- - Framework
+ - Database
 date: 2020-05-11
 ---
 

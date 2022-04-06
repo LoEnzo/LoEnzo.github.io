@@ -3,7 +3,7 @@ title: Nginx入门
 tags:
  - Nginx
 categories:
- - Framework
+ - OperationMaintenance
 date: 2021-06-21
 ---
 

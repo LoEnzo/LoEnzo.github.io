@@ -3,7 +3,7 @@ title: K8s之概念介绍和虚拟机环境搭建
 tags:
  - k8s
 categories:
- - OperationMaintenance
+ - K8sNotes
 date: 2021-07-18
 ---
 

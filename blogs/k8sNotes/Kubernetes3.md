@@ -3,7 +3,7 @@ title: K8s之pod控制器详解一
 tags:
  - k8s
 categories:
- - OperationMaintenance
+ - K8sNotes
 date: 2021-07-18
 ---
 

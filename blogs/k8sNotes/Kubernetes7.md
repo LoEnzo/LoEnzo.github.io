@@ -3,7 +3,7 @@ title: 微服务部署自动发布
 tags:
  - k8s
 categories:
- - OperationMaintenance
+ - K8sNotes
 date: 2022-01-21
 ---
 

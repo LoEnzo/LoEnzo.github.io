@@ -3,7 +3,7 @@ title: K8s之资源管理
 tags:
  - k8s
 categories:
- - OperationMaintenance
+ - K8sNotes
 date: 2021-07-18
 ---
 

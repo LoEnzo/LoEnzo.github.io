@@ -3,7 +3,7 @@ title: Redis入门
 tags:
  - Redis
 categories:
- - Framework
+ - Database
 date: 2021-06-24
 ---
 
