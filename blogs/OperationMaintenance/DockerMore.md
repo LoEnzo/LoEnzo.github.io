@@ -100,6 +100,20 @@ containerd 相比 docker, 多了 namespace 概念，每个image 和 container �
 | 推送镜像            | docker push       | ctr image push               | 无                   |
 | 在容器内部执行命令  | docker exec       | 无                           | crictl exec          |
 
+## K8s 相关
+
+* 获取 apiserver 地址
+
+`cat ～/.kube/config | grep server: | awk '{print $2}'`
+
+* 获取 token
+
+`kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep kubepi-user | awk '{print $1}') | grep token: | awk '{print $2}'`
+
+* 获取 config ：默认路径 `～/.kube/config`
+
+
+
 ## 工具推荐：
 
 **dive**
