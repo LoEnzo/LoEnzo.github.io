@@ -165,10 +165,14 @@ git stash list
 stash@{0}: On master: test2
 stash@{1}: On master: test1
 
-# 切换回原分支，还原储藏，后面跟对应的储藏名
-git stash apply stash@{0}
+# 切换回原分支，还原储藏
+git stash apply # 应用最近一次的stash
+git stash apply stash@{0}	# 应用指定的stash
+git stash pop # 应用最近一次stash，随后删除该记录
+
 
 # 删除堆栈的储藏，后面跟对应的储藏名
+git stash drop # 删除最近一次的储藏
 git stash drop stash@{0} 
 ```
 
