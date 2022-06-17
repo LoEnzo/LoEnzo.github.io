@@ -46,7 +46,7 @@ goharbor/harbor-log:v2.5.1              "/bin/sh -c /usr/loc…"   10 days ago  
 * 默认用户名密码
 
 ```shell
-Harbor 12345
+admin Harbor12345
 ```
 
 # 问题处理历程
