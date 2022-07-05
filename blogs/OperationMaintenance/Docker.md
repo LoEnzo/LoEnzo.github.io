@@ -118,8 +118,8 @@ apt-get install -y docker-ce
 | **docker stop**    | 停止容器         | 容器id、名称：`docker stop nginx`                                                                                                       |
 | **docker restart** | 重启容器         | 容器id、名称：`docker restart nginx`                                                                                                    |
 | **docker kill**    | 杀掉运行中的容器 | 容器id、名称：`docker kill nginx`                                                                                                       |
-| **docker rm**      | 删除容器         | `-f `：强制删除一个运行中的容器，`<br>-l`：移除容器间的网络连接，而非容器本身`<br>-v `：删除与容器关联的卷`<br>docker rm nginx`   |
-| **docker exec**    | 进入容器执行命令 | `-d `：分离模式: 在后台运行`<br>-i `：即使没有附加也保持STDIN 打开`<br>-t `：分配一个伪终端`<br>docker exec -it centos /bin/bash` |
+| **docker rm**      | 删除容器         | `-f `：强制删除一个运行中的容器，<br>`-l`：移除容器间的网络连接，而非容器本身<br>`-v `：删除与容器关联的卷<br>`docker rm nginx` |
+| **docker exec**    | 进入容器执行命令 | `-d `：分离模式: 在后台运行<br>`-i `：即使没有附加也保持STDIN 打开<br>`-t `：分配一个伪终端<br>`docker exec -it centos /bin/bash` |
 
 ::: details docker run options 参数说明
 
@@ -153,7 +153,7 @@ apt-get install -y docker-ce
 | --------------------- | ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **docker ps**   | 列出容器                 | `-a`：所有容器  `docker ps -a`                                                                                                                               |
 | **docker port** | 列出指定的容器的端口映射 | `docker port mysql`                                                                                                                                            |
-| **docker logs** | 获取容器的日志           | `-f `：跟踪日志输出`<br>--since`：显示某个开始时间的所有日志`<br>-t`：显示时间戳`<br>--tail `：仅列出最新N条容器日志`<br>docker logs --tail=10 mysql ` |
+| **docker logs** | 获取容器的日志           | `-f `：跟踪日志输出<br>`--since`：显示某个开始时间的所有日志<br>`-t`：显示时间戳<br>`--tail `：仅列出最新N条容器日志<br>`docker logs --tail=10 mysql ` |
 
 ::: details docker ps 显示进程信息
 
@@ -201,17 +201,17 @@ docker rmi $(docker images | awk '{print $3}' |tail -n +2)
 
 #### 本地镜像管理
 
-| 指令                    | 说明                                                                         | 参数                                                                                                                                                                                                                                   |
-| ----------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docker images`       | 列出本地镜像                                                                 | `-a`：列出本地所有的镜像；`<br>--digests`：显示镜像的摘要信息；`<br>-f`：显示满足条件的镜像；`<br>--format` ：指定返回值的模板文件；`<br>--no-trunc `：显示完整的镜像信息；`<br>-q` ：只显示镜像ID`<br>docker images -a` |
-| `docker rmi`          | 删除本地一个或多少镜像                                                       | `-f `：强制删除`<br>docker rmi images_name`                                                                                                                                                                                        |
-| `docker tag`          | 标记本地镜像，将其归入某一仓库                                               |                                                                                                                                                                                                                                        |
-| `docker build`        | 用于根据 `Dockerfile` 创建镜像                                             | `-f `：指定要使用的Dockerfile路径；                                                                                                                                                                                                  |
-| `docker save`         | 将镜像导出为文件                                                             | `-o`：输出到的文件                                                                                                                                                                                                                   |
-| `docker load`         | 将文件导入为镜像                                                             |                                                                                                                                                                                                                                        |
-| `docker export`       | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大             |                                                                                                                                                                                                                                        |
-| `docker import`       | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                                                                                                                                                                                                        |
-| `docker image prune ` | 删除无效镜像，镜像被更新覆盖的时候，老镜像会变成这种 `<none>`标识          |                                                                                                                                                                                                                                        |
+| 指令                  | 说明                                                         | 参数                                                         |
+| --------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| `docker images`       | 列出本地镜像                                                 | `-a`：列出本地所有的镜像；<br>`--digests`：显示镜像的摘要信息；<br>`-f`：显示满足条件的镜像；<br>`--format` ：指定返回值的模板文件；<br>`--no-trunc `：显示完整的镜像信息；<br>`-q` ：只显示镜像ID<br>`docker images -a` |
+| `docker rmi`          | 删除本地一个或多少镜像                                       | `-f `：强制删除`<br>docker rmi images_name`                  |
+| `docker tag`          | 标记本地镜像，将其归入某一仓库                               |                                                              |
+| `docker build`        | 用于根据 `Dockerfile` 创建镜像                               | `-f `：指定要使用的Dockerfile路径；                          |
+| `docker save`         | 将镜像导出为文件                                             | `-o`：输出到的文件                                           |
+| `docker load`         | 将文件导入为镜像                                             |                                                              |
+| `docker export`       | 将容器导出为文件，**会保存该镜像操作的历史记录**，文件较大   |                                                              |
+| `docker import`       | 将文件导入为镜像，**会丢失所有元数据和历史记录**，仅保留容器当时的状态 |                                                              |
+| `docker image prune ` | 删除无效镜像，镜像被更新覆盖的时候，老镜像会变成这种 `<none>`标识 |                                                              |
 
 ### 容器间通信
 
