@@ -315,20 +315,5 @@ curl -i -X POST -H '请求头信息' --user 'user:password' --data '请求信息
 echo `ls -lt /文件夹目录/ |grep 参数 | head -n 1 |awk '{print $9}'` 
 ```
 
-### 9. 设置 Swap交换内存
-
-```shell
-# 设置交换文件路径，文件大小
-# 其中bs是每块的大小，count是块的数量；bs*count，就是swap文件的大小：这里1M*1024=1G。可以根据需要自行调整。
-dd if=/dev/zero of=/mydata/swapfile bs=2M count=1024
-# 格式化交换分区文件
-mkswap swapfile
-# 启用swap分区文件
-swapon swapfile
-# 添加开机启动,添加或者修改这一行：
-vi /etc/fstab
-swapfile swap swap defaults 0 0
-```
-
 
 
