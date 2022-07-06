@@ -474,6 +474,18 @@ git tag push ip_addr:5000/images_new:version # 推送镜像到仓库
 # 服务器指令查看前面带 curl -XGET 即可
 ```
 
+#### Nginx
+
+```shell
+docker run  --name nginx -m 200m -p 80:80 \
+-v /docker-work/nginx/nginx.conf:/etc/nginx/nginx.conf \
+-v /docker-work/nginx/logs:/var/log/nginx \
+-v /docker-work/nginx/html:/usr/share/nginx/html \
+-v /docker-work/nginx/conf:/etc/nginx/conf.d \
+-e TZ=Asia/Shanghai \
+--privileged=true -d nginx
+```
+
 :::
 
 ## 其他
@@ -510,6 +522,13 @@ systemctl restart docker
 # 查看配置是否修改
 docker info
 Docker Root Dir: /DATA/docker/lib/docker
+
+
+# 第二种方法，停止docker服务，迁移目录，让后建立软连接，重启docker
+ln -s /home/docker /var/lib/docker
+systemctl start docker
+# 去除软链接，切换到该目录
+rm -rf ./docker
 ```
 
 ::: 

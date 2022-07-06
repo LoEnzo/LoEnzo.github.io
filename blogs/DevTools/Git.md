@@ -313,6 +313,20 @@ vim .git/config
 
 解决：可以查看状态：`git config --get core.ignorecase`，修改为false即可：`git config core.ignorecase false`
 
+**git pull 报错：cannot lock ref ...：is at ... but expected ...**
+
+报错详情，省略部分
+
+```shell
+error: cannot lock ref '...'：is at <commit_id1> but expected <commit_id2>
+From https://....
+! <commit_id1>..<commit_id2> <branchName> -> origin/<branchName> (unable to update local ref)
+```
+
+原因：本地分支和远程分支的HEAD不太一致，但是奇怪报错分支并不是自己的，有可能是分支名区分大小写导致的，参考上面；
+
+解决：去除Window区分大小写设置，参考上面，未生效；还可以删除本地保留的记录，`\.git\refs\remotes\origin`，删除对应报错的分支记录，重新拉取即可
+
 #### Git修改凭证
 
 事例：使用`Tortoigit`提交文件时，因为没有权限，输入的凭证错误，导致提交失败，后续添加权限后，重复提交仍然失败。
