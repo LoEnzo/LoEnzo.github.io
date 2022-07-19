@@ -183,6 +183,7 @@ nginx   default         1               2022-07-05 17:10:50.607565199 +0800 CST 
 ### helm uninstall
 
 ```shell
+$ helm uninstall nginx
 release "nginx" uninstalled	# 如果有namespace，也需要加上
 ```
 
