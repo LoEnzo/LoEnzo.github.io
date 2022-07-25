@@ -45,19 +45,19 @@ date: 2021-08-05
 
 | 指令           | 格式                                                         | 说明                                                         |
 | -------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **FROM**       | `FROM <image>` <br><br>`FROM <image>:<tag>` <br><br/>`FROM <image> @ <digest>` | 指定基础镜像，必须为第一个命令，<br/>tag，digest为可选的，不写会拉取latest版本的基础镜像 |
-| **MAINTAINER** | `MAINTAINER <name>` <br><br/>`MAINTAINER <email>`            | 维护者信息                                                   |
+| **FROM**       | `FROM <image>` <br>`FROM <image>:<tag>` <br>`FROM <image> @ <digest>` | 指定基础镜像，必须为第一个命令，<br/>tag，digest为可选的，不写会拉取latest版本的基础镜像 |
+| **MAINTAINER** | `MAINTAINER <name>` <br>`MAINTAINER <email>`                 | 维护者信息                                                   |
 | **LABEL**      | `LABEL <key>=<value> <key>=<value> ...`                      | 用于为镜像添加元数据                                         |
 | **ENV**        | `ENV <key> <value>`                                          | 设置环境变量                                                 |
-| **RUN**        | `RUN <command>`<br><br/>`RUN ["executable", "param1", "param2"]` | 构建镜像时执行的命令                                         |
-| **ADD**        | `ADD <src>... <dest>`<br><br>`ADD ["<src>",... "<dest>"] `   | 将本地文件添加到容器中，<br>tar类型文件会自动解压(网络压缩资源不会被解压)，<br>可以访问网络资源，类似wget<br>`ADD ["<src>",... "<dest>"] `用于支持包含空格的路径 |
+| **RUN**        | `RUN <command>`<br>`RUN ["executable", "param1", "param2"]`  | 构建镜像时执行的命令                                         |
+| **ADD**        | `ADD <src>... <dest>`<br>`ADD ["<src>",... "<dest>"] `       | 将本地文件添加到容器中，<br>tar类型文件会自动解压(网络压缩资源不会被解压)，<br>可以访问网络资源，类似wget<br>`ADD ["<src>",... "<dest>"] `用于支持包含空格的路径 |
 | **COPY**       | `COPY <src>... <dest>`                                       | 功能类似ADD，但是是不会自动解压文件，也不能访问网络资源      |
 | **CMD**        | `CMD ["executable","param1","param2"]`                       | 构建容器后调用，也就是在容器启动时才进行调用。               |
 | **ENTRYPOINT** | `ENTRYPOINT ["executable", "param1", "param2"]`              | 配置容器，使其可执行化。配合CMD可省去"application"，只使用参数 |
 | **EXPOSE**     | `EXPOSE <port> [<port>...]`                                  | 指定于外界交互的端口                                         |
 | **VOLUME**     | `VOLUME ["/path/to/dir"]`                                    | 用于指定持久化目录                                           |
 | **WORKDIR**    | `WORKDIR /path/to/workdir`                                   | 工作目录，类似于cd命令                                       |
-| **USER**       | `USER user`<br/><br/>`USER user:group`<br/><br/>`USER uid`<br/><br/>`USER uid:gid`<br/><br/>`USER user:gid`<br/><br/>`USER uid:group` | 指定运行容器时的用户名或 UID，后续的 RUN 也会使用指定用户<br/>使用USER指定用户时，可以使用用户名、UID或GID，或是两者的组合<br/>当服务不需要管理员权限时，可以通过该命令指定运行用户，并且可以在之前创建所需要的用户 |
+| **USER**       | `USER user`<br/>`USER user:group`<br/>`USER uid`<br/>`USER uid:gid`<br/>`USER user:gid`<br/>`USER uid:group` | 指定运行容器时的用户名或 UID，后续的 RUN 也会使用指定用户<br/>使用USER指定用户时，可以使用用户名、UID或GID，或是两者的组合<br/>当服务不需要管理员权限时，可以通过该命令指定运行用户，并且可以在之前创建所需要的用户 |
 | **ARG**        | `ARG <name>[=<default value>]`                               | 用于指定传递给构建运行时的变量                               |
 | **ONBUILD**    | `ONBUILD [INSTRUCTION]`                                      | 用于设置镜像触发器                                           |
 
