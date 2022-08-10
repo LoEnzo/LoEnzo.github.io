@@ -12,8 +12,7 @@ jobs:
     steps:
     - name: build pages
       uses: actions/checkout@v1
-    - run: npm ci
-    - run: npm install vuepress
+    - run: npm install
     - run: npm run build
 
     # 推送到阿里云服务器
