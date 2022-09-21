@@ -35,7 +35,8 @@ module.exports = {
   editLinkText: '在 GitHub 上编辑此页！',
   // valine 
   valineConfig: {
-    appId: "J1Uq1gtVn91RhSSw4FaAv2GD-MdYXbMMI", // your appId
-    appKey: "rxJmmc3H8KmkmMeddXkBRnsw", // your appKey
+    appId: "J1Uq1gtVn91RhSSw4FaAv2GD-MdYXbMMI",
+    appKey: "rxJmmc3H8KmkmMeddXkBRnsw",
+    serverURLs: "https://valine.loenzo.top"
   },
 };
