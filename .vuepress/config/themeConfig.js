@@ -37,5 +37,7 @@ module.exports = {
   valineConfig: {
     appId: "J1Uq1gtVn91RhSSw4FaAv2GD-MdYXbMMI", // your appId
     appKey: "rxJmmc3H8KmkmMeddXkBRnsw", // your appKey
+    visitor: true,
+    serverURLs: "https://valine.loenzo.top"
   },
 };

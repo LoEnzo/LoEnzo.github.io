@@ -22,7 +22,10 @@ nginx是一款自由的、开源的、高性能的HTTP服务器和反向代理�
 ```shell
 # 进入解压目录
 
-# 编译安装，依次执行
+#一键安装需要依赖
+yum -y install gcc zlib zlib-devel pcre-devel openssl openssl-devel
+
+# 编译安装，依次执行，添加模块,根据需求可选
 ./configure --prefix=/usr/local/webserver/nginx --with-http_stub_status_module --with-http_ssl_module --with-pcre=/usr/local/src/pcre-8.35
 make
 make install

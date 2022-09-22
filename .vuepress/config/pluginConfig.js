@@ -46,16 +46,16 @@ module.exports = [
       count: 10,
     },
   ],
-  // 复制代码功能
-  [
-    "vuepress-plugin-nuggets-style-copy",
-    {
-      copyText: "复制代码",
-      tip: {
-        content: "复制成功!",
-      },
-    },
-  ],
+  // 复制代码功能，疑似有问题
+  // [
+  //   "vuepress-plugin-nuggets-style-copy",
+  //   {
+  //     copyText: "复制代码",
+  //     tip: {
+  //       content: "复制成功!",
+  //     },
+  //   },
+  // ],
   // 自动生成侧边栏的插件，跟本地文件目录排列顺序有关系，
   // 多级目录自动侧边栏参考官方文档未生效，待解决；
   // 其他参数未尝试
