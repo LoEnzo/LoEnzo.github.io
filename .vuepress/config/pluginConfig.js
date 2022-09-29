@@ -28,20 +28,20 @@ module.exports = [
       },
     },
   ],
-  "@vuepress-reco/extract-code",
-  "flowchart",
-  [
-    "sitemap",
-    {
-      hostname: "https:/hjwu.gq",
-    },
-  ],
+  // "@vuepress-reco/extract-code",
+  // "flowchart",
+  // [
+  //   "sitemap",
+  //   {
+  //     hostname: "https:/hjwu.gq",
+  //   },
+  // ],
   // 添加rss订阅插件，测试发现只能订阅标题和tip内容
   [
     "@vuepress-reco/rss",
     {
       base_url: "/", // required
-      site_url: "https://hjwu.gq",
+      site_url: "https://loenzo.top",
       copyright: "",
       count: 10,
     },
@@ -64,7 +64,7 @@ module.exports = [
     {
       collapse: {
         open: true,
-      }
+      },
     },
   ],
 ];

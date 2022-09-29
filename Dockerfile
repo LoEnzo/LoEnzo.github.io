@@ -7,6 +7,10 @@ LABEL maintainer="loenzo"
 # 将编译后的静态文件拷贝到镜像
 ADD /public /usr/share/nginx/html
 
+#拷贝nginx.conf配置文件
+ADD nginx.conf  /usr/local/nginx/conf/
+ADD nginx.conf  /etc/nginx/
+
 # 用本地的 default.conf 配置来替换nginx镜像里的默认配置
 # ADD default.conf /etc/nginx/conf.d/default.conf
 
@@ -22,6 +26,7 @@ ADD /public /usr/share/nginx/html
 
 # 开放端口
 EXPOSE 80
+EXPOSE 443
 
 ENTRYPOINT ["nginx"]
 

@@ -4,6 +4,8 @@ const navConf = require("./navConfig.js");
 const blogConf = require("./blogConfig.js");
 // 友链
 const friendLinkConf = require("./friendLinkConfig.js");
+// 插件
+const pluginsConf = require("./pluginConfig.js");
 
 module.exports = {
   nav: navConf,
@@ -12,6 +14,7 @@ module.exports = {
   // 博客设置
   blogConfig: blogConf,
   friendLink: friendLinkConf,
+  plugins: pluginsConf,
   logo: "/logo.jpg",
   codeTheme: 'tomorrow',
   // 搜索设置

@@ -16,14 +16,14 @@ jobs:
     - run: yarn build
 
     # 推送到阿里云服务器
-    - name: deploy file to server
-      uses: wlixcc/SFTP-Deploy-Action@v1.0 
-      with:  
-        username: '${{ secrets.ALIYUN_USERNAME}}'             # ssh user name
-        server: '${{ secrets.Aliyun_IP }}'                    # 引用之前创建好的secret
-        ssh_private_key: ${{ secrets.Aliyun_KEY }}            # 引用之前创建好的secret
-        local_path: 'public/*'                                # 对应我们项目public的文件夹路径
-        remote_path: '${{ secrets.ALIYUN_BLOG_CATALOG }}'
+    # - name: deploy file to server
+    #   uses: wlixcc/SFTP-Deploy-Action@v1.0 
+    #   with:  
+    #     username: '${{ secrets.ALIYUN_USERNAME}}'             # ssh user name
+    #     server: '${{ secrets.Aliyun_IP }}'                    # 引用之前创建好的secret
+    #     ssh_private_key: ${{ secrets.Aliyun_KEY }}            # 引用之前创建好的secret
+    #     local_path: 'public/*'                                # 对应我们项目public的文件夹路径
+    #     remote_path: '${{ secrets.ALIYUN_BLOG_CATALOG }}'
 
     # 推送构建的静态网页到myblog分支
     - name: Deploy
