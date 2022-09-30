@@ -1,15 +1,15 @@
 # 设置继承镜像
-FROM rbgoodall/alpine-nginx
+FROM nginx:1.17.7-alpine
 
 # 提供作者信息
-LABEL maintainer="loenzo"
+LABEL maintainer="LoEnzo"
 
 # 将编译后的静态文件拷贝到镜像
 ADD /public /usr/share/nginx/html
 
-#拷贝nginx.conf配置文件
-ADD nginx.conf  /usr/local/nginx/conf/
-ADD nginx.conf  /etc/nginx/
+# 拷贝nginx.conf配置文件
+# ADD nginx.conf  /usr/local/nginx/conf/
+# ADD nginx.conf  /etc/nginx/
 
 # 用本地的 default.conf 配置来替换nginx镜像里的默认配置
 # ADD default.conf /etc/nginx/conf.d/default.conf
