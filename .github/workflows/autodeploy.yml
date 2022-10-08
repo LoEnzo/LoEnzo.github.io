@@ -58,15 +58,11 @@ jobs:
     - run: |
         sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
 
-    - name: Set K8s context
-      uses: ossrs/k8s-set-context-action@v1
+    - uses: actions-hub/kubectl@master
+      env:
+        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
       with:
-        kubeconfig: '${{ secrets.KUBE_CONFIG_DATA }}'
-
-    - name: Run K8s
-      run: |-
-        kubectl cluster-info
-        kubectl apply -f deployment.yaml
+        args: apply -f deployment.yaml
 
     # - name: deploy to cluster
     #   uses: steebchen/kubectl@master
