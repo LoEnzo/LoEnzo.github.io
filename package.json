@@ -24,10 +24,11 @@
     "commander": "^2.0.0",
     "depcheck": "^1.4.3",
     "esm": "^3.0.0",
-    "vue": "^2.0.0",
+    "vue": "^2.6.12",
     "vue-class-component": "^7.2.3",
     "vuepress-plugin-auto-sidebar": "^2.2.2",
-    "vuepress-plugin-nuggets-style-copy": "^1.0.3"
+    "vuepress-plugin-nuggets-style-copy": "^1.0.3",
+    "vue-server-renderer": "2.6.12"
   },
   "description": "just want to record somethings"
 }

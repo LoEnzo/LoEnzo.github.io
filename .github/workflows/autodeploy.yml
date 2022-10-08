@@ -45,14 +45,32 @@ jobs:
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
         image_name: blog                                                  # 指定镜像名称
-        tag: latest                                # 指定镜像标签
+        tag: ${{ github.sha }}                                            # 指定镜像标签
     - run: docker version
     - run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com # 登录阿里云镜像仓库
-    - run: docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:latest # 使用Dockerfile构建镜像
-    - run: docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:latest     # 推送镜像到镜像仓库
+    - run: docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }} # 使用Dockerfile构建镜像
+    - run: docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }}     # 推送镜像到镜像仓库
 
     - name: Docker Images List # 列出所有镜像
       run: docker images
+
+    # 让K3s应用deployment
+    - run: |
+        sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
+    - name: deploy to cluster
+      uses: steebchen/kubectl@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        KUBECTL_VERSION: "1.15"
+      with:
+        args: apply -f deployment.yaml
+    - name: verify deployment
+      uses: steebchen/kubectl@master
+      env:
+        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        KUBECTL_VERSION: "1.15"
+      with:
+        args: '"rollout status -n blog deployment/blog"'
     
     # 推送 github action 执行成功到iphone
     - name: push github action to iphone
