@@ -57,20 +57,31 @@ jobs:
     # 让K3s应用deployment
     - run: |
         sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
-    - name: deploy to cluster
-      uses: steebchen/kubectl@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        KUBECTL_VERSION: "1.15"
+
+    - name: Set K8s context
+      uses: ossrs/k8s-set-context-action@v1
       with:
-        args: apply -f deployment.yaml
-    - name: verify deployment
-      uses: steebchen/kubectl@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        KUBECTL_VERSION: "1.15"
-      with:
-        args: '"rollout status -n blog deployment/blog"'
+        kubeconfig: '${{ secrets.KUBE_CONFIG_DATA }}'
+
+    - name: Run K8s
+      run: |-
+        kubectl cluster-info
+        kubectl apply -f deployment.yaml
+
+    # - name: deploy to cluster
+    #   uses: steebchen/kubectl@master
+    #   env:
+    #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+    #     KUBECTL_VERSION: "1.15"
+    #   with:
+    #     args: apply -f deployment.yaml
+    # - name: verify deployment
+    #   uses: steebchen/kubectl@master
+    #   env:
+    #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+    #     KUBECTL_VERSION: "1.15"
+    #   with:
+    #     args: '"rollout status -n blog deployment/blog"'
     
     # 推送 github action 执行成功到iphone
     - name: push github action to iphone
