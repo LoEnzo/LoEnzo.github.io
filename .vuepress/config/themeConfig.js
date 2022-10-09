@@ -42,6 +42,6 @@ module.exports = {
     appKey: "rxJmmc3H8KmkmMeddXkBRnsw", // your appKey
     visitor: true,
     serverURLs: "https://valine.loenzo.top",
-    placeholder: 'hjwumail@dingtalk.com',
+    placeholder: '支持markdown语法',
   },
 };
