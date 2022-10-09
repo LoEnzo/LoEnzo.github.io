@@ -64,13 +64,13 @@ jobs:
     #   with:
     #     args: apply -f deployment.yaml
 
-    - name: deploy to cluster
-      uses: steebchen/kubectl@master
-      env:
-        KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        KUBECTL_VERSION: "1.15"
-      with:
-        args: apply -f deployment.yaml
+    # - name: deploy to cluster
+    #   uses: steebchen/kubectl@master
+    #   env:
+    #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+    #     KUBECTL_VERSION: "1.15"
+    #   with:
+    #     args: apply -f deployment.yaml
     # - name: verify deployment
     #   uses: steebchen/kubectl@master
     #   env:
@@ -78,6 +78,12 @@ jobs:
     #     KUBECTL_VERSION: "1.15"
     #   with:
     #     args: '"rollout status -n blog deployment/blog"'
+
+    - uses: danielr1996/kubectl-action@1.0.0
+      name: Deploy to k3s
+      with:
+        kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
+        args: apply -f deployment.yaml
     
     # 推送 github action 执行成功到iphone
     - name: push github action to iphone
