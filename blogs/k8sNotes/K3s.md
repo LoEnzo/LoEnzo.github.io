@@ -82,7 +82,7 @@ k3s 默认使用 crictl 替代docker 管理容器，同一个公司出品，指�
 
 下载对应版本的系统即可，以windows平台为例，下载下来，解压，把k9s.exe 加入系统环境变量即可。
 
-* 登录服务器，下载k8s集群的yaml配置文件
+* 登录服务器，下载k8s集群的yaml配置文件，注意把里面的 127.0.0.1 修改为你服务器的实际ip
 
 ```shell
 # k3s 
@@ -92,7 +92,9 @@ k3s 默认使用 crictl 替代docker 管理容器，同一个公司出品，指�
 ./kube/config
 
 # 将文件下载到本地路径，创建环境变量配置
-%KUBECTL_HOME%		k3s.yaml配置文件路径
+%KUBECTLCONFIGE%		k3s.yaml配置文件路径
+
+# 注意，有些本地 .kube/config 文件，config是json文件，可以直接将k3s.yml 转成json格式即可
 ```
 
 * 下载kubectl指令文件
@@ -102,7 +104,7 @@ k3s 默认使用 crictl 替代docker 管理容器，同一个公司出品，指�
 https://storage.googleapis.com/kubernetes-release/release/stable.txt
 
 # 下载最新版本
-https://storage.googleapis.com/kubernetes-release/release/v1.22.2/bin/windows/amd64/kubecti.exe
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.22.2/bin/windows/amd64/kubecti.exe
 
 # 配置kubectl.exe 指定文件路径
 %KUBECTL_HOME%		kubectl.exe 文件路径
