@@ -16,7 +16,7 @@
     "vuepress": "^1.5.0",
     "vuepress-plugin-feed": "^0.1.8",
     "vuepress-plugin-sponsor": "^1.0.0",
-    "vuepress-theme-reco": "^1.6.1"
+    "vuepress-theme-reco": "1.6.16"
   },
   "dependencies": {
     "@vuepress-reco/vuepress-plugin-rss": "^1.0.2",
