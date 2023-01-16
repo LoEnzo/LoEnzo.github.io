@@ -126,3 +126,52 @@ https://curl.se/windows/
 pc、ios平台可视化管理k8s集群 kubenav，根据软件描述，导入对应配置即可，k8s,k3s的配置文件上面有说，导入的时候改一下里面的127.0.0.1为自己服务器的ip地址即可
 
 [参考文档](https://docs.kubenav.io/mobile/kubeconfig/)
+
+## 问题：
+
+服务器重启问题
+
+k3s部署在阿里云轻量应用服务器，不知为啥，某天登陆服务器，一直登陆不上，登陆控制台，发现最近4天，CPU几乎一直占用100%，由于一直满载，ssh都登陆不进去，最后只能重启服务器
+
+重启之后k3s服务没有重启，手动重启也不行，重新覆盖安装也不行
+
+`starting kubernetes: preparing server: failed to normalize token; must be **in** format K10<CA-HASH>::<USERNAME>:<PASSWORD> **or** <PASSWORD>`
+
+```
+[root@iZbp10kr3w2ijuyctukq43Z file]# service k3s restart
+Redirecting to /bin/systemctl restart k3s.service
+Job for k3s.service failed because the control process exited with error code.
+See "systemctl status k3s.service" and "journalctl -xe" for details.
+[root@iZbp10kr3w2ijuyctukq43Z file]# systemctl status k3s.service
+● k3s.service - Lightweight Kubernetes
+   Loaded: loaded (/etc/systemd/system/k3s.service; enabled; vendor preset: disabled)
+   Active: activating (auto-restart) (Result: exit-code) since Mon 2023-01-16 13:15:01 CST; 2s ago
+     Docs: https://k3s.io
+  Process: 37172 ExecStart=/usr/local/bin/k3s server (code=exited, status=1/FAILURE)
+  Process: 37171 ExecStartPre=/sbin/modprobe overlay (code=exited, status=0/SUCCESS)
+  Process: 37169 ExecStartPre=/sbin/modprobe br_netfilter (code=exited, status=0/SUCCESS)
+  Process: 37166 ExecStartPre=/bin/sh -xc ! /usr/bin/systemctl is-enabled --quiet nm-cloud-setup.service (code=exited, status=0/SUCCESS)
+ Main PID: 37172 (code=exited, status=1/FAILURE)
+
+Jan 16 13:15:01 iZbp10kr3w2ijuyctukq43Z systemd[1]: Failed to start Lightweight Kubernetes.
+[root@iZbp10kr3w2ijuyctukq43Z file]# journalctl -xe
+Jan 16 13:15:06 iZbp10kr3w2ijuyctukq43Z k3s[37195]: time="2023-01-16T13:15:06+08:00" level=info msg="Kine available at unix://kine.sock"
+Jan 16 13:15:06 iZbp10kr3w2ijuyctukq43Z k3s[37195]: time="2023-01-16T13:15:06+08:00" level=fatal msg="starting kubernetes: preparing server: failed to normalize token; m>
+Jan 16 13:15:06 iZbp10kr3w2ijuyctukq43Z systemd[1]: k3s.service: Main process exited, code=exited, status=1/FAILURE
+Jan 16 13:15:06 iZbp10kr3w2ijuyctukq43Z systemd[1]: k3s.service: Failed with result 'exit-code'.
+-- Subject: Unit failed
+-- Defined-By: systemd
+-- Support: https://access.redhat.com/support
+-- 
+-- The unit k3s.service has entered the 'failed' state with result 'exit-code'.
+Jan 16 13:15:06 iZbp10kr3w2ijuyctukq43Z systemd[1]: Failed to start Lightweight Kubernetes.
+-- Subject: Unit k3s.service has failed
+-- Defined-By: systemd
+-- Support: https://access.redhat.com/support
+-- 
+-- Unit k3s.service has failed.
+```
+
+解决：
+
+删除 `/var/lib/rancher/k3s/server/toke`改文件，这个文件是空白的，然后在重启k3s服务即可，对应pod也能正常重启
