@@ -175,3 +175,5 @@ Jan 16 13:15:06 iZbp10kr3w2ijuyctukq43Z systemd[1]: Failed to start Lightweight 
 解决：
 
 删除 `/var/lib/rancher/k3s/server/toke`改文件，这个文件是空白的，然后在重启k3s服务即可，对应pod也能正常重启
+
+参考[在 1.22.5+k3s2 上安装失败，出现令牌错误 - K3s-Io/K3s (codesti.com)](https://codesti.com/issue/k3s-io/k3s/5025)
