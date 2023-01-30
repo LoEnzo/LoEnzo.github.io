@@ -21,6 +21,8 @@ module.exports = {
     ['link', { rel: 'mask-icon', href: '/icon_vuepress_hjwu.svg', color: '#42b983' }],
     ['meta', { name: 'msapplication-TileImage', content: '/icon_vuepress_hjwu.png' }],
     ['meta', { name: 'msapplication-TileColor', content: '#000000' }],
+    // 添加百度搜索资源验证
+    ['meta', { name: 'baidu-site-verification', content: 'baidu-site-verification' }],
     // 引入jquery
     ["script", {
         "language": "javascript",
