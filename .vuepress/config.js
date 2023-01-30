@@ -22,7 +22,7 @@ module.exports = {
     ['meta', { name: 'msapplication-TileImage', content: '/icon_vuepress_hjwu.png' }],
     ['meta', { name: 'msapplication-TileColor', content: '#000000' }],
     // 添加百度搜索资源验证
-    ['meta', { name: 'baidu-site-verification', content: 'baidu-site-verification' }],
+    ['meta', { name: 'baidu-site-verification', content: 'codeva-p04cMYFnLB' }],
     // 引入jquery
     ["script", {
         "language": "javascript",
