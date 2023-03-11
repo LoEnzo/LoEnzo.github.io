@@ -31,7 +31,7 @@ jobs:
       env:
         ACTIONS_DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
         PUBLISH_BRANCH: myblog
-        PUBLISH_DIR: public
+        PUBLISH_DIR: dist
 
     # 推送到 CleanCloud 云函数平台
     - name: Deploy to LeanEngine

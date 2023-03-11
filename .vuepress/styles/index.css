@@ -1,0 +1,25 @@
+.hero-content {
+  img {
+    @apply mb-8 !important;
+  }
+  p {
+    @apply text-2xl;
+  }
+}
+
+/* 标题 */
+.banner-brand__content h1 {
+  color: white;
+  font-size: 1.875rem;
+}
+
+/* 标题 描述 */
+.banner-brand__content p {
+  color: white;
+  font-size: 1.375rem;
+}
+
+/* 正文宽度，修改无效 */
+.home-blog-content {
+  max-width: 55%;
+}

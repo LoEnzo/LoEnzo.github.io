@@ -1,19 +1,32 @@
 ---
 home: true
-# 控制显示主页标题，描述内容，不写则引用cofig.js配置，以透明图代替的话，需要设置值为null
-# heroText: null
-# tagline: null
-# 背景可以覆盖展示图片
-# heroImage: '/hero_write.png'
-heroImageStyle: {
-  maxWidth: '30%',
-  width: '100%',
-  display: block,
-  margin: '0rem auto 2rem',
-  background: 'rgb(255,255,255,0)',
-  borderRadius: '1rem',
-}
-bgImage: '/backgroud.jpg'
-bgImageStyle: {
-  height: '400px'
-}
+modules: # 指定首页展示模块
+  - Banner
+  - Blog
+  - MdContent
+  - Footer
+banner: # banner 模块的配置
+  heroText: 杂乱无章
+  tagline: 前山微有雨, 永巷净无尘
+  # heroImage: /logo.jpg
+  heroImageStyle:
+    maxWidth: 200px
+    margin: 0 auto 2rem
+  bgImage: /backgroud.jpg
+  bgImageStyle:
+    height: 450px
+blog: # blog 模块的配置
+  socialLinks: # 社交地址
+    - { icon: 'LogoGithub', link: 'https://github.com/loenzo' }
+    - { icon: 'Code', link: 'https://gitee.com/company_enzo/' }
+    - { icon: 'UserAdmin', link: 'https://loenzo.cf/'}
+    - { icon: 'Cloud', link: 'https://biggerdrive.herokuapp.com/'}
+    - { icon: 'Cloud', link: 'https://hjwudriver.herokuapp.com/'}
+    - { icon: 'Cloud', link: 'https://rare-dour-bike.glitch.me/'}
+footer: # 底部模块的配置
+  record: 渝ICP备2022001000
+  recordLink: https://beian.miit.gov.cn/
+  cyberSecurityRecord: 
+  cyberSecurityLink: 
+  startYear: 2019
+---
