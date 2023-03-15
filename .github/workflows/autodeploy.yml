@@ -12,6 +12,7 @@ jobs:
     steps:
     - name: build pages
       uses: actions/checkout@v1
+    - run: node -v
     - run: yarn install
     - run: yarn build
 
