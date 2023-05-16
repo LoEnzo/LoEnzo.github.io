@@ -148,7 +148,24 @@ git reset --hard commit_id
 git push -f
 ```
 
-### 9. 储藏
+### 9.修改提交记录
+
+```shell
+# 有时候因为自己commit信息写错了，需要修改对应的记录
+# 修改最后一次提交记录
+git commit --amend -m "new commit message"
+
+# 修改最近n次记录，不确定可以git log查看历史记录确认
+git rebase -i HEAD~n
+# 之后会进入会进入交互式界面，列出了你想要修改的提交以及它们的哈希值和提交信息。在想要修改的提交前一行，将其对应的`pick`改为`edit`。保存退出后，Git 会自动切换到想要修改的这个提交
+git commit --amend -m "new commit message"
+# 继续变基命令
+git rebase --continue
+# 强制推送到远端，可以先 git log 查看修改记录是否正确
+git push -f origin <current_branch_name>
+```
+
+### 10. 储藏
 
 ```shell
 # 本地仓库，当前正在开发，修改的代码还处于混乱状态，不好针对当前状态进行一个说明不清晰的commit，但是又需要切换到其他分支进行其他任务处理，这时候就需要 git stash 场景了，可以多次储藏
@@ -176,7 +193,7 @@ git stash drop # 删除最近一次的储藏
 git stash drop stash@{0} 
 ```
 
-### 10. git pull | fetch 区别
+### 11. git pull | fetch 区别
 
 git pull 可以选择拉取远端的更新代码，通常我们是拉取远端master更新的代码到本地分支，确保分支推送到远端后,合并时没有冲突，
 
@@ -224,7 +241,7 @@ git rebase --continue -->
 git push
 ```
 
-### 11. 其他
+### 12. 其他
 
 ```shell
 # 修改.ignore 使其生效

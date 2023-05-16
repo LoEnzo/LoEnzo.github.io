@@ -91,7 +91,7 @@ heroImage: /blog.png
 heroText: A Persion Blog
 # tagline: Hero 副标题
 actionText: QuickLook
-actionLink: /Travelsky/Git命令实践/
+actionLink: /Demo/Git命令实践/
 features:
 - title: 简洁至上
   details: 以 Markdown 为中心的项目结构，以最少的配置帮助你专注于写作。
@@ -173,8 +173,8 @@ footer: MIT Licensed | Copyright © 2018-present Evan You
       {
           text: 'TravleSky',
           items: [
-              { text: 'IBE相关', link: '/Travelsky/' },
-              { text: '代码工具', link: '/Travelsky/codeTools/' },
+              { text: 'IBE相关', link: '/Demo/' },
+              { text: '代码工具', link: '/Demo/codeTools/' },
           ]
       },
   ];
@@ -206,9 +206,9 @@ footer: MIT Licensed | Copyright © 2018-present Evan You
           title: 'IBE相关',
           collapsable: false,
           children: [
-            '/Travelsky/',
-            '/Travelsky/eTerm.md',
-            '/Travelsky/小E.md',
+            '/Demo/',
+            '/Demo/eTerm.md',
+            '/Demo/小E.md',
           ]
         }
       ]
@@ -296,7 +296,7 @@ const sidebarConf = require('../../config/sidebarConf/index.js');
 ├─ sidebarConf
 │  ├─ Software
 │  │  └─ index.js
-│  └─ Travelsky
+│  └─ Demo
 │     └─ codeTools
 │		 └─ index.js
 │	  └─ index.js
@@ -310,8 +310,8 @@ const sidebarConf = require('../../config/sidebarConf/index.js');
 const software = require('./Software/index.js');
 
 // IBE相关
-const Travelsky = require('./Travelsky/index.js');
-const codeTools = require('./Travelsky/codeTools/index.js');
+const Demo = require('./Demo/index.js');
+const codeTools = require('./Demo/codeTools/index.js');
 
 // 测试相关
 const jmockit = require('./Jmockit/index.js');
@@ -320,9 +320,9 @@ module.exports = {
     // 软件相关
     '/Software/': software,
 
-    // IBE相关
-    '/Travelsky/codeTools/': codeTools,
-    '/Travelsky/': Travelsky,
+    // 相关
+    '/Demo/codeTools/': codeTools,
+    '/Demo/': Demo,
 
     // 测试相关
     '/Jmockit/': jmockit,
@@ -334,7 +334,7 @@ module.exports = {
 ```javascript
 const utils = require('../../../../utils/index.js');
 // docs下的路径
-const filePath = '/Travelsky/codeTools';
+const filePath = '/Demo/codeTools';
 let filenames = [];
 filenames = utils.getChildren(filePath);
 module.exports = [
