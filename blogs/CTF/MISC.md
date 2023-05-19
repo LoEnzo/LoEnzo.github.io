@@ -94,7 +94,7 @@ CTF MISC（杂项）WriteUp
 
 ## 隐写
 
-::: 隐写 详情查看
+::: details 隐写 详情查看
 
 下载得到 2.png 图片
 
