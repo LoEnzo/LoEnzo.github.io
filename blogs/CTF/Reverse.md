@@ -119,3 +119,70 @@ CTF Reverse（逆向）WriteUp
 ![image-20230525114158168](./images/signin-04.png)
 
 :::
+
+## 特殊的Base64
+
+::: details 特殊的Base64 详情查看
+
+下载文件：解压得`特殊的Base64.exe`文件
+
+解题：
+
+先IDA打开，`alt+t`搜索 flag 相关信息，可以看到如下信息
+
+```shell
+.rdata:0000000000489008 aMtyqm7wjodkrnl db 'mTyqm7wjODkrNLcWl0eqO8K8gc1BPk1GNLgUpI==',0
+.rdata:0000000000489008                                         ; DATA XREF: main+36↑o
+.rdata:0000000000489031 ; const char Str[]
+.rdata:0000000000489031 Str             db 'Please input your flag!!!!',0
+.rdata:0000000000489031                                         ; DATA XREF: main+51↑o
+.rdata:000000000048904C ; const char aTheFlagIsRight[]
+.rdata:000000000048904C aTheFlagIsRight db 'The flag is right!!!!!!!!!',0
+.rdata:000000000048904C                                         ; DATA XREF: main+C6↑o
+.rdata:0000000000489067 ; const char aThisIsAWrongFl[]
+.rdata:0000000000489067 aThisIsAWrongFl db 'This is a wrong flag!!!!!!!!',0
+.rdata:0000000000489067                                         ; DATA XREF: main:loc_40161A↑o
+.rdata:0000000000489084 unk_489084      db    0                 ; DATA XREF: base64Encode(std::string)+29↑o
+.rdata:0000000000489085 asc_489085      db '==',0               ; DATA XREF: base64Encode(std::string)+2AA↑o
+.rdata:0000000000489088 asc_489088      db '=',0                ; DATA XREF: base64Encode(std::string)+3DE↑o
+.rdata:000000000048908A                 align 10h
+.rdata:0000000000489090 aAabbccddeeffgg db 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0987654321/+',0
+.rdata:0000000000489090                                         ; DATA XREF: __static_initialization_and_destruction_0(int,int)+4E↑o
+```
+
+可以看到一串可以的 Base64编码串，`mTyqm7wjODkrNLcWl0eqO8K8gc1BPk1GNLgUpI==`，直接使用在线工具进行Base64解码，返回信息明显是错误的，
+
+下面看到另外一串可以的字符`AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0987654321/+`，看起来像是字典，密码表之类的，百度了 及 查看评论区，了解到 Base64 有个基本的密码表：`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/`，看起来和反编译查看到的，长度一致，只是顺序不同，也就说是说，这道题采用了自己的 Base64编码表，而不是常规的，
+
+按顺序，也就是 A对应A，a对应B，B对应C的编码表，前者是题目本身，后者是标准Base64编码表顺序，
+
+百度到python有对应的包可以直接使用
+
+```python
+import base64
+import string
+
+# 用户使用自定义Base64编码表加密的字符串
+base64String = "mTyqm7wjODkrNLcWl0eqO8K8gc1BPk1GNLgUpI=="
+
+# 用户自定义Base64编码顺序
+userStr = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0987654321/+"
+# 标准Base64编码顺序
+baseStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+
+#利用密码表还原成正常base64编码后的字符串
+newBase64Code=str1.translate(base64String.maketrans(userStr,baseStr))
+
+#base64解码
+print(base64.b64decode(newBase64Code).decode())
+```
+
+执行可得结果
+
+```shell
+92826@DESKTOP-HI2TV6C MINGW64 ~/Desktop
+$ py 特殊Base64.py
+flag{Special_Base64_By_Lich}
+```
+
+:::
