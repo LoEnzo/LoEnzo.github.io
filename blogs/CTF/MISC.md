@@ -376,7 +376,7 @@ wireshark 还有个指令模式，再对应的目录下，可参考下面使用
 
 :::
 
-#### blind_injection
+## blind_injection
 
 ::: details blind_injection 详情查看
 
@@ -393,3 +393,103 @@ wireshark 还有个指令模式，再对应的目录下，可参考下面使用
 有个问题：有可能挨个拼接，不知道哪位开始才是最终的flag，如果字符串过长，是不可去的，要么得自己写脚本直接跑出来，再看结果，要么，得定位到flag开始出现的位置，从那里开始
 
 :::
+
+## Snowfall
+
+::: details Snowfall 详情查看
+
+下载文件解压得：`step1.text`，`step2.text`
+
+解题：打开两个解压文件，都是写纯文本的内容，根据提示，肯定也是看 `step1.text`文件，
+
+看评论区思路，才发现每行后面有些空行，notepad-- 打开文件直接看没看出来，不过光标再每行最后位置可以看出区别，根据评论区提示，这种要去 `whitespace`解
+
+工具：[Whitelips the Esoteric Language IDE (vii5ard.github.io)](https://vii5ard.github.io/whitespace/)
+
+将第一个文件的问题直接复制进去，点击run即可，可以看到结果：`OK now you can run whitespace code. By the way, the key is H0wt0Pr1ntAWh17e5p4ceC0de. `
+
+![Snowfall-01](./images/Snowfall-01.png)
+
+下面是 `whitespace` 语言解析后输出结果，右边是解析后的栈流程
+
+第二个文本解析结果如下：
+
+![Snowfall-02](./images/Snowfall-02.png)
+
+文件开头是7z，估计是个压缩包，参考网友思路，先将右侧栈流程拷贝到文本，就是写脚本，输入一个压缩包，第一步得到的key就是解压密码，参考`python`脚本如下：
+
+```python
+import re
+from queue import LifoQueue
+
+
+with open("snowfall.txt", "r") as f:
+	data = f.read()
+	data = data.splitlines()
+
+stack = LifoQueue()
+
+ret = ""
+for line in data:
+	if "push" in line:
+		num = int(re.findall("push (.*?)$", line)[0])
+		stack.put(num)
+	elif line == "add":
+		stack.put(stack.get() + stack.get())
+	elif line == "dup":
+		num = stack.get()
+		stack.put(num)
+		stack.put(num)
+	elif line == "drop":
+		stack.get()
+	elif line == "printc":
+		asc = chr(stack.get())
+		# print(asc, end="")
+		ret += asc
+
+# save file
+bin_data = ret.encode("latin1")
+with open("1.7z", "wb") as f:
+	f.write(bin_data)
+```
+
+五个函数说明：
+
+> push：将数字压入栈顶
+> printc：将栈顶元素弹出并以ASCII字符形式输出
+> dup：复制栈顶元素后压入栈顶drop:弹出栈顶元素
+> add：将堆栈最上方的两个元素弹出，二者做加法运算,得到的结果入栈***
+
+执行python脚本，得到 `1.7z`压缩包，输入解压密码key `H0wt0Pr1ntAWh17e5p4ceC0de` 得到 `flag.text`，
+
+打开文件，又是很多空行，也是复制到 `whitespace`网站解析，点击 RUN，居然没有结果，重新查看右边的栈流程，很多 drop 操作，也就是执行又删除了，对比之前的两个栈流程，将 `drop` 修改为 `printc`，也就是打印出来，重新修改后的python脚本即可，脚本如下：
+
+```python
+import re
+from queue import LifoQueue
+
+
+with open("flagresult.txt", "r") as f:
+	data = f.read()
+	data = data.splitlines()
+
+stack = LifoQueue()
+
+ret = ""
+for line in data:
+	if "push" in line:
+		num = int(re.findall("push (.*?)$", line)[0])
+		stack.put(num)
+	elif line == "add":
+		stack.put(stack.get() + stack.get())
+	elif line == "dup":
+		num = stack.get()
+		stack.put(num)
+		stack.put(num)
+	elif line == "drop":
+		asc = chr(stack.get())
+		print(asc, end="")
+```
+
+:::
+
