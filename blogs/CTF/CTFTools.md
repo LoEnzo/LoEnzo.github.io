@@ -54,3 +54,13 @@ Task Completed
 使用：一般我用来反编译 `.exe`程序
 
 相关文档：[IDA PRO新手使用教程 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/82177268)
+
+# MISC 相关
+
+## Wireshark
+
+> 简介：网络分析工具
+
+工具：[Wireshark · Download](https://www.wireshark.org/download.html)，这个地址下载快一点：[Wireshark v3.6.1 绿色版.zip - 蓝奏云 (lanzoul.com)](https://l13144.lanzoul.com/its9lzbk38h)
+
+相关文档：[网络分析工具——WireShark的使用（超详细）_世间繁华梦一出的博客-CSDN博客](https://blog.csdn.net/zzwwhhpp/article/details/113077747)
