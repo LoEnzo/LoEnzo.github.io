@@ -351,3 +351,45 @@ print (flag)
 ![image-20230612173154233](./images/telnet.png)
 
 :::
+
+## ping
+
+::: details ping详情查看
+
+下载文件得解压得 `ping.pcap`
+
+解题：使用工具 wireshark 打开，看着一串下来都是 ICMP 的，每条看起来很有规律，按个点击，发先就是 Data 数据中的前两位会变化，
+
+如下图，看最后面也能看到 `f`，就是对应的16进制转换成的字符，按顺序即可看到 `flag{}`，所以就是每条 Data 数据截取前两位，然后再16进制转换为字符串即可
+
+![ping](./images/ping.png)
+
+wireshark 还有个指令模式，再对应的目录下，可参考下面使用
+
+指令：` ./Wireshark/App/Wireshark/tshark.exe -r ping.pcap -T fields -e data.data | cut -c -2 | awk '{printf($1)}'`
+
+![ping-01](./images/ping-01.png)
+
+[16进制到ASCII字符串在线转换工具 - Coding.Tools](https://coding.tools/cn/hex-to-ascii)
+
+使用在线工具即可将所得16进制转为字符串
+
+:::
+
+#### blind_injection
+
+::: details blind_injection 详情查看
+
+下载文件解压得：`cap.pcap`
+
+![blind_injection](./images/blind_injection.png)
+
+解题：根据提示是盲注，看数据流，http请求即是盲注内容
+
+`http://119.23.75.183:8033/Less-5/?id=1'%20and%20substr((select%20group_concat(table_name)%20from%20information_schema.tables%20where%20table_schema=database()),1,1)='a'%20--+`
+
+一般来说，都是响应包字节不同或者是序号中的最后一个才是正确的字符，入截图中，第一个字符是 `e`，按此规律一次凭借得`emails,flag_e62d3da86fe34a83bbfbdb9d3177a641`
+
+有个问题：有可能挨个拼接，不知道哪位开始才是最终的flag，如果字符串过长，是不可去的，要么得自己写脚本直接跑出来，再看结果，要么，得定位到flag开始出现的位置，从那里开始
+
+:::
