@@ -13,9 +13,9 @@ CTF 相关工具持续整理
 
 :::
 
-# WEB 相关
+## WEB 相关
 
-## dirsearch
+### dirsearch
 
 > 简介：dirsearch是一个基于python3的命令行工具，常用于暴力扫描页面结构，包括网页中的目录和文件
 
@@ -45,9 +45,9 @@ Target: http://a8c4c27b-6588-405c-8522-5287f73fcc01.challenge.qsnctf.com:8081/
 Task Completed
 ```
 
-# Reverse 相关
+## Reverse 相关
 
-## IDA
+### IDA
 
 > 一款交互式反汇编工具
 
@@ -55,9 +55,9 @@ Task Completed
 
 相关文档：[IDA PRO新手使用教程 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/82177268)
 
-# MISC 相关
+## MISC 相关
 
-## Wireshark
+### Wireshark
 
 > 简介：网络分析工具
 
