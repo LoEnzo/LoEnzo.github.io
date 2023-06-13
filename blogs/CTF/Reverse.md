@@ -186,3 +186,52 @@ flag{Special_Base64_By_Lich}
 ```
 
 :::
+
+## love
+
+::: details love 详情查看
+
+下载文件，解压得 `reverse_3.exe`
+
+解题：
+
+IDA默认模式打开，查看main函数，`alt+t`搜索 flag，然后f5 反编译得下面图
+
+![love](./images/love.png)
+
+直接查看 sub_411127(v9 , v8)函数，只看到了 v8, v9的定义，没看到那里有变更赋值操作；
+
+不知道是不是软件版本不一致导致，网上别人反编译出来的结果如下
+
+![love-1](./images/love-1.png)
+
+看别人这个就比较清晰了，满足if中的判断，就能得到正确的flag
+
+百度了了一下，strncmp() 函数：C 库函数 **int strncmp(const char \*str1, const char \*str2, size_t n)** 把 **str1** 和 **str2** 进行比较，最多比较前 **n** 个字节。
+
+那就是比较 Dest 和 Str2 的长度一致，strlen() 函数就是 Dest 字符串长度，Str2 双击进去可以查看，或者前面的截图可以看到，如下`e3nifIH9b_C@n@dH`
+
+Str2等同于Dest，原来 for循环是 Dest[j] += j;我们反过来即可
+
+```c
+#include<stdio.h>
+#include<string.h>
+
+# strlen就是字符串长度，在线编译不知道为啥不对，直接写死16
+int main()
+{
+    char Dest[20]="e3nifIH9b_C@n@dH";
+    // int len=strlen(str);
+    for(int i=0;i<16;i++)
+        Dest[i]-=i;
+    for(int i=0;i<16;i++)
+        printf("%c",Dest[i]);
+}
+
+// 返回 e2lfbDB2ZV95b3V9
+```
+
+直接标准 Base64解码 得`{i_l0ve_you}`，根据提示，拼接上 flag 即可
+
+:::
+

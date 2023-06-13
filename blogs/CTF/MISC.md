@@ -317,3 +317,37 @@ print (flag)
 ```
 
 :::
+
+## 啊哒
+
+::: details 啊哒 详情查看
+
+下载文件得：ada.jpg
+
+解题：邮件查看属性，发现有 `照相机型号：73646E6973635F32303138`，看起来是16进制字符串， 尝试转其他进制，看结果应该不是这思路
+
+网上搜索了下，16进制转ASCII字符串，参考下列工具，得到结果`sdnisc_2018`，看这返回结果，感觉是这个没错
+
+估计是个密码啥的，尝试修改文件后缀为 `.zip`，打开发现有文件`flag.text`，输入上面密码即可得 flag
+
+工具：[十六进制到ASCII | 十六进制到文本字符串转换器 (rapidtables.org)](https://www.rapidtables.org/zh-CN/convert/number/hex-to-ascii.html#:~:text=在输入文本框中粘贴十六进制字节码。,选择字符编码类型。 按下转换按钮。)
+
+:::
+
+## telnet
+
+::: details telnet 详情查看
+
+下载文件得：`networking.pcap`
+
+解题：notepad-- 文件直接打开，提示二级制或者文本方式打开，两种格式，打开后，全文搜索 flag直接看到结果
+
+学习：.pcap 文件：[(89条消息) pcap文件详解_meteor^_^的博客-CSDN博客](https://blog.csdn.net/ytx2014214081/article/details/80112277)
+
+工具：[Wireshark · Download](https://www.wireshark.org/download.html)，这个地址下载快一点：[Wireshark v3.6.1 绿色版.zip - 蓝奏云 (lanzoul.com)](https://l13144.lanzoul.com/its9lzbk38h)
+
+运行程序，打开`networking.pcap`文件，邮件追踪流，TCP就可以直接看到 flag
+
+![image-20230612173154233](./images/telnet.png)
+
+:::
