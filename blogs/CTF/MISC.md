@@ -490,6 +490,21 @@ for line in data:
 		asc = chr(stack.get())
 		print(asc, end="")
 ```
+:::
+
+## chatgpt-1
+
+::: details chatgpt-1 详情查看
+
+描述: 本题是在研究chatgpt的灵光乍现。 也算是对AI安全性的一种测试。 由于是基于AI的，所以难度不能保证每个人一致但总体不会相差过大。 做题需要自备ApiKey（平台承诺不会窃取任何用户的ApiKey），介意勿开
+
+启动应用场景，访问地址，估计每次不一样，这里就贴地址了，再右上角设置中配置自己的 openai 的  `apikey`
+
+然后就可以开始了，了解几句，大概知道这个题的意思了，他内置隐藏了flag，需要你通过聊天，突破他自有的安全意识
+
+截图参考：
+
+![chatgpt-1](./images/chatgpt-1.png)
 
 :::
 

@@ -55,6 +55,11 @@ Task Completed
 
 相关文档：[IDA PRO新手使用教程 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/82177268)
 
+### pyinstxtractor.py
+>一款反编译工具，反编译由`pyinstaller`打包的exe文件下载连接：  
+
+https://nchc.dl.sourceforge.net/project/pyinstallerextractor/dist/pyinstxtractor.py
+
 ## MISC 相关
 
 ### Wireshark

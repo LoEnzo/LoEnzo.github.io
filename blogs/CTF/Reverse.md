@@ -579,3 +579,100 @@ NM，真过了....
 
 :::
 
+## 树木的小秘密
+
+::: details 树木的小秘密 详情查看
+
+解压下载文件得：`easy_reverse.exe`
+解题：老规矩，先IDA打开查看一下，`alt+t`全局搜索一下`f`、`flag`、`ctf`之类的，没有明显的东西
+`F5`反编译一下，如下，看到有 py字样，所以可以看出是一个使用pyinstaller打包为exe的文件。使用一个pyinstxtractor.py的工具进行反编译
+```c
+__int64 __fastcall sub_1400022B0(__int64 a1)
+{
+  unsigned int v2; // edi
+  unsigned __int64 v3; // rsi
+  __int64 v4; // rax
+  __int64 v5; // r15
+  __int64 v6; // r12
+  void *v7; // r14
+  __int64 v8; // rbx
+  __int64 v9; // rax
+  __int64 v10; // rbx
+  __int64 v12; // [rsp+20h] [rbp-1048h]
+  wchar_t Buffer[2048]; // [rsp+30h] [rbp-1038h] BYREF
+
+  if ( (unsigned int)sub_1400039B0() )
+    return 0xFFFFFFFFi64;
+  v2 = 1;
+  *(_DWORD *)(a1 + 20604) = 1;
+  if ( (unsigned int)sub_140003D30(a1) || (unsigned int)sub_140003780(a1) || (unsigned int)sub_1400038B0(a1) )
+    return 0xFFFFFFFFi64;
+  v3 = *(_QWORD *)(a1 + 16);
+  v4 = qword_140037CB8("__main__");
+  v5 = v4;
+  if ( !v4 )
+  {
+    sub_140001C40("Could not get __main__ module.\n");
+    return (unsigned int)-1;
+  }
+  v6 = qword_140037CF8(v4);
+  if ( !v6 )
+  {
+    sub_140001C40("Could not get __main__ module's dict.\n");
+    return (unsigned int)-1;
+  }
+  if ( v3 >= *(_QWORD *)(a1 + 24) )
+    return 0;
+  while ( 1 )
+  {
+    if ( *(_BYTE *)(v3 + 17) != 115 )
+      goto LABEL_15;
+    LODWORD(v12) = 92;
+    v7 = (void *)sub_1400012B0(a1, v3);
+    if ( swprintf(Buffer, 0x1000ui64, "%s%c%s.py", (const char *)(a1 + 16504), v12, (const char *)(v3 + 18)) >= 4096 )
+      break;
+    v8 = qword_140037CE0(Buffer);
+    qword_140037CC0(v5, "__file__", v8);
+    qword_140037C68(v8);
+    v9 = qword_140037D70(v7, *(unsigned int *)(v3 + 12));
+    v10 = v9;
+    if ( !v9 )
+    {
+      sub_140001C40("Failed to unmarshal code object for %s\n", (const char *)(v3 + 18));
+      qword_140037D18();
+      return (unsigned int)-1;
+    }
+    qword_140037CC0(v5, "_pyi_main_co", v9);
+    if ( !qword_140037D68(v10, v6, v6) )
+    {
+      qword_140037D18();
+      sub_140001C40("Failed to execute script '%s' due to unhandled exception!\n", (const char *)(v3 + 18));
+      return v2;
+    }
+    free(v7);
+LABEL_15:
+    v3 = sub_140001770(a1, v3);
+    if ( v3 >= *(_QWORD *)(a1 + 24) )
+      return 0;
+  }
+  sub_140001C40("Absolute path to script exceeds PATH_MAX\n");
+  return (unsigned int)-1;
+}
+```
+工具：https://nchc.dl.sourceforge.net/project/pyinstallerextractor/dist/pyinstxtractor.py
+命令：`python pyinstxtractor.py 待反编译文件 `
+执行后得到下面文件目录树
+![](./images/树洞.png)
+很明显文件`123`比较可以，打开查看，`==`号一般是base64解密，剪切出来，即为正确答案
+```shell
+�               @   s�   d dl Z d dlZd dlZdZed�ZdZee�ekrbe �e�Z	e
+dee	� � e�d� e��  ne
+d� e�d� e��  dS )�    Ni��
+ zPlease input your flag:z ZmxhZ3tteV9uYW1lX2lzX3NodW11fQ==zthis is your flag:�   �error)
+�base64�time�sys�a�input�b�c�str�	b64decode�m�print�sleep�exit� r   r   z123.py�<module>   s   
+
+
+
+
+```
+:::
