@@ -508,3 +508,102 @@ for line in data:
 
 :::
 
+## 简单取证1
+
+::: details 简单取证1 详情查看
+
+解压下载得：config 文件目录
+
+工具：[mimikatz/x64/mimikatz.exe at master · ParrotSec/mimikatz · GitHub](https://github.com/ParrotSec/mimikatz/blob/master/x64/mimikatz.exe)、[md5在线解密破解,md5解密加密 (cmd5.com)](https://www.cmd5.com/)
+
+解题：此类型，一般是解密`SYSTEM`文件，下载`mimikatz`软件，将exe文件放置到config文件目录（待分析文件目录同级），执行指令`lsadump::sam /sam:SAM /system:SYSTEM`，结果如下：
+
+```shell
+
+  .#####.   mimikatz 2.2.0 (x64) #18362 Feb 29 2020 11:13:36
+ .## ^ ##.  "A La Vie, A L'Amour" - (oe.eo)
+ ## / \ ##  /*** Benjamin DELPY `gentilkiwi` ( benjamin@gentilkiwi.com )
+ ## \ / ##       > http://blog.gentilkiwi.com/mimikatz
+ '## v ##'       Vincent LE TOUX             ( vincent.letoux@gmail.com )
+  '#####'        > http://pingcastle.com / http://mysmartlogon.com   ***/
+
+mimikatz # lsadump::sam /sam:SAM /system:SYSTEM
+Domain : DESKTOP-VBBTMVS
+SysKey : 37f0b72b8ef4052d5a305281c2c8905c
+Local SID : S-1-5-21-2468344919-3152572563-1510310172
+
+SAMKey : 6bbc5d51b8b9609e241bba9a2558048e
+
+RID  : 000001f4 (500)
+User : Administrator
+
+RID  : 000001f5 (501)
+User : Guest
+
+RID  : 000001f7 (503)
+User : DefaultAccount
+
+RID  : 000001f8 (504)
+User : WDAGUtilityAccount
+  Hash NTLM: 8adf83b531e1cdadc8d16b206d87a4d5
+
+Supplemental Credentials:
+* Primary:NTLM-Strong-NTOWF *
+    Random Value : 58d06fcf956eb58ebd0869ec521014e6
+
+* Primary:Kerberos-Newer-Keys *
+    Default Salt : WDAGUtilityAccount
+    Default Iterations : 4096
+    Credentials
+      aes256_hmac       (4096) : 1faacace6af0e20c359b06724c78091e449bf47b89acc2038f04e4ba2d572831
+      aes128_hmac       (4096) : 709124a7e0fa42ff205ba8e78185c294
+      des_cbc_md5       (4096) : c8c2263e86f426d0
+
+* Packages *
+    NTLM-Strong-NTOWF
+
+* Primary:Kerberos *
+    Default Salt : WDAGUtilityAccount
+    Credentials
+      des_cbc_md5       : c8c2263e86f426d0
+
+
+RID  : 000003e8 (1000)
+User : administrator-QQAAzz
+// hash 加密方式 NTLM，后面是 md5 hash值
+  Hash NTLM: 5f9469a1db6c8f0dfd98af5c0768e0cd
+
+Supplemental Credentials:
+* Primary:NTLM-Strong-NTOWF *
+    Random Value : ec93efdfb8a9278be59f7a1f4116a46e
+
+* Primary:Kerberos-Newer-Keys *
+    Default Salt : DESKTOP-VBBTMVSadministrator-QQAAzz
+    Default Iterations : 4096
+    Credentials
+      aes256_hmac       (4096) : 08da13a926b2b211cb0f1ba75ab191f72ed77469734eaf1f201199e553565005
+      aes128_hmac       (4096) : 21f966b6130439e9675a028093241e31
+      des_cbc_md5       (4096) : c8804662201043a2
+    OldCredentials
+      aes256_hmac       (4096) : cc294cf8db8838e1c973d8e868a4c32d7fd215162c9ae75a797493fd96cec3b7
+      aes128_hmac       (4096) : d7230e305d7f9ab31247e9ed06da3e9f
+      des_cbc_md5       (4096) : 62dfbf1c0dbc8685
+    OlderCredentials
+      aes256_hmac       (4096) : 11bc124de204c19f0f9305390aad0785f0bb5250eb0147a55d3ce95549bcc455
+      aes128_hmac       (4096) : ac7b1df27906f24c8b9228e9e573f48f
+      des_cbc_md5       (4096) : e6c7194a6eab4673
+
+* Packages *
+    NTLM-Strong-NTOWF
+
+* Primary:Kerberos *
+    Default Salt : DESKTOP-VBBTMVSadministrator-QQAAzz
+    Credentials
+      des_cbc_md5       : c8804662201043a2
+    OldCredentials
+      des_cbc_md5       : 62dfbf1c0dbc8685
+```
+
+在线MD5解密，选择类型`NTLM`，输入`5f9469a1db6c8f0dfd98af5c0768e0cd`，得结果`forensics`，拼接结果得 `flag{administrator-QQAAzz_forensics}`
+
+:::
