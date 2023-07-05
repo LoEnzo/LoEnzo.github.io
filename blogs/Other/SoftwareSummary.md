@@ -23,6 +23,8 @@ date: 2020-07-09
 
 * **[Maven](http://maven.apache.org/download.cgi)**
 
+* [**Mvnd**](https://github.com/apache/maven-mvnd/releases)
+
 * **[Mysql](https://dev.mysql.com/downloads/installer/)**
 
 * [**Redis**](https://github.com/tporadowski/redis/releases)

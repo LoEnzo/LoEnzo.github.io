@@ -662,7 +662,7 @@ LABEL_15:
 工具：https://nchc.dl.sourceforge.net/project/pyinstallerextractor/dist/pyinstxtractor.py
 命令：`python pyinstxtractor.py 待反编译文件 `
 执行后得到下面文件目录树
-![](./images/树洞.png)
+![](./images/treehole.png)
 很明显文件`123`比较可以，打开查看，`==`号一般是base64解密，剪切出来，即为正确答案
 ```shell
 �               @   s�   d dl Z d dlZd dlZdZed�ZdZee�ekrbe �e�Z	e

@@ -41,6 +41,17 @@ MAVEN_HOME	# 软件安装路径
 PATH		%MAVEN_HOME%\bin
 ```
 
+**mvnd**
+
+```shell
+# mvnd，maven新一代构建工具，性能提升，下载解压安装，配置文件中
+# PATH 配置软件安装路径/bin
+
+conf mvn.properties 最后一行配置修改 maven.settings=maven settings.xml 路径配置，注意windows为 //
+验证： mvnd -version
+idea使用：maven helper插件，配置中，最上面勾选设置，user a  terminal to goal xxxx, 配置中指定 mvnd.exe的绝对路径
+```
+
 ### Tomcat
 
 ```shell
