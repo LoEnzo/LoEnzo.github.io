@@ -77,13 +77,22 @@ ERROR kuhl_m_lsadump_sam ; CreateFile (SYSTEM hive) (0x00000002)
 mimikatz # lsadump::sam /sam:SAM /system:SYSTEM
 ```
 
-
+- GitTools: git泄漏利用工具, 地址: https://github.com/internetwache/GitTools
+- ds_store_exp: DS_Store泄漏利用工具, 地址: https://github.com/lijiejie/ds_store_exp
+- burpsuite、fiddler: 抓包工具
+- 菜刀、antsword蚁剑、behinder冰蝎: php木马利用工具
+- 御剑: web目录扫描
+- sqlmap: sql注入扫描
+- namp: 端口扫描
+- wappalyzer: 指纹识别
+- netcat: 网络工具包
+- metasploit: 渗透工具
 
 ## Reverse 相关
 
 ### IDA
 
-> 简介：一款交互式反汇编工具
+> 简介：一款交互式反汇编工具，逆向分析工具-静态分析
 
 使用：一般我用来反编译 `.exe`程序
 
@@ -93,6 +102,15 @@ mimikatz # lsadump::sam /sam:SAM /system:SYSTEM
 >简介：一款反编译工具，反编译由`pyinstaller`打包的exe文件下载连接：  
 
 https://nchc.dl.sourceforge.net/project/pyinstallerextractor/dist/pyinstxtractor.py
+
+- PEiD: 壳分析工具
+- Ollydbg: 逆向分析工具-动态调试
+- Android Killer: 安卓反编译
+- Roeder’s .NET Reflector: .NET Framework反编译
+- EasyPythonDecompiler: pyc反编译, 地址: https://sourceforge.net/projects/easypythondecompiler
+- JD-GUI: Java反编译工具
+- ILSpy: 是一个开源的.NET反编译工具
+- angr: 约束求解器
 
 ## MISC 相关
 
@@ -110,3 +128,89 @@ https://nchc.dl.sourceforge.net/project/pyinstallerextractor/dist/pyinstxtractor
 
 工具：WhiteSpace 在线编译软件，[Whitelips the Esoteric Language IDE (vii5ard.github.io)](https://vii5ard.github.io/whitespace/)
 
+### RouterPassView
+
+> 简介：路由器密码查看器
+
+### QR_Research
+
+> 简介：二维码扫描器
+
+### aircrack-ng/Wireshark
+
+> 简介：流量分析
+
+### 010editor
+
+> 简介：16进制编辑器
+
+### Advanced Archive Password Recovery
+
+> 简介：压缩包密码破解
+
+### R-studio、Diskgenius: 
+
+> 简介：文件恢复、镜像挂载
+
+### advanced office password recovery
+
+> 简介：doc密码暴力破解
+
+### volatility
+
+> 简介：内存取证
+
+### binwalk
+
+> 简介：二进制文件分析
+
+### foremost
+
+> 简介：文件分离
+
+### Audacity
+
+> 简介: 音频分析
+
+### steghide
+
+> 简介: 隐藏文件
+
+### gifsplitter
+
+> 简介: gif分离工具
+
+### MP3Stego
+
+> 简介: Mp3隐写工具
+
+### tweakpng
+
+> 简介: png图片分析工具
+
+### ntfsstreamseditor
+
+> 简介: NTFS分区数据流检测工具
+
+### pdfcrack
+
+> 简介: pdf密码爆破
+
+## Cryptography 相关
+
+- kt.gy: 各种编码转换工具, 地址: https://github.com/koczkatamas/koczkatamas.github.io
+- CyberChef: 英国情报机构政府通信总部官方离线解密解码html工具, 地址: https://github.com/gchq/CyberChef
+- CTFtools: 工具合集, 地址: https://www.ctftools.com/down
+- CTFCrackTools: 加解密工具合集
+- bugku在线工具箱: 地址: https://tool.bugku.com/
+- hydra: 系统服务密码暴力破解
+- hashcat: hash密码破解
+- mimikatz: 获取Win明文登录密码
+- RsaCtfTool: rsa破解工具, 地址: https://github.com/Ganapati/RsaCtfTool
+
+## PWN 相关
+
+- pwntools: pwn常用工具
+- checksec: 查看防御措施
+- gdb: 二进制程序调试
+- peda: 反汇编插件
