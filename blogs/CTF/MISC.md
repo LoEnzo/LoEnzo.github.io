@@ -607,3 +607,46 @@ Supplemental Credentials:
 在线MD5解密，选择类型`NTLM`，输入`5f9469a1db6c8f0dfd98af5c0768e0cd`，得结果`forensics`，拼接结果得 `flag{administrator-QQAAzz_forensics}`
 
 :::
+
+## 出师表
+
+::: details 出师表 详情查看
+
+解压下载文件得两个压缩包：`key.rar` 和 `出师表rar`
+
+解题：
+
+尝试打开，发现`key.rar`是不需要密码的，`出师表.rar`中有一张图片，解压需要密码，明显根据提示，密码来自第一个压缩包
+
+`key.rar`包含了 p1 到 p13个文件，每个文件都是出师表中的句子，截取前面三个，发现末尾有A字符，每个不一样，有些还没有，下面是截取前面三个
+
+![image-20230803163318724](./images/chushibiao-01.png)
+
+A字符肯定是有作用的，不过统计了每个A字符数量作为密码未能解开第二个压缩包，只得根据评论区提示了，每个文件压缩前后大小有差值，
+
+![image-20230803163533072](./images/chushibiao-02.png)
+
+`75 101 121 58 90 104 117 71 76 64 64 46 48`，通过 asiic 解码得到 `Key:ZhuGL@@.0`，看字符密码就是`ZhuGL@@.0`
+
+解压得到图片，提示`flag in here`，使用`010 Editor`工具打开图片，搜索 文本 flag可以看到下面内容：
+
+![image-20230803170941835](./images/chushibiao-03.png)
+
+字符串：`flag in here{LjFWBuxFNTzEWv6t2NfxjNFSH1sQEwBt5wTTLD1fJ}`
+
+提交报错，那就是里面的字符还有一层编码，对其Base64解码未成功，对其Base58解码成功
+
+注：
+
+**Base58编码介绍：**
+Base64是很多人熟知的一种编码，在URL传输领域，还有类似的Base32编码。
+Base58编码去掉了一些特殊字符及容易混淆的字母和数字。。
+   1、Base_58 主要是用于“比特币”中使用的一种独特的编码方式，主要用于产生“比特币”的钱包地址。
+   2、相比 Base_64，Base_58 不使用数字 “0“，字母大写“O“，字母大写 “I“，和字母小写 “l“，以及 “+“ 和 “/“ 符号，比Base64共减少6个字符，故称着Base58。
+**Base58编码字符：
+** “123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz”
+**Base58编码优势：**
+   1、易读，没有混淆的字母和数字。
+   2、此编码是一个混淆编码，看上去像Base64，但是其实不是；同时编码效率又高于Base32
+
+:::

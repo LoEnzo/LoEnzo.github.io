@@ -214,3 +214,38 @@ https://nchc.dl.sourceforge.net/project/pyinstallerextractor/dist/pyinstxtractor
 - checksec: 查看防御措施
 - gdb: 二进制程序调试
 - peda: 反汇编插件
+
+
+
+# AWD相关
+
+## 脚本
+
+* 同步本地源码和远端源码脚本，用于修复漏洞后上传
+
+::: details uploadScript.sh
+
+```sh
+#!/bin/bash
+
+# 本地目录
+localDir="/root/awd"
+# 远端目录
+remoteDir="/root"
+# 连接远程服务器ip或域名
+sshHost="121.x.x.5"
+# 连接远程服务器端口号
+sshPort="22"
+# 连接远程服务器用户名
+sshUser="user"
+# 连接远程服务器密码
+sshPass="password"
+
+# sshpass + scp 全覆盖，耗时，不能同步删除文件
+# sshpass -p "$sshPass" scp -P "$sshPort" -o StrictHostKeyChecking=no -r "$localDir"  "$sshUser"@"$sshHost":"$remoteDir"
+
+# 只同步变更文件或目录，第一次最好先备份
+rsync -av --progress --delete -e "sshpass -p $sshPass ssh -p $sshPort" "$localDir"  "$sshUser@$sshHost:$remoteDir"
+```
+
+:::
