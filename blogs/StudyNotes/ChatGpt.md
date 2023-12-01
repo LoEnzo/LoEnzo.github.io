@@ -11,20 +11,18 @@ date: 2023-07-11
 ---
 ::: tip
 
-将ChatGtp接入钉钉，直接以会话聊天的方式进行问答，有 `api key`的可以直接接入使用，只有账号且 `api key`试用额度过期的，可以参考教程，修改js达到只用账号 `access_token`接入钉钉正常使用，各有优缺点；
-Pandora像项目更加适合使用，只不过不知钉钉接入而已，Web，客户端都有
+​		将ChatGtp接入钉钉，直接以会话聊天的方式进行问答，有 `api key`的可以直接接入使用，只有账号且 `api key`试用额度过期的，可以参考教程，修改js达到只用账号 `access_token`接入钉钉正常使用，各有优缺点；
+​		Pandora像项目更加适合使用，只不过不知钉钉接入而已，Web，客户端都有
 
 :::
 
 ## 初始
 
-    ChatGpt最开始出现那段时间，没怎么在意，主要是当时没怎么用，后来发现这玩意儿越来越火，找了一些体验的网站，发现问一些问题（就小白直接问，像百度那种，不是啥预设角色，prompt关键词高级用法），直接给出答案发现还不错，至少比某度搜索，开篇几行都是广告（虽然自己使用油猴插件，过滤了大部分），需要自己去辨别，搜索；且出现最前面的CSDN（虽然大家很诟病，觉得这里面都是贴来贴去的答案，但是不妨碍小白能从中搜索到答案，没github stackoverflow专业，但是好用）、知乎、掘金等这些网站，广告也多，啥复制展开这些还要登陆账号，繁琐。
+​		ChatGpt最开始出现那段时间，没怎么在意，主要是当时没怎么用，后来发现这玩意儿越来越火，找了一些体验的网站，发现问一些问题（就小白直接问，像百度那种，不是啥预设角色，prompt关键词高级用法），直接给出答案发现还不错，至少比某度搜索，开篇几行都是广告（虽然自己使用油猴插件，过滤了大部分），需要自己去辨别，搜索；且出现最前面的CSDN（虽然大家很诟病，觉得这里面都是贴来贴去的答案，但是不妨碍小白能从中搜索到答案，没github stackoverflow专业，但是好用）、知乎、掘金等这些网站，广告也多，啥复制展开这些还要登陆账号，繁琐。
+​		那么，既然这玩意这么好用，那自己也得来用用，于是呼，在网上达搜特搜相关白嫖网站（镜像网站），有些是提供给大家免费使用的，有些是可以自己登陆账号，输入`api key`的，有些界面官方的，有些是魔改的，简直五花八门；平时用得不多，可能是公司业务涉及到的问题不多（自己琢磨不深），哈哈，没怎么用，不过后面偶尔想用用的时候，发现某些地址就不能访问了，又要去找新的（主要是不想花钱），就很麻烦，用起来不舒服。
+​		熟话说，别人再好，不如自己有，就准备自己也去搞个官方账号。
 
-    那么，既然这玩意这么好用，那自己也得来用用，于是呼，在网上达搜特搜相关白嫖网站（镜像网站），有些是提供给大家免费使用的，有些是可以自己登陆账号，输入`api key`的，有些界面官方的，有些是魔改的，简直五花八门；平时用得不多，可能是公司业务涉及到的问题不多（自己琢磨不深），哈哈，没怎么用，不过后面偶尔想用用的时候，发现某些地址就不能访问了，又要去找新的（主要是不想花钱），就很麻烦，用起来不舒服。
-
-    熟话说，别人再好，不如自己有，就准备自己也去搞个官方账号。
-
-    正巧了解到朋友，她自己已经注册了一个账号，就用它的账号登陆了下`openai`官网（需要科学上网，也是用她的账号），发现她一直都是在官网在线使用的，尝试创建了 `api key`，在外面一些提供的免费平台，输入这个 `api key`，使用两个良好，然后搭建 `AirCode`接入钉钉，完美使用，那么剩下的就是自己注册一个自己的账号了，毕竟，老用别人的不好，哈哈。
+正巧了解到朋友，她自己已经注册了一个账号，就用它的账号登陆了下`openai`官网（需要科学上网，也是用她的账号），发现她一直都是在官网在线使用的，尝试创建了 `api key`，在外面一些提供的免费平台，输入这个 `api key`，使用两个良好，然后搭建 `AirCode`接入钉钉，完美使用，那么剩下的就是自己注册一个自己的账号了，毕竟，老用别人的不好，哈哈。
 
 ## 注册OpenAi账号
 
@@ -38,27 +36,27 @@ Pandora像项目更加适合使用，只不过不知钉钉接入而已，Web，�
 
 开始注册：
 
-    注：最好直接使用邮箱注册，而不是点击三方登陆再进行注册，很多封装chatGpt的项目都不支持三方登陆
+​		注：最好直接使用邮箱注册，而不是点击三方登陆再进行注册，很多封装chatGpt的项目都不支持三方登陆
 
-    登陆[OpenAi官网](https://openai.com/), 点击最上边导航栏 `API`，然后再 `SIGN UP`，可能会要求你是否是真人，注意没有科学上网会报错 `OpenAI's services are not available in your country`。自己注册账户，然后充值一点点money，上面是dollar结算，左边就有服务，对应就有 openai 的服务，不同国家的虚拟账号是加个不一样的，差不多7-15RMB，也就是说充值的时候差不多2dollar就行。充值完成之后就可以选择这边的服务购买了，这平台好处就在于如果你选择了服务，后面对应生成了号码，结果在openai注册选择了改号码，提示不能使用的报错，那么你可以直接在生成的订单哪里点击叉，或者等到实际时间过了，会退款给你，不过只是退款到该平台哦，可不会退回到你支付宝这些。
+​		登陆[OpenAi官网](https://openai.com/), 点击最上边导航栏 `API`，然后再 `SIGN UP`，可能会要求你是否是真人，注意没有科学上网会报错 `OpenAI's services are not available in your country`。自己注册账户，然后充值一点点money，上面是dollar结算，左边就有服务，对应就有 openai 的服务，不同国家的虚拟账号是加个不一样的，差不多7-15RMB，也就是说充值的时候差不多2dollar就行。充值完成之后就可以选择这边的服务购买了，这平台好处就在于如果你选择了服务，后面对应生成了号码，结果在openai注册选择了改号码，提示不能使用的报错，那么你可以直接在生成的订单哪里点击叉，或者等到实际时间过了，会退款给你，不过只是退款到该平台哦，可不会退回到你支付宝这些。
 
-详细流程可以直接百度，这里就不在重复的详细说明提供一步步实例了，流程就是这样的，可参考：
+​		详细流程可以直接百度，这里就不在重复的详细说明提供一步步实例了，流程就是这样的，可参考：
 
-[超详细注册OpenAI接口账号的教程 - 掘金 (juejin.cn)](https://juejin.cn/post/7203009064719400997)
+​		[超详细注册OpenAI接口账号的教程 - 掘金 (juejin.cn)](https://juejin.cn/post/7203009064719400997)
 
-    注册完成后，你就可以登陆进去了，依次点击**个人头像** -> **API Keys** -> **Create new secret key** ，即可获取 `Secret Key` 。
+​		注册完成后，你就可以登陆进去了，依次点击**个人头像** -> **API Keys** -> **Create new secret key** ，即可获取 `Secret Key` 。
 
-    这个时候你点击在线的`chatGpt`已经可以直接使用了，不过得一直保持科学上网哦，生成的 `Secret Key` 是可以用于个人兴趣项目，开发过程中提供接口调用方式的。
+这个时候你点击在线的`chatGpt`已经可以直接使用了，不过得一直保持科学上网哦，生成的 `Secret Key` 是可以用于个人兴趣项目，开发过程中提供接口调用方式的。
 
-    一直保持科学上网我还没这么有钱，下面进行白嫖之旅....
+一直保持科学上网我还没这么有钱，下面进行白嫖之旅....
 
 ## AirCode 接入钉钉
 
-    偶然查找文档，发现右边一小块有个广告，就是`AirCode`这玩意儿，看了下，大概就是云函数平台，跟以前腾讯云平台的差不多，不过腾讯云云函数平台开始收费后，之前白嫖部署的一些自动签到的项目就没管了。这个文档进去就能看到主要推广就是各种平台接入 `chatGpt`的，包含：siri、飞书、钉钉、企业微信、slack、discord。正好自己一般使用钉钉就自己看了下文档，发现人家提供一站式js示例，只要有对应的 `api key`其他照着流程来，虽然达不到5分钟部署完成，但是总的来说还是很快的。
+​		偶然查找文档，发现右边一小块有个广告，就是`AirCode`这玩意儿，看了下，大概就是云函数平台，跟以前腾讯云平台的差不多，不过腾讯云云函数平台开始收费后，之前白嫖部署的一些自动签到的项目就没管了。这个文档进去就能看到主要推广就是各种平台接入 `chatGpt`的，包含：siri、飞书、钉钉、企业微信、slack、discord。正好自己一般使用钉钉就自己看了下文档，发现人家提供一站式js示例，只要有对应的 `api key`其他照着流程来，虽然达不到5分钟部署完成，但是总的来说还是很快的。
 
-    详细教程：[钉钉 ChatGPT 机器人 - 用 JavaScript 五分钟开发一个钉钉 ChatGPT 机器人（含全部源码，免费托管，手把手教程） (aircode.cool)](https://aircode.cool/xspb3by9fs)
+详细教程：[钉钉 ChatGPT 机器人 - 用 JavaScript 五分钟开发一个钉钉 ChatGPT 机器人（含全部源码，免费托管，手把手教程） (aircode.cool)](https://aircode.cool/xspb3by9fs)
 
-    差不多照着流程就可以，不过有些小点还是可以给大家说明一下，避免弯路：
+差不多照着流程就可以，不过有些小点还是可以给大家说明一下，避免弯路：
 
 - 钉钉开发者平台可以自己随便创建一个组织就可以进去
 - 使用默认模板建立的时候，Deploy 会报错，记得左下角先添加对应依赖 `openai`
@@ -89,17 +87,17 @@ const OPENAI_MODEL = process.env.OPENAI_MODEL || 'gpt-3.5-turbo';
 // 主方法
 module.exports = async function(params, context) {
   if (context.method !== 'POST') {
-    // 钉钉机器人消息是 POST 请求，所以忽略所有非 POST 请求
+// 钉钉机器人消息是 POST 请求，所以忽略所有非 POST 请求
     return;
   }
 
   // 如果设置了 SECRET，则进行验证
   if (DING_APP_SECRET) {
-    //从 Headers 中拿到 timestamp 和 sign 进行验证
+//从 Headers 中拿到 timestamp 和 sign 进行验证
     const { timestamp, sign } = context.headers;
     if (generateSign(timestamp) !== sign) {
-      return;
-    }
+  return;
+}
   }
 
   // 打印请求参数到日志，方便排查
@@ -135,32 +133,32 @@ module.exports = async function(params, context) {
 
   //从数据库中取之前沟通的问题
   const records = await ChatsTable
-    .where({ 'cid':conversationId,'sid':senderStaffId })
-    .find();
-    //return reply(params, '之前的问题：'+records.question);
+.where({ 'cid':conversationId,'sid':senderStaffId })
+.find();
+//return reply(params, '之前的问题：'+records.question);
   
   // 构建发送给 GPT 的消息体
   const messages = [
-    { role: 'system', content: 'You are a helpful assistant.' },
+{ role: 'system', content: 'You are a helpful assistant.' },
   ];
   //装入上下文
   for (const record of records) {
     messages.push(
-    { role: 'user', content: record.question },
-    { role: 'assistant', content: record.assistant },
+{ role: 'user', content: record.question },
+{ role: 'assistant', content: record.assistant },
   );
   }
   //装入当前问题
    messages.push(
-     { role: 'user', content },
-     );
+ { role: 'user', content },
+ );
 
 // 将用户的问题存入数据表中，后续方便进行排查，或者支持连续对话
   const personItem = {
-    'cid':conversationId,
-    'sid':senderStaffId,
-    'question':content,
-    'assistant':' ',
+'cid':conversationId,
+'sid':senderStaffId,
+'question':content,
+'assistant':' ',
   };
   await ChatsTable.save(personItem);
 
@@ -168,35 +166,35 @@ module.exports = async function(params, context) {
   const openai = new OpenAIApi(new Configuration({ apiKey: OPENAI_KEY }));
 
   try {
-    // 请求 GPT 获取回复
+// 请求 GPT 获取回复
     const completion = await openai.createChatCompletion({
-      model: OPENAI_MODEL,
-      messages,
-    });
+  model: OPENAI_MODEL,
+  messages,
+});
 
     const responseMessage = completion.data.choices[0].message;
 
-    // 将 ChatGPT 的响应也存入数据库
+// 将 ChatGPT 的响应也存入数据库
     const record = await ChatsTable
-    .where({ 'cid':conversationId,'sid':senderStaffId })
-    .set({
-      'assistant':responseMessage.content
-    })
-    .save();
+.where({ 'cid':conversationId,'sid':senderStaffId })
+.set({
+  'assistant':responseMessage.content
+})
+.save();
   
-    //await ChatsTable.save({ conversationId, ...responseMessage });
+//await ChatsTable.save({ conversationId, ...responseMessage });
 
-    // 回复钉钉用户消息
+// 回复钉钉用户消息
     return reply(params, responseMessage.content);
 
   } catch (error) {
-    // 错误处理，首先打印错误到日志中，方便排查
+// 错误处理，首先打印错误到日志中，方便排查
     console.error(error.response || error);
 
-    // 根据不同的情况来生成不同的错误信息
+// 根据不同的情况来生成不同的错误信息
     const errorMessage = handleError(error);
   
-    // 回复错误信息给用户
+// 回复错误信息给用户
     return reply(params, `错误：${errorMessage}`);
   }
 }
@@ -365,11 +363,11 @@ module.exports = {
 
 :::
 
-    在个人dashboard-usage可以看到自己使用了多少配置，[AirCode](https://aircode.io/dashboard/usage)，毕竟是免费的，有时候可能反应比较慢一点，有条件的小伙伴可以自己给 AirCode，购买他们的plus服务哦。
+在个人dashboard-usage可以看到自己使用了多少配置，[AirCode](https://aircode.io/dashboard/usage)，毕竟是免费的，有时候可能反应比较慢一点，有条件的小伙伴可以自己给 AirCode，购买他们的plus服务哦。
 
 ## Pandora 相关项目
 
-    pandora项目作者（大家称始皇）前后换了几个github账户，关注了下，因为前面项目开源的原因，导致被滥用举报封号，之前的pandora相关项目，不在维护
+pandora项目作者（大家称始皇）前后换了几个github账户，关注了下，因为前面项目开源的原因，导致被滥用举报封号，之前的pandora相关项目，不在维护
 
 截止当前最新项目 Pandora-Next ：[pandora-next/deploy: Pandora Cloud + Pandora Server + Shared Chat + BackendAPI Proxy + Chat2API = PandoraNext. New GPTs(Gizmo) UI, All in one! (github.com)](https://github.com/pandora-next/deploy)
 
@@ -411,30 +409,30 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pandora-next
+  app: pandora-next
   template:
     metadata:
-      labels:
-        app: pandora-next
+  labels:
+    app: pandora-next
     spec:
-      containers:
-        - name: pandora-next
+  containers:
+- name: pandora-next
 	# （避免不知道当前版本以及网络问题，我是拉去最新的重命名为当前日期推送到自己阿里云仓库了）
-          image: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/pandora-next:20231130
-          env:
-            - name: PANDORA_NEXT_LICENSE
+  image: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/pandora-next:20231130
+  env:
+- name: PANDORA_NEXT_LICENSE
 		# (自己根据项目Readme中JWT license)
-              value: xxxxx
-          ports:
-            - containerPort: 8181
-          volumeMounts:
-            - name: pandora-next-log
-              mountPath: /data
-      volumes:
-        - hostPath:
-            path: /data/pandora-next
-            type: ""
-          name: pandora-next-log
+  value: xxxxx
+  ports:
+- containerPort: 8181
+  volumeMounts:
+- name: pandora-next-log
+  mountPath: /data
+  volumes:
+- hostPath:
+    path: /data/pandora-next
+    type: ""
+  name: pandora-next-log
 ---
 
 apiVersion: v1
@@ -446,9 +444,9 @@ spec:
   selector:
     app: pandora-next
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8181
+- protocol: TCP
+  port: 80
+  targetPort: 8181
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -458,14 +456,14 @@ metadata:
   namespace: pandora
 spec:
   entryPoints:
-    #    - web ##  使用 http 方式
-    - websecure   ## 使用https方式
+#- web ##  使用 http 方式
+- websecure   ## 使用https方式
   routes:
-    - match: Host(`pandora-next.loenzo.top`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: pandora-next-service
-          port: 80
+- match: Host(`pandora-next.loenzo.top`) && PathPrefix(`/`)
+  kind: Rule
+  services:
+- name: pandora-next-service
+  port: 80
   tls:
     secretName: loenzo-top-tls   ## https 配置证书
 
@@ -477,19 +475,19 @@ metadata:
   namespace: pandora
 spec:
   entryPoints:
-    - web
-    # - websecure   ## 使用https方式
+- web
+# - websecure   ## 使用https方式
   routes:
-    - match: Host(`pandora-next.loenzo.top`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: pandora-next-service
-          port: 80
-      # 自动http转https
-      middlewares:
-        - name: redirect-https
+- match: Host(`pandora-next.loenzo.top`) && PathPrefix(`/`)
+  kind: Rule
+  services:
+- name: pandora-next-service
+  port: 80
+  # 自动http转https
+  middlewares:
+- name: redirect-https
   #  - tls:
-    #  secretName: loenzo-top-tls  ## 配置证书
+#  secretName: loenzo-top-tls  ## 配置证书
 ---
 # 创建中间件，自动http转https
 apiVersion: traefik.containo.us/v1alpha1
@@ -517,28 +515,28 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: pandora
+  app: pandora
   template:
     metadata:
-      labels:
-        app: pandora
+  labels:
+    app: pandora
     spec:
-      containers:
-        - name: pandora
-          image: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/pandora:latest
-          env:
-            - name: PANDORA_CLOUD
-              value: cloud
-            - name: PANDORA_SERVER
-              value: 0.0.0.0:80
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: data-volume
-              mountPath: /data/pandora
-      volumes:
-        - name: data-volume
-          emptyDir: {}
+  containers:
+- name: pandora
+  image: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/pandora:latest
+  env:
+- name: PANDORA_CLOUD
+  value: cloud
+- name: PANDORA_SERVER
+  value: 0.0.0.0:80
+  ports:
+- containerPort: 80
+  volumeMounts:
+- name: data-volume
+  mountPath: /data/pandora
+  volumes:
+- name: data-volume
+  emptyDir: {}
 ---
 
 apiVersion: v1
@@ -550,9 +548,9 @@ spec:
   selector:
     app: pandora
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
+- protocol: TCP
+  port: 80
+  targetPort: 80
 
 ---
 apiVersion: traefik.containo.us/v1alpha1
@@ -562,14 +560,14 @@ metadata:
   namespace: pandora
 spec:
   entryPoints:
-    #    - web ##  使用 http 方式
-    - websecure   ## 使用https方式
+#- web ##  使用 http 方式
+- websecure   ## 使用https方式
   routes:
-    - match: Host(`pandora.loenzo.top`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: pandora-service
-          port: 80
+- match: Host(`pandora.loenzo.top`) && PathPrefix(`/`)
+  kind: Rule
+  services:
+- name: pandora-service
+  port: 80
   tls:
     secretName: loenzo-top-tls   ## https 配置证书
 
@@ -581,20 +579,20 @@ metadata:
   namespace: pandora
 spec:
   entryPoints:
-    - web
-    # - websecure   ## 使用https方式
+- web
+# - websecure   ## 使用https方式
   routes:
-    - match: Host(`pandora.loenzo.top`) && PathPrefix(`/`)
-      kind: Rule
-      services:
-        - name: pandora-service
-          port: 80
-      # 自动http转https
-      middlewares:
-        - name: redirect-https
+- match: Host(`pandora.loenzo.top`) && PathPrefix(`/`)
+  kind: Rule
+  services:
+- name: pandora-service
+  port: 80
+  # 自动http转https
+  middlewares:
+- name: redirect-https
 
   #  - tls:
-    #  secretName: loenzo-top-tls  ## 配置证书
+#  secretName: loenzo-top-tls  ## 配置证书
 ---
 # 创建中间件，自动http转https 一个namespace 创建一个就行了
 apiVersion: traefik.containo.us/v1alpha1
