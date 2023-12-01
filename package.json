@@ -19,7 +19,7 @@
     "@vuepress/plugin-register-components": "1.2.0",
     "chalk": "2.0.0",
     "commander": "2.0.0",
-    "esm": "3.1.0",
+    "esm": "3.0.0",
     "vue": "^2.0.0",
     "vue-class-component": "7.2.6",
     "vuepress": "1.9.7",
