@@ -51,7 +51,7 @@ export default defineUserConfig({
     // 友情链接，这里包含一些关注的博主
     friendshipLinks: friendshipLinksConf,
     // valine 评论系统配置，后台挂在 cleanCloud
-    // commentConfig: valineConf,
+    commentConfig: valineConf,
   }),
   // debug: true,
 });
