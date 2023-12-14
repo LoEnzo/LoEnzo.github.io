@@ -16,7 +16,7 @@ jobs:
         node-version: '20.10.0'
 
     - name: yarn install and build
-    - run: |
+      run: |
         node -v
         yarn install
         yarn build
@@ -28,8 +28,7 @@ jobs:
         curl: -X POST https://us-w1-console-api.leancloud.app/1.1/engine/groups/web/production/version?gitTag=myblog&token=${{ secrets.DEPLOY_LEANCLOUD_TOKEN }}
 
     # 推送 docker 镜像到阿里云私有仓库
-    - name: Build And Push Docker image
-      uses: aliyun/acr-login@v1                                               # 使用阿里云镜像服务action
+    - uses: aliyun/acr-login@v1                                               # 使用阿里云镜像服务action
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep      # 指定自己的仓库地址
         image_name: blog                                                      # 指定镜像名称
