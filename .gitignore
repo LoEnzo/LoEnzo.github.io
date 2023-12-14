@@ -1,18 +1,9 @@
-node_modules/
-LoEnzo.github.io/.vuepress/theme/
-LoEnzo.github.io/.vuepress/dist/
-
-y
-y.pub
-y./
-
 yarn.lock
 yarn-error.log
 
-public/
+.vuepress/.cache
+.vuepress/.temp
+.vuepress/dist
+.vuepress/.configt.ts.swp
 
-!.vuepress/public/
-
-.obsidian
-
-node_module
+package-lock.json
