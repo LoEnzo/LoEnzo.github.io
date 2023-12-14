@@ -11,6 +11,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
       with:
         node-version: '16.19.0'
@@ -18,65 +19,25 @@ jobs:
     - run: yarn install
     - run: yarn build
 
-    - name: Debug KUBE_CONFIG_DATA
+
+    - name: yarn install and build
       run: |
-        echo "KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}"
-        echo "Decoded KUBE_CONFIG:"
-        echo ${{ secrets.KUBE_CONFIG_DATA }} | base64 --decode | kubectl config view
-        curl --location --request POST 'https://api2.pushdeer.com/message/push?text='' ' | ${{ secrets.KUBE_CONFIG_DATA }} | base64 --decode | kubectl config view >> test
+        node -v
+        yarn install
+        yarn build
 
 
-    # # 推送构建的静态网页到myblog分支
-    # - name: deploy file to server
-    #   uses: wlixcc/SFTP-Deploy-Action@v1.0 
-    #   with:  
-    #     username: '${{ secrets.ALIYUN_USERNAME}}'             # ssh user name
-    #     server: '${{ secrets.Aliyun_IP }}'                    # 引用之前创建好的secret
-    #     ssh_private_key: ${{ secrets.Aliyun_KEY }}            # 引用之前创建好的secret
-    #     local_path: 'public/*'                                # 对应我们项目public的文件夹路径
-    #     remote_path: '${{ secrets.ALIYUN_BLOG_CATALOG }}'
-
-    # 推送构建的静态网页到myblog分支
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v2.5.0
-      env:
-        ACTIONS_DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
-        PUBLISH_BRANCH: myblog
-        PUBLISH_DIR: public
 
     # 推送到 CleanCloud 云函数平台
-    # - name: Deploy
-    #   uses: peaceiris/actions-gh-pages@v2.5.0
-    #   env:
-    #     ACTIONS_DEPLOY_KEY: ${{secrets.ACCESS_TOKEN}}
-    #     PUBLISH_BRANCH: myblog
-    #     PUBLISH_DIR: public
-
-    # # 推送到 CleanCloud 云函数平台
-    # - name: Deploy to LeanEngine
-    #   uses: enflo/curl-action@v1.2
-    #   with:
-    #     curl: -X POST https://us-w1-console-api.leancloud.app/1.1/engine/groups/web/production/version?gitTag=myblog&token=${{ secrets.DEPLOY_LEANCLOUD_TOKEN }}
-
-    # # 推送 docker 镜像到阿里云私有仓库
     - name: Deploy to LeanEngine
       uses: enflo/curl-action@v1.2
       with:
         curl: -X POST https://us-w1-console-api.leancloud.app/1.1/engine/groups/web/production/version?gitTag=myblog&token=${{ secrets.DEPLOY_LEANCLOUD_TOKEN }}
-    # - name: Build And Push Docker image
-    #   uses: aliyun/acr-login@v1                                           # 使用阿里云镜像服务action
-    #   env:
-    #     docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
-    #     image_name: blog                                                  # 指定镜像名称
-    #     tag: ${{ github.sha }}                                            # 指定镜像标签
-    # - run: docker version
-    # - run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com # 登录阿里云镜像仓库
-    # - run: docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }} # 使用Dockerfile构建镜像
-    # - run: docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }}     # 推送镜像到镜像仓库
 
-    # - name: Docker Images List # 列出所有镜像
+    # 推送 docker 镜像到阿里云私有仓库
     - name: Build And Push Docker image
       uses: aliyun/acr-login@v1                                           # 使用阿里云镜像服务action
+    - uses: aliyun/acr-login@v1                                               # 使用阿里云镜像服务action
       env:
         docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep  # 指定自己的仓库地址
         image_name: blog                                                  # 指定镜像名称
@@ -85,52 +46,58 @@ jobs:
     - run: docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com # 登录阿里云镜像仓库
     - run: docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }} # 使用Dockerfile构建镜像
     - run: docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }}     # 推送镜像到镜像仓库
-    #   run: docker images
+        docker_repo: registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep      # 指定自己的仓库地址
+        image_name: blog                                                      # 指定镜像名称
+        tag: ${{ github.sha }}                                                # 指定镜像标签
+    - run: |
+        docker version
+        docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-hangzhou.aliyuncs.com     # 登录阿里云镜像仓库
+        docker build . --file Dockerfile --tag registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }}                      # 使用Dockerfile构建镜像
+        docker push registry.cn-hangzhou.aliyuncs.com/aliyun-docker-rep/blog:${{ github.sha }}                                                 # 推送镜像到镜像仓库
 
     - name: Docker Images List # 列出所有镜像
       run: docker images
 
-    # # 让K3s应用deployment
+    # 配置kubectl环境并更新pod
     - run: |
         sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
-    # - run: |
-    #     sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml
-
-    # # - uses: actions-hub/kubectl@master
-    # #   env:
-    # #     KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-    # #   with:
-    # #     args: apply -f deployment.yaml
-
-    # # - name: deploy to cluster
-    # #   uses: steebchen/kubectl@master
-    # #   env:
-    # #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-    # #     KUBECTL_VERSION: "1.15"
-    # #   with:
-    # #     args: apply -f deployment.yaml
-    # # - name: verify deployment
-    # #   uses: steebchen/kubectl@master
-    # #   env:
-    # #     KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-    # #     KUBECTL_VERSION: "1.15"
-    # #   with:
-    # #     args: '"rollout status -n blog deployment/blog"'
-
     - uses: danielr1996/kubectl-action@1.0.0
       name: Deploy to k3s
       with:
         kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
         args: apply -f deployment.yaml
-    # - uses: danielr1996/kubectl-action@1.0.0
-    #   name: Deploy to k3s
+    - name: setup Kubeconfig and apply this deployment.yaml
+      run: |
+        sed -i 's/{TAG}/${{ github.sha }}/g' deployment.yaml                  # 将sha值作为更新deploy镜像版本号更新yaml
+        echo "${{ secrets.KUBECONFIG_CONTENTS }}" > kubeconfig.yaml           # 配置kubectl环境           
+        kubectl --kubeconfig=kubeconfig.yaml apply -f deployment.yaml         # 更新pod
+      env:
+        KUBECONFIG: kubeconfig.yaml
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    # 推送 github action 执行成功到iphone
     - name: push github action to iphone
       run: curl --location --request POST 'https://api2.pushdeer.com/message/push?pushkey=${{ secrets.PUSHDEER_KEY }}&text='github_action_execute_successfully''
-    #   with:
-    #     kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
-    #     args: apply -f deployment.yaml
-    
-    # # 推送 github action 执行成功到iphone
-    # - name: push github action to iphone
-    #   run: curl --location --request POST 'https://api2.pushdeer.com/message/push?pushkey=${{ secrets.PUSHDEER_KEY }}&text='github_action_execute_successfully''
-     
