@@ -5,7 +5,7 @@ FROM nginx:1.17.7-alpine
 LABEL maintainer="LoEnzo"
 
 # 将编译后的静态文件拷贝到镜像
-ADD /public /usr/share/nginx/html
+ADD /.vuepress/dist /usr/share/nginx/html
 
 # 拷贝nginx.conf配置文件
 # ADD nginx.conf  /usr/local/nginx/conf/
