@@ -1,0 +1,68 @@
+/* 博客首页自定义样式 */
+
+/* 首页标题字体颜色调整 */
+.banner-wrapper .banner-brand__content h1 {
+    color: white;
+    font-size: 50px;
+    font-weight: 550;
+}
+
+/* 首页标题描述字体颜色调整 */
+.banner-wrapper .banner-brand__content p {
+    color: white;
+    font-size: 25px;
+}
+
+/* 博客展示模块宽度调整 */
+.home-wrapper .home-blog-content {
+    max-width: 65%;
+    
+} 
+
+/* tag外框长度 */
+.home-blog-content .info-wrapper .tag-wrapper {
+    list-style-type: none;
+    padding-left: 0px;
+    height: 80px;
+}
+
+/* 隐藏ul下的第4个及以后的li元素 */
+.home-blog-content .info-wrapper .tag-wrapper .tag-item:nth-child(n+9) {    
+    display: none;
+} 
+
+/* 博客文档界面自定义样式 */
+
+/* 文档展示页面右侧目录索引样式 */
+.theme-container .page-catalog-container {
+    width: 350px;
+}
+
+/* 正文title样式 */
+.page-title {
+    margin-left: 15%!important;
+    /* margin-right: 0!important; */
+}
+
+
+/* 正文title info 样式 */
+.theme-container .page-container .page-info {
+    margin-left: 15%!important;
+}
+
+/* 文档正文宽度 */
+.theme-container .page-container .theme-reco-default-content {
+    max-width: 70%;
+}
+
+/* 文档Edit 链接样式 */
+.page-meta {
+    margin-left: 15%!important;
+}
+
+
+/* timeline页面，按列逆序渲染 */
+.timeline-wrapper .timeline-content {
+    display: flex;
+    flex-direction: column-reverse;
+}
