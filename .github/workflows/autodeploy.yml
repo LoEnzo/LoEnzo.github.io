@@ -14,18 +14,11 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '20.10.0'
-
     - name: yarn install and build
       run: |
         node -v
         yarn install
         yarn build
-    # 推送到 CleanCloud 云函数平台
-    - name: Deploy to LeanEngine
-      uses: enflo/curl-action@v1.2
-      with:
-        curl: -X POST https://us-w1-console-api.leancloud.app/1.1/engine/groups/web/production/version?gitTag=myblog&token=${{ secrets.DEPLOY_LEANCLOUD_TOKEN }}
-
     # 推送 docker 镜像到阿里云私有仓库
     - uses: aliyun/acr-login@v1                                               # 使用阿里云镜像服务action
       env:
@@ -45,7 +38,6 @@ jobs:
         kubectl --kubeconfig=kubeconfig.yaml apply -f deployment.yaml         # 更新pod
       env:
         KUBECONFIG: kubeconfig.yaml
-    
     # 推送 github action 执行成功到iphone
     - name: push github action to iphone
       run: curl --location --request POST 'https://api2.pushdeer.com/message/push?pushkey=${{ secrets.PUSHDEER_KEY }}&text='github_action_execute_successfully''
