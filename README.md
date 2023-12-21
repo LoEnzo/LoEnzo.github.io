@@ -37,7 +37,7 @@ actionLink: /views/other/about
 footer: # 底部模块的配置
   record: "渝ICP备2022001000号"
   recordLink: 'https://beian.miit.gov.cn/'
-  # cyberSecurityRecord: 公安备案文案
-  # cyberSecurityLink: 公安备案地址
+  cyberSecurityRecord: "渝公网安备50010902502584号"
+  cyberSecurityLink: "https://beian.mps.gov.cn/#/query/webSearch"
   startYear: 2018
 ---
